@@ -27,3 +27,22 @@ Vue.use(Icon);
 
 import { Collapse, CollapseItem } from 'vant';
 Vue.use(Collapse).use(CollapseItem);
+
+import { NavBar } from 'vant';
+Vue.use(NavBar);
+
+import { Card } from 'vant';
+Vue.use(Card);
+
+import { Dialog } from 'vant';
+// 全局注册
+Vue.use(Dialog);
+
+import { Pagination } from 'vant';
+Vue.use(Pagination);
+
+import { Tabbar, TabbarItem } from 'vant';
+Vue.use(Tabbar).use(TabbarItem);
+
+import { Divider } from 'vant';
+Vue.use(Divider);

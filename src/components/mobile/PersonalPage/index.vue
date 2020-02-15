@@ -1,10 +1,21 @@
 <template>
-  <div class="head">个人信息页</div>
+  <div class="head">个人信息页
+    <van-button @click="beforeunloadHandler">退出</van-button>
+  </div>
+  <!-- <van-button>退出</van-button> -->
 </template>
 
 <script>
-export default {
+import { logout_ } from "@/api/login";
 
+export default {
+  name:'personalPage',
+  methods:{
+    beforeunloadHandler(){
+      this.$router.push({path:"/login"});
+      logout_(this.$store.getters.userId);
+    },
+  }
 }
 </script>
 

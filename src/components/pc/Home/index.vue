@@ -3,17 +3,13 @@
 </template>
 
 <script>
-// import { logout_ } from "../../../api/login";
 
 export default {
   name: 'homePage',
-  destroyed(){
-    // window.removeEventListener('beforeunload', this.beforeunloadHandler())
+  mounted(){
+    
   },
   methods:{
-    // beforeunloadHandler(){
-    //   logout_(this.$store.getters.userId);
-    // },
   }
 }
 </script>

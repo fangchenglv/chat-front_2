@@ -3,23 +3,18 @@
     <router-view v-if="!$route.meta.keepAlive"/>
     
     <el-container v-if="$route.meta.keepAlive">
-      <el-header style="height:0.95rem; padding:0rem; background-color:#ddd">
+
+      <el-header >
         <keep-alive>
-          <h1>欢迎来到电脑端聊天系统, {{userName}}</h1>
+          <left-aside>
+          </left-aside>
         </keep-alive>
       </el-header>
-
-      <el-container>
-        <el-aside>
-          <keep-alive>
-            <left-aside></left-aside>
-          </keep-alive>
-        </el-aside>
 
         <el-main>
           <router-view/>
         </el-main>
-      </el-container>
+
     </el-container>
 
   </div>
@@ -58,27 +53,35 @@ body{
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  overflow: hidden;
+  overflow: scroll;
   
   /* background-image: url("../../assets/img/backGroud.jpg");
   background-repeat: no-repeat;
   background-size: 99% 100%; */
 }
  .el-header {
-  background-color:#67C23A;
   color: #333;
   text-align: center;
   height: 1rem;
-}
-.el-aside {
-  color: #333;
-  height: 100%;
-  /* overflow: scroll; */
+  height:0.95rem; 
+  padding:0rem; 
+  background-color:#ABD0F7;
+  margin-bottom: 0.2rem;
 }
 .el-main {
   color: #333;
+  width: 75%;
+  padding:0.5rem 0.2rem 0.1rem 0.2rem;
+  margin: 0 auto;
+  
 }
-.leftAside{
-  overflow: scroll;
+.el-container{
+  height: 100%;
 }
+/* .el-aside{
+  color: #333;
+  height: 100%;
+  float: left;
+  display: inline-block;
+} */
 </style>

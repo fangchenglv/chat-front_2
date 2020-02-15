@@ -30,6 +30,74 @@ let router = new Router({
         keepAlive: true,
       }
     },
+    //新建好友分组
+    {
+      path:'/newFriendGroup',
+      component:() => import('../../components/pc/LeftSide/NewFriendGroup/index.vue'),
+      meta:{
+        keepAlive:true,
+      }
+    },
+    //添加新好友
+    {
+      path:'/requestFriend',
+      component:() => import('../../components/pc/LeftSide/NewFriend/index.vue'),
+      meta:{
+        keepAlive:true,
+      },
+      children:[
+        {
+          path:'result',
+          component:() => import('../../components/pc/LeftSide/NewFriend/result.vue'),
+          meta:{
+            keepAlive:true,
+          }
+        }
+      ]
+    },
+    //查询好友申请并处理
+    {
+      path:'/solveRequest',
+      component:() => import('../../components/pc/LeftSide/FriendRequest/index.vue'),
+      meta:{
+        keepAlive:true,
+      }
+    },
+    //查询历史好友请求
+    {
+      path:'/acceptRejectFriend',
+      component:() => import("../../components/pc/LeftSide/HistoryFriend/index.vue"),
+      meta:{
+        keepAlive:true,
+      }
+    },
+    //好友列表
+    {
+      name:'friendList',
+      path:"/friendList/:groupId",
+      component:() => import("../../components/pc/MyFriendList/index.vue"),
+      meta:{
+        keepAlive:true,
+      }
+    },
+    //好友聊天室
+    {
+      name: 'privateChatRoom',
+      path:"/privateChatRoom/:friendId/:name/:avatar",
+      component:() => import('../../components/pc/PrivateChatRoom/index.vue'),
+      meta:{
+        keepAlive:true,
+      }
+    },
+    //好友聊天历史记录
+    {
+      path:"/privateHistoryPage/:toId/:fromId",
+      name:"privateHistoryPage",
+      component:() => import("../../components/pc/HistoryRecord/index.vue"),
+      meta:{
+        keepAlive:true,
+      }
+    },
     //重定向
     {
       path:'/*',

@@ -8,6 +8,7 @@ const getters = {
   beSearchFriend: state => state.user.beSearchFriend,
   // toSearchMe: state => state.user.toSearchMe,
   myFriendList: state => state.user.myFriendList,
+  allFriend: state => state.user.allFriend,
   socket: state => state.user.socket,
   sock: state => state.websock.sock,
   unreadList: state => state.user.unreadList,

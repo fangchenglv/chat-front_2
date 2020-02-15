@@ -8,7 +8,6 @@
       <router-view></router-view>
     </div>
     <router-view v-if="!$route.meta.keepAlive"/>
-    
   </div>
 </template>
 

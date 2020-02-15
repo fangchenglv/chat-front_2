@@ -1,17 +1,38 @@
 <template>
   <div class="head">
-    <ul class="operation">
-      <li class="item">新建好友分组</li>
-      <li class="item">添加新的好友</li>
-      <li class="item">查询好友申请并处理申请</li>
-      <li class="item">查询已处理的好友申请</li>
-    </ul>
+
+    <van-cell-group title="好友操作">
+      <van-cell title="新建好友分组" is-link @click="newGroup" />
+      <van-cell title="添加新的好友" is-link @click="newFriend" />
+      <van-cell title="查询好友申请并处理申请" is-link @click="checkAndReselve"/>
+      <van-cell title="查询已经处理的好友申请" is-link @click="historyRequest" />
+    </van-cell-group>
+    <van-cell-group title="群组操作">
+      暂时为空
+    </van-cell-group>
+
   </div>
 </template>
 
 <script>
 export default {
-
+  name:"friendOperation",
+  methods:{
+    newGroup(){
+      this.$router.push({path:"/newFriendGroup"}).catch(err => {
+        console.log(err);
+      });
+    },
+    newFriend(){
+      this.$router.push({path:"/newFriend"});
+    },
+    checkAndReselve(){
+      this.$router.push({path:"/ReselveFriendRequset"});
+    },
+    historyRequest(){
+      this.$router.push({path:"/historyFriend"});
+    }
+  }
 }
 </script>
 
@@ -19,10 +40,12 @@ export default {
 .head{
   margin-top: 1rem;
   margin-bottom: 1rem;
+  text-align: left;
 }
-.operation{
+/* .operation{
   font-size: 0.5rem;
-}
+  text-align: left;
+} */
 .item{
   line-height: 1rem;
   background-color: #fff;

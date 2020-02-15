@@ -1,6 +1,6 @@
 import {
   login,
-  register //请求参数有这么多(userName, password, nickname, gender, email, phone, roleCode)
+  register 
 } from "../../api/login.js";
 import {
   searchFriend,
@@ -23,6 +23,7 @@ const user = {
     beSearchFriend: [],
     // toSearchMe: [],
     myFriendList: [],
+    allFriend:[],
     socket : process.env.BASE_API,
     userAvatar:"",
     unreadList:[],
@@ -58,6 +59,9 @@ const user = {
     SET_UNREADLIST(state, list){
       state.unreadList = list;
     },
+    SET_ALLFRIEND(state, list){
+      state.allFriend = list;
+    }
     // UPDATE_WEBSOCKET(state, sock){
     //   state.socket = sock;
     // },
@@ -106,6 +110,14 @@ const user = {
           .then(response => {
             const data = response.data.data;
             commit("SET_MYFRIENDLIST", data);
+            let allFriend = [];
+            for(let i = 0; i < data.length; i++){
+              for(let j = 0; j < data[i].friends.length; j++){
+                allFriend.push(data[i].friends[j]);
+              }
+            }
+            commit("SET_ALLFRIEND", allFriend);
+            // console.log(allFriend);
             resolve(response);
           })
           .catch(error => {

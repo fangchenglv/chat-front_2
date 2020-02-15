@@ -69,7 +69,7 @@ class WebSocketClass {
             this.pingPong = 'ping'
         }, 20000)
     }
-    发送信息给服务器
+    // 发送信息给服务器
     sendHandle(data) {
         console.log(`${this.name}发送消息给服务器:`, data)
         return this.ws.send(data);
@@ -95,6 +95,7 @@ class WebSocketClass {
         return this.ws.close();
     }
 }
+
 // function someFn(data) {
 //     console.log('接收服务器消息的回调：', data);
 // }

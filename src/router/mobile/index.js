@@ -44,6 +44,45 @@ let router = new Router({
       component:() => import('../../components/mobile/FriendOperation/index.vue'),
       meta:{
         keepAlive:true,
+      },
+    },
+    //新建好友分组
+    {
+      path:'/newFriendGroup',
+      component:() => import('../../components/mobile/FriendOperation/NewGroup/index.vue'),
+      meta:{
+        keepAlive:false,
+      }
+    },
+    //申请添加新的好友
+    {
+      path:"/newFriend",
+      component:() => import("../../components/mobile/FriendOperation/NewFriend/index.vue"),
+      meta:{
+        keepAlive:false,
+      },
+      children:[{
+        path:"result",
+        component:() => import("../../components/mobile/FriendOperation/NewFriend/result.vue"),
+        meta:{
+          keepAlive:false,
+        }
+      }]
+    },
+    //处理发送过来的好友请求
+    {
+      path:'/ReselveFriendRequset',
+      component:() => import("../../components/mobile/FriendOperation/ReselveRequest/index.vue"),
+      meta:{
+        keepAlive:false,
+      }
+    },
+    //查看历史好友处理情况
+    {
+      path: "/historyFriend",
+      component:() => import("../../components/mobile/FriendOperation/HistoryRequest/index.vue"),
+      meta:{
+        keepAlive:false,
       }
     },
     //好友列表页
@@ -60,6 +99,33 @@ let router = new Router({
       component:() => import('../../components/mobile/PersonalPage/index.vue'),
       meta:{
         keepAlive: true,
+      }
+    },
+    //好友个人主页
+    {
+      path:"/friendPage/:id",
+      name:"FriendPage",
+      component:() => import("../../components/mobile/FriendList/FriendPage/index.vue"),
+      meta:{
+        keepAlive:false,
+      }
+    },
+    //私人聊天主页
+    {
+      name: 'privateChatRoom',
+      path:"/privateChatRoom/:friendId/:name/:avatar",
+      component:() => import('../../components/mobile/PrivateChatRoom/index.vue'),
+      meta:{
+        keepAlive:false,
+      }
+    },
+    //好友聊天历史记录
+    {
+      path:"/privateHistoryPage/:toId/:fromId",
+      name:"privateHistoryPage",
+      component:() => import("../../components/mobile/HistoryRecord/index.vue"),
+      meta:{
+        keepAlive:false,
       }
     },
     //重定向
