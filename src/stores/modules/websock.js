@@ -12,12 +12,16 @@ const websock = {
     },
 
     actions:{
-        START_WEBSOCKET({commit}, 
-            // id, 
-            url, func, name
-            ){
-
-            commit('UPDATE_WEBSOCKET', new WebSocketClass(url, func, name));         
+        StartWebsocket({commit}, msg){
+            
+            // console.log(msg)
+            // console.log(...msg)
+            let url = msg[0]
+            let name = msg[1]
+            let regisMsg = msg[2]
+            // console.log(url,  name, regisMsg);
+            commit('UPDATE_WEBSOCKET', new WebSocketClass(url, name, regisMsg));    
+            // commit('UPDATE_WEBSOCKET', new WebSocketClass(...msg)); 
         }
     }
 };

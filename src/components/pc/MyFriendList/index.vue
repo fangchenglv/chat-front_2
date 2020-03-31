@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="10" v-for="item in this.friendList" :key="item.friendId" offset="1">
+      <el-col :span="11" v-for="item in this.friendList" :key="item.friendId" :offset="1">
         <el-card >
           <img :src=item.friendInfo.avatar alt="图片不存在" class="image" />
             <p style="font-size:0.5rem; ">昵称:{{item.friendInfo.nickName}}</p>
@@ -37,6 +37,7 @@
 <script>
 import { GetMyFriendList } from "@/stores/modules/user";
 import { deleteMyFriend, getHistoryReadList } from "@/api/friendOperation";
+import {getMyFriendList} from "./../../../api/friendOperation"
 
 export default {
   components: {},
@@ -60,6 +61,9 @@ export default {
     messageList: function(){
       return this.messagelist;
     }
+  },
+  mounted(){
+    // console.log("好友列表", this.friendList)
   },
   methods: {
     toHistoryPage(toId){
@@ -94,6 +98,11 @@ export default {
               type: "warning"
             });
           }
+          getMyFriendList(this.$store.getters.userId).then(res =>{
+            const data = res.data.data;
+            // this.myFriendList = data
+            this.$store.dispatch("GetAllFriend", data).then(res =>{}).catch(err =>{console.log(err)});
+          })
         })
         .catch(error => {
           console.log("!!!!有错误", error);
@@ -106,6 +115,7 @@ export default {
 .button {
   margin: 0 0 0.3rem 0;
   float: right;
+  width: 100%
 }
 .image{
   width: 20%;

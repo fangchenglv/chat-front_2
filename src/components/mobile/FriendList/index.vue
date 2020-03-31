@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <div v-for="item in groupList" :key="item.id">
+    <div v-for="(item, id) in groupList" :key="id">
       <van-cell 
         :title=item.typeName 
         :value=item.friends.length 
@@ -14,31 +14,64 @@
           @click="toFriend(data.friendId)" 
           is-link 
           style="text-align:left;border:solid 0.02rem #ddd; border-top:none; border-left:none; border-right:none"/>
-        
       </div>
-
     </div>
+    <div>
+      <van-cell 
+        title="群组" 
+        :value="myGroupList.length" 
+        icon="arrow-down" 
+        @click="onClickLeft(myGroupList.groupNum)"
+        style="text-align:left;background-color:rgb(250,250,250)"/>
+        <div v-show="show === myGroupList.groupNum" v-for="(data, id) in myGroupList" :key="id">
+          <van-cell 
+          :icon="data.avatar"
+            :title="data.groupName" 
+            @click="toPathGroup(data.groupNum)" 
+            is-link 
+            style="text-align:left;border:solid 0.02rem #ddd; border-top:none; border-left:none; border-right:none"/>
+        </div>
+    </div>
+
   </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
+import {getMyGroupList} from "../../../api/friendOperation"
 
 export default {
   data(){
     return{
       groupList:[],
       show:-1,
+      myGroupList:[],
     }
   },
   mounted() {
     this.init();
+    this.getGroupList();
   },
   methods:{
     init(){
       this.$store.dispatch("GetMyFriendList", this.$store.getters.userId).then(res =>{
         this.groupList = this.$store.getters.myFriendList;
+        // console.log(this.groupList);
       })
+    },
+    toPathGroup(id){
+      this.$router.replace({name: "groupChat", params: {groupNum: id}});
+    },
+    getGroupList(){
+      getMyGroupList(this.$store.getters.userId)
+        .then(res => {
+          this.myGroupList = res.data.data;
+          this.$store.dispatch("GetMyGroupChat", res.data.data);
+          // console.log(this.myGroupList);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
     },
     onClickLeft(i){
       if(this.show === i){

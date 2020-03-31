@@ -9,23 +9,16 @@
           text-color="#fff"
           active-text-color="#ffd04b"
           mode="horizontal"
+          menu-trigger="click"
         >
-          <!-- <li>
-            <h2>
-              <a href="#/home" style="text-decoration:none;">
-                <span >首页</span>
-              </a>
-            </h2>
-          </li> -->
-
-          <el-submenu index="1">
+          <el-submenu index="1" >
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span>
-                <strong >好友操作</strong>
+                <strong >操作</strong>
               </span>
             </template>
-            <el-menu-item-group>
+            <el-menu-item-group >
               <el-menu-item index="/friendGroup">
                 <span @click="toPath0">新建好友分组</span>
               </el-menu-item>
@@ -38,6 +31,9 @@
               <el-menu-item index="/acceptRejectFriend">
                 <span @click="toPath3">查询已处理的好友申请</span>
               </el-menu-item>
+              <el-menu-item index="/newGroupChat">
+                <span @click="toPath4">新建群聊</span>
+              </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -49,7 +45,7 @@
               </span>
             </template>
             <el-menu-item-group>
-              <div v-for="item in this.myFriendList" :key="item.id">
+              <div v-for="item in myFriendList" :key="item.id">
                 <el-menu-item index="/myFriendList">
                   <span @click="toPath(item.id)">{{item.typeName}}</span>
                 </el-menu-item>                
@@ -57,7 +53,27 @@
             </el-menu-item-group>
           </el-submenu>
 
-          <el-menu-item index="3">
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-user-solid"></i>
+              <span @click="getGroupList()">
+                <strong>群组列表</strong>
+              </span>
+            </template>
+            <el-menu-item-group>
+              <div v-for="(item, id) in myGroupList" :key="id">
+                <el-menu-item index="/myGroupList">
+                  <span @click="toPathGroup(item.groupNum)">{{item.groupName}}</span>
+                </el-menu-item>                
+              </div>
+            </el-menu-item-group>
+          </el-submenu>
+
+          <el-menu-item index="4">
+            <i class="el-icon-s-home"></i>
+            <span slot="title" @click="toHome()">聊天</span>
+          </el-menu-item>
+          <el-menu-item index="5">
             <i class="el-icon-setting"></i>
             <span slot="title" @click="logout()">登出</span>
           </el-menu-item>
@@ -70,17 +86,20 @@
 <script>
 import { mapGetters } from "vuex";
 import { logout_ } from "@/api/login";
+import {getMyFriendList, getMyGroupList} from "./../../../api/friendOperation"
 
 export default {
   name: "sidebar",
   data(){
     return{
       name:this.$store.getters.userName,
+      myFriendList:[],
+      myGroupList:[],
     }
   },
   props: {},
   computed: {
-    ...mapGetters(["myFriendList"])
+    // ...mapGetters(["myFriendList"])
   },
   // mounted() {
   //   window.addEventListener('beforeunload', this.beforeunloadHandler())
@@ -94,14 +113,29 @@ export default {
       logout_(this.$store.getters.userId);
     },
     getFriendList() {
-      this.$store
-        .dispatch("GetMyFriendList", this.$store.getters.userId)
-        .then(response => {})
-        .catch(error => {
+      getMyFriendList(this.$store.getters.userId).then(res =>{
+        const data = res.data.data;
+        this.myFriendList = data
+        this.$store.dispatch("GetAllFriend", data).then(res =>{});
+      })
+    },
+    getGroupList(){
+      getMyGroupList(this.$store.getters.userId)
+        .then(res => {
+          this.myGroupList = res.data.data;
+          this.$store.dispatch("GetMyGroupChat", res.data.data);
+          // console.log(this.myGroupList);
+        })
+        .catch((error) => {
           console.log(error);
-        });
+        })
+    },
+    toHome(){
+      this.$router.push({path:"/home"});
     },
     logout(){
+      // const sock = this.$store.getters.sock;
+      // sock.closeMyself();
       this.$router.push({path:"/login"})
       logout_(this.$store.getters.userId);
     },
@@ -123,8 +157,14 @@ export default {
     toPath2() {
       this.$router.push({ path: "/solveRequest" });
     },
+    toPath4(){
+      this.$router.push({path:"/newGroupChat"});
+    },
     toPath(groupid) {
       this.$router.push({ name: "friendList", params: { groupId: groupid } });
+    },
+    toPathGroup(id){
+      this.$router.replace({name: "groupChat", params: {groupNum: id}});
     }
   }
 };

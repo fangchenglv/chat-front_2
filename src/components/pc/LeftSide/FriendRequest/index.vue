@@ -145,7 +145,7 @@ export default {
               type: "success"
             });
           };
-          this.$router.push({path:"/home"});
+          this.$router.replace({path:"/home"});
         })
         .catch(err => {
           console.log("!!!!!!!!!!!!!!!!!!!!!!!!", err);

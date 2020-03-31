@@ -38,6 +38,23 @@ let router = new Router({
         keepAlive:true,
       }
     },
+    //新建群聊
+    {
+      path:'/newGroupChat',
+      component:() => import("../../components/pc/LeftSide/newGroupChat/index.vue"),
+      meta:{
+        keepAlive:true,
+      }
+    },
+    //进入指定群聊页
+    {
+      path:"/groupChat/:groupNum",
+      name:"groupChat",
+      component:() => import("../../components/pc/GroupChat/index.vue"),
+      meta:{
+        keepAlive:true,
+      }
+    },
     //添加新好友
     {
       path:'/requestFriend',

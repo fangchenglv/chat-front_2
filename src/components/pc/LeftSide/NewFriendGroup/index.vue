@@ -5,7 +5,8 @@
       <el-input 
         v-model="ruleForm.name" 
         style="width:85%;text-align:left;"
-        placeholder="添加分组名"></el-input>
+        placeholder="添加分组名">
+      </el-input>
     </el-form-item>
     <el-form-item >
       <el-button plain type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
@@ -35,18 +36,19 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          setFriendGroup(this.ruleForm.name, this.$store.getters.userId).then(responce=>{
-            const data = responce.data.status;
-            // console.log('tag', data);
-            if(data === "success"){
-              this.$message({
-                  message:"分组创建成功",
-                  type:"success"});
-              this.$router.push({path:"/home"});
-            }
-          }).catch(error=>{
-            console.log('!!!!!!!!!!!!!!!!', error);
-          })
+          setFriendGroup(this.ruleForm.name, this.$store.getters.userId)
+            .then(responce=>{
+              const data = responce.data.status;
+              // console.log('tag', data);
+              if(data === "success"){
+                this.$message({
+                    message:"分组创建成功",
+                    type:"success"});
+                this.$router.push({path:"/home"});
+              }
+            }).catch(error=>{
+              console.log('!!!!!!!!!!!!!!!!', error);
+            })
         } else {
             console.log('error submit!!');
             return false;

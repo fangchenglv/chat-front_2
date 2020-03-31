@@ -85,6 +85,41 @@ let router = new Router({
         keepAlive:false,
       }
     },
+    //新建群聊
+    {
+      path: "/newGroupChat",
+      component:() => import("../../components/mobile/FriendOperation/NewGroupChat/index.vue"),
+      meta:{
+        keepAlive:false,
+      }
+    },
+    //某群聊信息页
+    {
+      path: "/groupChat/:groupNum",
+      name: "groupChat",
+      component:() => import("../../components/mobile/GroupChat/index"),
+      meta:{
+        keepAlive:false,
+      },
+    },
+    //修改群名片
+    {
+      path: "/groupChat/:groupNum/newMessage",
+      name: "newMessage",
+      component: () => import("../../components/mobile/GroupChat/newGroupMessage"),
+      meta: {
+        keepAlive: false,
+      }
+    },
+    //添加新的群成员
+    {
+      path: "/groupChat/:groupNum/:groupId/newGroupChatMember",
+      name: "newGroupChatMember",
+      component:() => import("../../components/mobile/GroupChat/newGroupChatMember"),
+      meta:{
+        keepAlive:false,
+      }
+    },
     //好友列表页
     {
       path:'/friendList',
@@ -139,11 +174,8 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   if(!/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
     window.location.href = '/p_index.html#/'
-    // top.location.href = '/p_index.html'
-    // next()
     return
   }
-  // next({path:'/login'})
   next()
 })
 

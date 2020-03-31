@@ -1,23 +1,21 @@
 <template>
   <div id="app">
-    <div v-if="$route.meta.keepAlive">
-      <!-- <router-view></router-view> -->
+    <div v-if="$route.meta.keepAlive" style="height:100%">
       <keep-alive>
-        <Bottom-List></Bottom-List>
+        <BaseStruct></BaseStruct>
       </keep-alive>
-      <router-view></router-view>
     </div>
     <router-view v-if="!$route.meta.keepAlive"/>
   </div>
 </template>
 
 <script>
-import BottomList from '@/components/mobile/BottomList/index'
+import BaseStruct from '@/components/mobile/BaseStruct/index'
 
 export default {
   name: 'App',
   components:{
-    BottomList,
+    BaseStruct,
   }
 }
 </script>
@@ -29,13 +27,8 @@ html,body,#app {
   -moz-osx-font-smoothing: grayscale;
   text-align:center;
   color: #2c3e50;
-  margin-top: 0px;
+  margin-top: 0rem;
   height: 100%;
-  font-size: 8px;
-
   background-color:whitesmoke;
-}
-#app div{
-  
 }
 </style>

@@ -1,6 +1,5 @@
 <template>
   <div class="head">
-
     <van-cell-group title="好友操作">
       <van-cell title="新建好友分组" is-link @click="newGroup" />
       <van-cell title="添加新的好友" is-link @click="newFriend" />
@@ -8,7 +7,7 @@
       <van-cell title="查询已经处理的好友申请" is-link @click="historyRequest" />
     </van-cell-group>
     <van-cell-group title="群组操作">
-      暂时为空
+      <van-cell title="新建群聊" is-link @click="newFriendChat" />
     </van-cell-group>
 
   </div>
@@ -18,6 +17,9 @@
 export default {
   name:"friendOperation",
   methods:{
+    newFriendChat(){
+      this.$router.push({path:"/newGroupChat"});
+    },
     newGroup(){
       this.$router.push({path:"/newFriendGroup"}).catch(err => {
         console.log(err);
@@ -41,6 +43,7 @@ export default {
   margin-top: 1rem;
   margin-bottom: 1rem;
   text-align: left;
+  background-color: rgb(250,250,250);
 }
 /* .operation{
   font-size: 0.5rem;

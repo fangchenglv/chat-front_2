@@ -46,3 +46,16 @@ Vue.use(Tabbar).use(TabbarItem);
 
 import { Divider } from 'vant';
 Vue.use(Divider);
+
+import { DropdownMenu, DropdownItem } from 'vant';
+Vue.use(DropdownMenu);
+Vue.use(DropdownItem);
+
+import { Uploader } from 'vant';
+Vue.use(Uploader);
+
+import { Overlay } from 'vant';
+Vue.use(Overlay);
+
+import { Form } from 'vant';
+Vue.use(Form);

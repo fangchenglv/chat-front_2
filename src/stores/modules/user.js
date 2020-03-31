@@ -27,6 +27,7 @@ const user = {
     socket : process.env.BASE_API,
     userAvatar:"",
     unreadList:[],
+    myGroupChat:[],
   },
   mutations: {
     SET_USERID: (state, id) => {
@@ -61,10 +62,10 @@ const user = {
     },
     SET_ALLFRIEND(state, list){
       state.allFriend = list;
+    },
+    SET_MYGROUPCHAT(state, data){
+      state.myGroupChat = data;
     }
-    // UPDATE_WEBSOCKET(state, sock){
-    //   state.socket = sock;
-    // },
   },
   actions: {
     //保存后台地址
@@ -83,10 +84,6 @@ const user = {
         login(name, pass)
           .then(response => {
             const data = response.data.data; //是接口返回的参数
-            // console.log('!!!!!!!!!!!!!!!!!!!!!', data)
-            // console.log('!!!!!!!!!!!!!', data.id)
-            // const wssUrl = 'wss://10.112.48.143:8890/chat/' + data.id
-            // console.log(wssUrl)
             commit("SET_USERID", data.id);
             commit("SET_USERROLE", data.userRole);
             commit("SET_USERSIGN", data.userSign);
@@ -107,23 +104,38 @@ const user = {
     }, id) {
       return new Promise((resolve, reject) => {
         getMyFriendList(id)
-          .then(response => {
-            const data = response.data.data;
-            commit("SET_MYFRIENDLIST", data);
-            let allFriend = [];
-            for(let i = 0; i < data.length; i++){
-              for(let j = 0; j < data[i].friends.length; j++){
-                allFriend.push(data[i].friends[j]);
-              }
+        .then(response => {
+          const data = response.data.data;
+          commit("SET_MYFRIENDLIST", data);
+          let allFriend = [];
+          for(let i = 0; i < data.length; i++){
+            for(let j = 0; j < data[i].friends.length; j++){
+              allFriend.push(data[i].friends[j]);
             }
-            commit("SET_ALLFRIEND", allFriend);
-            // console.log(allFriend);
-            resolve(response);
-          })
-          .catch(error => {
-            reject(error);
-          });
+          }
+          commit("SET_ALLFRIEND", allFriend);
+          // console.log(allFriend);
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
       });
+    },
+    //得到好友列表的整形数据
+    GetAllFriend({commit}, data){
+      commit("SET_MYFRIENDLIST", data);
+      let allFriend = [];
+      for(let i = 0; i < data.length; i++){
+        for(let j = 0; j < data[i].friends.length; j++){
+          allFriend.push(data[i].friends[j]);
+        }
+      }
+      commit("SET_ALLFRIEND", allFriend);
+    },
+    //得到自己加的群聊的详细数据
+    GetMyGroupChat({commit}, data){
+      commit("SET_MYGROUPCHAT", data);
     },
     //得到离线消息列表
     GetUnreadMsgList({commit}, id){

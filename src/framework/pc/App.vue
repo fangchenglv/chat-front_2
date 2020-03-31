@@ -70,10 +70,12 @@ body{
 }
 .el-main {
   color: #333;
-  width: 75%;
+  width: 95%;
   padding:0.5rem 0.2rem 0.1rem 0.2rem;
+  text-align: center;
   margin: 0 auto;
-  
+  height: 100%;
+  overflow: auto;
 }
 .el-container{
   height: 100%;

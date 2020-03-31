@@ -35,6 +35,7 @@
 <script>
 import WebSocketClass from '../../../api/webSocket'
 import {mapGetters} from 'vuex'
+import {getMyFriendList} from '../../../api/friendOperation'
 
 export default {
   name: 'login',
@@ -67,16 +68,23 @@ export default {
           const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
           //产品环境地址
           // const wsUrl = "wss://127.0.0.1:8081/ws";
-          this.$store.dispatch('START_WEBSOCKET',  wsUrl, null, "聊天系统").then(res =>{
-            console.log("页面连接成功websocket");
+          let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
+          this.$store.dispatch('StartWebsocket',  [wsUrl, "聊天系统", regisMsg]).then(res =>{
+            // console.log("页面连接成功websocket");
           }).catch(err =>{
             console.log(err);
           });
           this.websock = this.$store.getters.sock;
-          this.websock.connect(JSON.stringify({"userId" : this.userId,"type" : "REGISTER"}));
+          this.websock.connect(JSON.stringify({"userId" : "" + this.userId,"type" : "REGISTER"}));
           this.loading = false;
-          this.$router.push({path:'/chatList'});
+          this.$router.replace({path:'/chatList'});
           // this.$router.push({path: '/home'});
+          this.$store
+            .dispatch("GetMyFriendList", this.$store.getters.userId)
+            .then(response => {})
+            .catch(error => {
+              console.log(error);
+            });
         })
         .catch(() => {
           this.loading = false;

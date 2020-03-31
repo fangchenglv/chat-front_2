@@ -44,16 +44,13 @@
 </template>
 
 <script>
-// import Header from "@/components/header";
 import { isvalidUserName } from "../../../utils/validate";
 import { callbackify } from "util";
 import {mapGetters} from "vuex"
+// import messageHandle from "../../../api/handleWebsocket"
 
 export default {
   name: "loginPage",
-  // components: {
-  //   Header
-  // },
   data() {
     let validateUsername = (rule, value, callback) => {
       if (value === "") {
@@ -98,18 +95,21 @@ export default {
           this.$store
             .dispatch("Login", this.ruleForm1) //调用的是store里面的Login函数，传入参数是自己的表单
             .then(() => {
-              //连接成功https后连接websocket
               // 开发环境地址
               const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
               //产品环境地址
               // const wsUrl = "wss://127.0.0.1:8081/ws";
-              this.$store.dispatch('START_WEBSOCKET',  wsUrl, null, "聊天系统").then(res =>{
-                console.log("页面连接成功websocket");
+              let uid = this.userId;
+              uid = "" + uid;
+              // url, msgCallback, name, regisMsg
+              let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
+              this.$store.dispatch('StartWebsocket',  [wsUrl,  "网页聊天", regisMsg]).then(res =>{
+                // console.log("页面连接成功websocket");
               }).catch();
               this.websock = this.$store.getters.sock;
-              this.websock.connect(JSON.stringify({"userId" : this.userId,"type" : "REGISTER"}));
+              this.websock.connect(JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"}));
               this.loading = false;
-              this.$router.push({ path: "/home" }); //这儿有问题，之后改路由的时候好好看看！
+              this.$router.replace({ path: "/home" }); //这儿有问题，之后改路由的时候好好看看！
             })
             .catch(() => {
               this.loading = false;

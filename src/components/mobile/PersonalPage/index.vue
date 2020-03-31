@@ -1,6 +1,19 @@
 <template>
-  <div class="head">个人信息页
-    <van-button @click="beforeunloadHandler">退出</van-button>
+  <div class="head">
+    <img src= "myAvator" style="background-color:rgb(250,250,250)"/>
+    <van-divider style="margin: 0rem;"/>
+    <p style="margin: 0rem;padding:0.25rem 0rem;background-color: rgb(250, 250, 250);font-size:0.5rem">
+      用户名:{{myName}}
+    </p>
+    <van-divider style="margin: 0rem;"/>
+    <p style="margin: 0rem;padding:0.25rem 0rem;background-color: rgb(250, 250, 250);font-size:0.5rem">
+      用户昵称:{{myNickname}}
+    </p>
+    <van-divider style="margin: 0.1rem;"/>
+    <div style="background-color:rgb(250, 250, 250);">
+      <p @click="beforeunloadHandler" style="margin: 0rem;padding:0.25rem 0rem;font-size:0.5rem">登出</p>
+    </div>
+    
   </div>
   <!-- <van-button>退出</van-button> -->
 </template>
@@ -10,6 +23,13 @@ import { logout_ } from "@/api/login";
 
 export default {
   name:'personalPage',
+  data(){
+    return{
+      myName: this.$store.getters.userName,
+      myAvator: this.$store.getters.userAvatar,
+      myNickname: this.$store.getters.userNickname,
+    }
+  },
   methods:{
     beforeunloadHandler(){
       this.$router.push({path:"/login"});

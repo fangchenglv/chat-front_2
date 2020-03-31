@@ -3,7 +3,7 @@
     <div v-if="findList !== []">
     <el-row>
       <el-col :span="10" v-for="item in findList" :key="item.id" :offset="1">
-        <el-card style="height:5rem">
+        <el-card >
           <img :src="item.avatar" class="image"/>
           <p style="font-size:0.5rem">好友名: {{item.userName}}</p>
           <div class="friendG">

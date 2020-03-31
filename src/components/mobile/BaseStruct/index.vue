@@ -1,37 +1,27 @@
 <template>
-  <div>
-    
-    <div class="head"><span>{{tit}}</span></div>
-    <!-- <van-row class="foot">
-        <van-col span="6" class="list" @click="chatList">
-          <van-icon name="chat-o"></van-icon>
-          <span>聊天</span>
-        </van-col>
-        <van-col span="6" class="list" @click="friendList">
-          <van-icon name="chat-o"></van-icon>
-          <span>通讯录</span>
-        </van-col>
-        <van-col span="6" class="list" @click="manage">
-          <van-icon name="manager-o"></van-icon>
-          <span>好友操作</span>
-        </van-col>
-        <van-col span="6" class="list" @click="ownPage">
-          <van-icon name="user-o"></van-icon>
-          <span>我</span>
-        </van-col>
-    </van-row> -->
-    <van-tabbar v-model="active">
+  <div style="height:100%">
+    <div class="head">
+      <span>{{tit}}</span>
+    </div>
+    <!-- <van-nav-bar
+      :title="tit"
+    /> -->
+    <!-- <van-divider style="margin-bottom:1rem"></van-divider> -->
+
+    <div class="medium" >
+      <router-view></router-view>
+    </div>
+
+    <van-tabbar v-model="active" class="foot">
       <van-tabbar-item icon="chat-o" @click="chatList">聊天</van-tabbar-item>
       <van-tabbar-item icon="friends-o" @click="friendList">通讯录</van-tabbar-item>
-      <van-tabbar-item icon="manager-o" @click="manage">好友操作</van-tabbar-item>
+      <van-tabbar-item icon="manager-o" @click="manage">操作</van-tabbar-item>
       <van-tabbar-item icon="user-o" @click="ownPage">我</van-tabbar-item>
     </van-tabbar>
-    
   </div>
 </template>
 
 <script>
-// import { logout_ } from "@/api/login";
 
 export default {
   name:"Bottom",
@@ -74,7 +64,6 @@ export default {
 
 <style scoped>
 .head{
-  /* background: #ddd; */
   background-color: #fff;
   font-size: 0.4rem;
   width: 100%;
@@ -82,17 +71,13 @@ export default {
   left: 0rem;
   top: 0rem;
   line-height: 1rem;
+  margin-bottom: 0.1rem;
 }
-/* .foot{
-  background-color:#ddd;
-  font-size: 0.4rem;
+.medium{
+  height: 100%;
+  margin-top: 1.1rem; 
+}
+.foot{
   width: 100%;
-  position:absolute;
-  left: 0rem;
-  bottom: 0rem;
-  
 }
-.list{
-  line-height: 1rem;
-} */
 </style>

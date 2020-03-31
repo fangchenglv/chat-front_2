@@ -11,6 +11,76 @@ export function getMyFriendList(userId) {
     }
   })
 }
+//新建群聊
+export function buildNewGroupChat(userId, groupName, description){
+  return request({
+    url: "/group/add",
+    method: "post",
+    data: {
+      userId:userId, 
+      groupName:groupName, 
+      description:description
+    }
+  })
+}
+//得到自己的群组列表
+export function getMyGroupList(userId){
+  return request({
+    url:"/groupUser/getGroupByUserId" + `?userId=${userId}`,
+    method:"get",
+  })
+}
+//获取群成员
+export function getMyGroupChatPerson(id){
+  return request({
+    url:"/groupUser/getMemberByGroupId" + `?groupId=${id}`,
+    method:"get",
+  })
+}
+//修改群信息
+export function changeGroupChatInfo(groupId, groupName, description){
+  return request({
+    url:"/group/update",
+    method:"post",
+    data: {
+      groupId:groupId,
+      groupName:groupName,
+      description:description
+    }
+  })
+}
+//退出群聊
+export function quitOneGroupChat(groupId, userId){
+  return request({
+    url:"/group/quit",
+    method:"post",
+    data:{
+      groupId,
+      userId
+    }
+  })
+}
+//解散群聊
+export function deleteMyGroupChat(groupId){
+  return request({
+    url:"/group/delete",
+    method: "post",
+    data: {
+      groupId
+    }
+  })
+}
+//批量添加群成员
+export function addNewGroupMember(groupId, userIds){
+  return request({
+    url: "/groupUser/batchAdd",
+    method :"post",
+    data:{
+      groupId,
+      userIds
+    }
+  })
+}
 //加载自己与好友的历史聊天记录
 export function getHistoryChatWithFriendId(params){
   return request({
@@ -97,16 +167,9 @@ export function sendMessage(param, toId){
     url:"/chat/push/"+toId,
     method:"post",
     data:param,
-
-    // transformRequest:[function(data){
-    //   return Qs.stringify(data);
-    // }],
-    // headers:{
-    //   "Content-type":'application/x-www-form-urlencoded',
-    // }
   })
 }
-//聊天：获得离线好友信息列表
+//聊天：获得离线好友个人信息的列表，不是具体聊天内容
 export function getUnreadMsgList(userId){
   return request({
     url:"/chat/unreadMsgList",
@@ -133,6 +196,7 @@ export function getUnreadMessageList(toUserId, fromUserId){
     }
   })
 }
+
 // //登出
 // export function logout_(userId){
 //   return request({
