@@ -50,6 +50,7 @@ import FriendItem from "./FriendItem"
 import MyItem from './MyItem';
 import { type } from 'os';
 import Data from 'vue';
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -71,53 +72,144 @@ export default {
       myAvator:this.$store.getters.userAvatar,
       friendNickName:this.$route.params.name,
       friendAvator:this.$route.params.avatar,
+      // currendStartChatList:this.$websocket.getters.privateMessage(this.friendId),
       // sendImage:this.sendMsg,
       // messageId : 1,
       };
   },
+  computed:{
+    currendStartChatList:{
+      get(){
+        if (this.$websocket.getters.privateMessage(this.friendId) === undefined || this.$websocket.getters.privateMessage(this.friendId) === null) {
+          return [];
+        }
+        return this.$websocket.getters.privateMessage(this.friendId)
+      },
+      set(val){
+      }
+    },
+    otherChatList:{
+      get(){
+        return this.$websocket.state.privateMessage
+      },
+      set(){
+      }
+    }
+  },
   methods: {
     init(){
-      this.websock = this.$store.getters.sock;
+      this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
-      // console.log(this.sendImage);
-      // this.websock.connect(JSON.stringify({"userId" : this.userId,"type" : "REGISTER"}));
+      this.ParparePrivateChatMessage();
       this.websockOnMessage();
     },
     websockOnMessage(){
-      // this.websock.ws.onmessage = e =>{
-      //   const data = JSON.parse(e.data);
-      //   console.log("得到的数据啊", data);
-      //   if (data.status === 200 && data.data.fromUserId == this.$route.params.friendId){
-      //     let msgId = -1;
-      //     if(data.data.type === "SINGLE_SENDING"){
-      //       let dat = data.data;
-      //       msgId = 0;
-      //       let param = {
-      //       "fromUser":{"id":this.$route.params.friendId,
-      //       "nickName": this.$route.params.name,
-      //       "avatar":this.$route.params.avatar}, 
-      //       "toUser":{"id":this.$store.getters.userId, 
-      //       "nickName":this.$store.getters.userNickname, 
-      //       "avatar": this.$store.getters.userAvatar}, 
-      //       "message":dat.content,
-      //       "id": msgId
-      //       };
-      //     }
-      //     else if (data.data.type === "SINGLE_SENDING_IMG"){//先留下口子
-      //     } else {return;}
+      let param = null;
+      this.$websocket.state.websock.onmessage = e =>{
+        const data = JSON.parse(e.data);
+        // console.log("得到的数据啊", data);
+        if(data.data.type !== "REGISTER" && data.status === 200){
+          if (data.data.fromUserId == this.friendId){
+            // console.log("难道走了这儿")
+            let msgId = -1;
+            if(data.data.type === "SINGLE_SENDING"){
+              let dat = data.data;
+              msgId = 0;
+              param = {
+                "fromUser":{"id":this.$route.params.friendId,
+                            "nickName": this.$route.params.name,
+                            "avatar":this.$route.params.avatar}, 
+                "toUser":{"id":this.$store.getters.userId, 
+                          "nickName":this.$store.getters.userNickname, 
+                          "avatar": this.$store.getters.userAvatar}, 
+                "message":dat.content,
+                "id": msgId
+              };
+            }
+            else if (data.data.type === "SINGLE_SENDING_IMG"){
+              //先留下口子
+            } else {return;}
 
-      //     //添加到信息列表，以便展示信息
-      //     if (! this.messageList){
-      //       this.messageList = [param];
-      //     }
-      //     else{
-      //       this.messageList.push( param );
-      //     }
-      //     // this.messageId = this.messageId + 1; 
-      //   } else if (data.status === 200 && data.data.fromUserId !== this.$route.params.friendId){
-      //     //不是自己这个聊天框的信息，怎么处理。
-      //   }
-      // }
+            //添加到信息列表，以便展示信息
+            if (! this.messageList){
+              this.messageList = [param];
+            }
+            else{
+              this.messageList.push( param );
+            }
+            this.currendStartChatList.push(data.data)
+            // console.log("得到的数据放入数组中了", this.currendStartChatList)
+          } else{
+          // else if (data.data.fromUserId !== this.friendId){
+            //不是自己这个聊天框的信息，怎么处理。
+            if (/Android|iPhone|SymbianOS|iPad|iPod/i.test(navigator.userAgent)){
+              this.$toast("新的好友信息，请注意查看");
+            } else {
+              this.$message("新的好友信息，请注意查看");
+            }
+            console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
+            if(this.$websocket.state.privateMessage.find((val, ind) => {return (""+ind) === data.data.fromUserId })){
+              this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
+            } else{
+              this.$websocket.state.privateMessage[data.data.fromUserId] = [data.data];
+            }
+            // if(this.otherChatList.find((val, ind) => {
+            //   console.log("ind", typeof ind, ind);
+            //   console.log("fromUser", typeof data.data.fromUserId, data.data.fromUserId)
+            //   return ind === data.data.fromUserId })){
+            //   this.otherChatList[data.data.fromUserId].push(data.data);
+            // } else{
+            //   this.otherChatList[data.data.fromUserId] = [data.data];
+            // }
+            console.log("其他人发送消息以后是否更新", this.$websocket.state.privateMessage)
+          }
+        }
+      }
+    },
+    ParparePrivateChatMessage(){
+      //初始化数据吧
+      if (!this.currendStartChatList) {
+        // this.currendStartChatList = [];
+        return ;
+      }
+      let param = null, msgId = -1;
+      this.currendStartChatList.forEach(data => {
+        if(data.type === "SINGLE_SENDING"){
+          msgId = 0;
+          if (data.fromUserId === this.friendId) {
+            param = {
+              "fromUser":{"id":this.$route.params.friendId,
+                          "nickName": this.$route.params.name,
+                          "avatar":this.$route.params.avatar
+                          }, 
+              "toUser":{"id":this.$store.getters.userId, 
+                        "nickName":this.$store.getters.userNickname, 
+                        "avatar": this.$store.getters.userAvatar
+                        }, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
+          else {
+            param = {
+              "fromUser":{"id":this.$store.getters.userId, 
+                          "nickName":this.$store.getters.userNickname, 
+                          "avatar": this.$store.getters.userAvatar
+                          },
+              "toUser":{"id":this.$route.params.friendId,
+                        "nickName": this.$route.params.name,
+                        "avatar":this.$route.params.avatar
+                        }, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
+        }
+        else if (data.type === "SINGLE_SENDING_IMG"){
+          //先留下口子
+        }
+        this.messageList.push(param);
+      })
     },
     handleFile(event){
       let data = event.target.files[0];
@@ -128,12 +220,9 @@ export default {
         let reader = new FileReader();
         reader.onload = function(e){
           me.imageFile = e.target.result;
-          // console.log(me.imageFile);
           me.sendMsg();
         } 
         reader.readAsDataURL(data);
-        // me.sendMsg();
-        // console.log("!!!!!!!:1", "2", me.imageFile);
       } else if(!data) {
         //没数据，退出
         return;
@@ -141,61 +230,59 @@ export default {
         //处理文件
       }
     },
-    // var sendImage = sendMsg;
     sendMsg(){
       let data = null;
       let param = null;
-      const toId = this.$route.params.friendId;
       if (this.message.trim() === "" && this.imageFile.trim() === ""){
         this.$message.error("输入信息不能为空");
         return
       }
-      if(this.websock.status === 'open'){
-        if(this.imageFile !== ""){
-          data = {                    
+      if(this.imageFile !== ""){
+        data = {                    
           "fromUserId" : ""+this.userId,
-          "toUserId" : ""+toId,
+          "toUserId" : ""+this.friendId,
           "content" : ""+this.imageFile,
-          "type" : "SINGLE_SENDING_IMG"};
-          param = {
+          "type" : "SINGLE_SENDING_IMG"
+        };
+        param = {
           "fromUser":{"id":this.$store.getters.userId,
-          "nickName":this.$store.getters.userNickname,
-          "avatar":this.$store.getters.userAvatar}, 
+                      "nickName":this.$store.getters.userNickname,
+                      "avatar":this.$store.getters.userAvatar}, 
           "toUser":{"id":this.$route.params.friendId, 
-          "nickName":this.$route.params.name, 
-          "avatar":this.$route.params.avatar}, 
+                    "nickName":this.$route.params.name, 
+                    "avatar":this.$route.params.avatar}, 
           "message":this.imageFile,
           "id": 1
-          };
-        }
-        if(this.message !== ""){
-          data = {                    
+        };
+      }
+      if(this.message !== ""){
+        data = {                    
           "fromUserId" : ""+this.userId,
-          "toUserId" : ""+toId,
+          "toUserId" : ""+this.friendId,
           "content" : ""+this.message,
-          "type" : "SINGLE_SENDING"};
-          param = {
+          "type" : "SINGLE_SENDING"
+        };
+        param = {
           "fromUser":{"id":this.$store.getters.userId,
-          "nickName":this.$store.getters.userNickname,
-          "avatar":this.$store.getters.userAvatar}, 
+                      "nickName":this.$store.getters.userNickname,
+                      "avatar":this.$store.getters.userAvatar}, 
           "toUser":{"id":this.$route.params.friendId, 
-          "nickName":this.$route.params.name, 
-          "avatar":this.$route.params.avatar}, 
+                    "nickName":this.$route.params.name, 
+                    "avatar":this.$route.params.avatar}, 
           "message":this.message,
           "id": 0
-          };
-        }
-        
-        this.websock.sendHandle(JSON.stringify(data));
-        this.messageList.push(param);
-        // console.log("11111", this.messageList);
-        this.message = "";
-        this.imageFile = "";
-        this.websockOnMessage();
+        };
       }
+      this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId]);
+      this.currendStartChatList.push(data);
+      // console.log(this.currendStartChatList)
+      this.messageList.push(param);
+      this.message = "";
+      this.imageFile = "";
+      this.websockOnMessage();
     },
     getTime(){
-      let myTime = new Data('December 17, 1995 03:24:00');
+      let myTime = new Date('December 17, 1995 03:24:00');
       let y = myTime.getFullYear();
       let m = myTime.getMonth() + 1;
       let d = myTime.getData();
@@ -212,8 +299,6 @@ export default {
         if(this.unreadList){
           this.unreadList.forEach((data) =>{
             if(data.fromUser.id == this.userid){
-              // data.id = this.messageId;
-              // this.messageId = this.messageId + 1;
               if(!this.messageList){
                 this.messageList = [data]; 
               }else{
@@ -231,13 +316,17 @@ export default {
       }).catch()
     },
   },
-  mounted() {
+  beforeMount() {
     // console.log(this);
     this.init();
-    },
+  },
+  beforeDestroy(){
+    // this.otherChatList[this.friendId] = this.currendStartChatList;
+    // this.$websocket.state.privateMessage = this.otherChatList;
+    this.$websocket.state.privateMessage[this.friendId] = this.currendStartChatList;
+    this.$websocket.dispatch("StopChatId");
+  }
 };
-// console.log(this)
-// var sendImage = vm.sendMsg;
 </script>
 <style scoped>
 .el-container{

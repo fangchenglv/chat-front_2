@@ -1,3 +1,7 @@
+// import  privateMessage from "../api/Global"
+// import groupMessage from "../api/Global"
+// import getPrivateMessage from "../api/Global";
+
 class WebSocketClass {
     /**
      * @description: 初始化实例属性，保存参数
@@ -6,11 +10,12 @@ class WebSocketClass {
      * @param {String} name 可选值 用于区分ws，用于debugger
      */
     constructor(url, name, regisMsg) {
+        
         this.url = url;
         // this.msgCallback = msgCallback;
         this.name = name;
         this.regisMsg = regisMsg;
-
+        // this.msgCallback = someFn;
         this.ws = null;  // websocket对象
         this.status = null; // websocket是否关闭
         this.e = null;
@@ -18,27 +23,26 @@ class WebSocketClass {
         this.pongT = undefined;
     }
     connect(data) {
-        // console.log("注册信息", this.regisMsg)
-        // 新建 WebSocket 实例
         this.ws = new WebSocket(this.url);
-        // 监听服务器端返回的信息
         this.ws.onmessage = function(e){
-            console.log(e.data);
+            // console.log(privateMessage, groupMessage);
+            // console.log("在socket类里面", e.data);
+            // privateMessage = e.data;
+            // console.log(privateMessage);
+            // console.log(getPrivateMessage)
+            // getPrivateMessage(e.data);
         }
-        //开启websocket服务
         this.ws.onopen = setTimeout( e => {
             this.status = 'open';
-            // this.heartCheck();
+            this.heartCheck();
             if (data !== undefined && this.ws.readyState === 1) {
                 this.regisMsg = data;
                 this.sendHandle(data);
             }
         }, 1000);
-        // ws关闭回调
         this.ws.onclose = e => {
             this.closeHandle(e); // 判断是否关闭
         }
-        // ws出错回调
         this.ws.onerror = e => {
             this.closeHandle(e); // 判断是否关闭
         }

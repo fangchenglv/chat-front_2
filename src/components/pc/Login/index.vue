@@ -103,11 +103,14 @@ export default {
               uid = "" + uid;
               // url, msgCallback, name, regisMsg
               let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
-              this.$store.dispatch('StartWebsocket',  [wsUrl,  "网页聊天", regisMsg]).then(res =>{
-                // console.log("页面连接成功websocket");
-              }).catch();
-              this.websock = this.$store.getters.sock;
-              this.websock.connect(JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"}));
+              // this.$store.dispatch('StartWebsocket',  [wsUrl,  "网页聊天", regisMsg]).then(res =>{
+              //   // console.log("页面连接成功websocket");
+              // }).catch();
+              // this.websock = this.$store.getters.sock;
+              // this.websock.connect(JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"}));
+              this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg]).then((res) =>{
+                // console.log("可能登录了吧", res);
+              })
               this.loading = false;
               this.$router.replace({ path: "/home" }); //这儿有问题，之后改路由的时候好好看看！
             })

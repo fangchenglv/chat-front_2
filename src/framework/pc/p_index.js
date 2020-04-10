@@ -14,9 +14,12 @@ import Vuex from 'vuex'
 import store from '@/stores'
 import "lib-flexible/flexible"
 
+import Websocket from "../../stores/WebSocket";
+
 Vue.use(ElementUI)
 Vue.use(VueAxios, axios)
 Vue.use(Vuex)
+Vue.prototype.$websocket = Websocket
 
 Vue.config.productionTip = false
 
