@@ -34,7 +34,7 @@ export default {
       getUnreadMsgList(this.$store.getters.userId).then(response =>{
         // console.log("发来信息的人",response);
         this.unreadFriend = response.data.data;
-        console.log(this.unreadFriend);
+        // console.log(this.unreadFriend);
       })
     },
     toHistoryPage(id){

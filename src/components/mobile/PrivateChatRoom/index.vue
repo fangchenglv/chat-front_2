@@ -10,9 +10,9 @@
 
     <!-- 聊天内容主体 -->
     <div id="body">
-      <div v-for="item in this.messageList" :key="item.id">
-        <FriendItem v-if="item.fromUser.id == userId" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></FriendItem>
-        <MyItem v-else :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
+      <div v-for="(item, ind) in this.messageList" :key="ind">
+        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></FriendItem>
+        <MyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
       </div>
     </div>
     
@@ -25,10 +25,13 @@
         <div style="width:0.5rem; float:right">
           <van-dropdown-menu direction="up">
             <van-dropdown-item ref="item">
-              <van-uploader :before-read="beforeRead" :after-read="afterRead">
-                <van-button icon="photo" type="primary" plain style="padding-left:3.9rem;padding-right:3.9rem" >上传图片</van-button>
+              <van-uploader :before-read="beforeReadImg" :after-read="afterReadImg">
+                <van-button type="primary" plain style="padding-left:3.9rem;padding-right:3.9rem" >上传图片</van-button>
               </van-uploader >
-              <van-button block type="info" @click="onConfirm" plain>确认</van-button>
+              <van-uploader accept=".xls,.doc,.txt,.pdf" result-type="file" :before-read="beforeReadFile" :after-read="afterReadFile">
+                <van-button type="primary" plain style="padding-left:3.9rem;padding-right:3.9rem" >上传文件</van-button>
+              </van-uploader >
+              <van-button block type="info" @click="onConfirm" plain>返回</van-button>
             </van-dropdown-item>
           </van-dropdown-menu>
         </div>
@@ -56,89 +59,253 @@ export default {
       historyMessageList:[],    //历史消息列表
       unreadList:[],    //未读消息列表
       pic:this.$route.params.avatar,
-      friendId:this.$route.params.friendId,
+      friendId:""+this.$route.params.friendId,
       userId:this.$store.getters.userId,
       messageList:[],
-      messageId : 1,
+      // messageId : 1,
       friendName:this.$route.params.name,
-      files:null,
+      // files:null,
+      imageFile:[],
+      fileName:[],
       };
   },
-  watch:{
-    files:function (file, oldfile) {
-      console.log(file);
-    }
+  computed:{
+    currendStartChatList:{
+      get(){
+        if (this.$websocket.getters.privateMessage(this.friendId) === undefined || this.$websocket.getters.privateMessage(this.friendId) === null) {
+          return [];
+        }
+        return this.$websocket.getters.privateMessage(this.friendId)
+      },
+      set(val){
+      }
+    },
   },
   methods: {
     init(){
-      this.websock = this.$store.getters.sock;
-      this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
+      // console.log(typeof this.friendId)
+      // this.websock = this.$store.getters.sock;
+      // this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
       // console.log(this.websock);
       // this.websock.connect(JSON.stringify({"userId" : this.userId,"type" : "REGISTER"}));
+      this.$websocket.state.privateUnreadNumber[this.friendId] = 0;
+      this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
+      this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
+      this.ParparePrivateChatMessage();
       this.websockOnMessage();
+      // this.websockOnMessage();
     },
     websockOnMessage(){
-      this.websock.ws.onmessage = e =>{
+      let param = null;
+      this.$websocket.state.websock.onmessage = e =>{
         const data = JSON.parse(e.data);
-        // console.log(e);
-        console.log(data);
-        // console.log(data.data);
-        if (data.status == 200 && data.data.type == "SINGLE_SENDING" && data.data.fromUserId == this.$route.params.friendId){
-          const dat = data.data;
-          const param = {
-          "fromUser":{"id":this.$route.params.friendId,
-          "nickName": this.$route.params.name,
-          "avatar":this.$route.params.avatar}, 
-          "toUser":{"id":this.$store.getters.userId, 
-          "nickName":this.$store.getters.userNickname, 
-          "avatar": this.$store.getters.userAvatar}, 
-          "message":dat.content,
-          "id":this.messageId};
+        console.log("得到的数据啊", data);
+        if(data.status === -1){
+          this.$toast({
+            message:"请注意，用户离线",
+            position:"top"
+          })
+          this.websockOnMessage();
+          return;
+        }
+        if(data.data.type !== "REGISTER" && data.status === 200){
+          if (data.data.fromUserId == this.friendId){
+            let msgId = -1;
+            if(data.data.type === "SINGLE_SENDING"){
+              let dat = data.data;
+              msgId = 0;
+              param = {
+                "fromUser":{"id":this.$route.params.friendId,
+                            "nickName": this.$route.params.name,
+                            "avatar":this.$route.params.avatar}, 
+                "toUser":{"id":this.$store.getters.userId, 
+                          "nickName":this.$store.getters.userNickname, 
+                          "avatar": this.$store.getters.userAvatar}, 
+                "message":dat.content,
+                "id": msgId
+              };
+            }
+            else if (data.data.type === "SINGLE_SENDING_IMG"){
+              //先留下口子
+            } else {return;}
 
-          if (! this.messageList){
-            this.messageList = [param];
+            //添加到信息列表，以便展示信息
+            if (! this.messageList){
+              this.messageList = [param];
+            }
+            else{
+              this.messageList.push( param );
+            }
+            this.currendStartChatList.push(data.data)
+            // console.log("得到的数据放入数组中了", this.currendStartChatList)
+          } else{
+          // else if (data.data.fromUserId !== this.friendId){
+            //不是自己这个聊天框的信息，怎么处理。
+            // if (/Android|iPhone|SymbianOS|iPad|iPod/i.test(navigator.userAgent)){
+              // this.$toast("新的好友信息，请注意查看");
+              this.$toast({
+                message:"新的好友信息，请注意查看",
+                position:"top",
+              })
+            // } else {
+            //   this.$message("新的好友信息，请注意查看");
+            // }
+            // console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
+            if(this.$websocket.state.privateMessage.find((val, ind) => {return (""+ind) === data.data.fromUserId })){
+              this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
+              this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = this.$websocket.state.privateUnreadNumber[data.data.fromUserId] + 1;
+            } else{
+              this.$websocket.state.privateMessage[data.data.fromUserId] = [data.data];
+              this.$websocket.state.privateUnreadNumber[ata.data.fromUserId] = 1;
+            }
+            // console.log("其他人发送消息以后是否更新", this.$websocket.state.privateMessage)
           }
-          else{
-            this.messageList.push( param );
-          }
-          this.messageId = this.messageId + 1; 
-        }else{
-          return
         }
       }
     },
-    sendMsg(){
-      const toId = this.$route.params.friendId;
-      if(this.websock.status === 'open'){
-        const data = {                    
-          "fromUserId" : ""+this.userId,
-          "toUserId" : ""+toId,
-          "content" : ""+this.message,
-          "type" : "SINGLE_SENDING"};
-        this.websock.sendHandle(JSON.stringify(data));
-        // console.log("发送数据", data);
-        const param = {
-          "fromUser":{"id":this.$store.getters.userId,
-          "nickName":this.$store.getters.userNickname,
-          "avatar":this.$store.getters.userAvatar}, 
-          "toUser":{"id":this.$route.params.friendId, 
-          "nickName":this.$route.params.name, 
-          "avatar":this.$route.params.avatar}, 
-          "message":this.message,
-          "id":this.messageId};
-
-        this.messageId = this.messageId + 1;
-        this.messageList.push(param);
-        this.message = "";
-        this.websockOnMessage();
+    ParparePrivateChatMessage(){
+      //初始化数据吧
+      if (this.currendStartChatList.lenght <= 0) {
+        // this.currendStartChatList = [];
+        return ;
       }
+      console.log(this.currendStartChatList)
+      let param = null, msgId = -1;
+      this.currendStartChatList.forEach(data => {
+        console.log("哪儿不对啊", data)
+        if(data.type === "SINGLE_SENDING"){
+          msgId = 0;
+          // console.log("!!!!!!!!!", typeof data.fromUserId, typeof this.friendId)
+          if (data.fromUserId === this.friendId) {
+            param = {
+              "fromUser":{"id":this.$route.params.friendId,
+                          "nickName": this.$route.params.name,
+                          "avatar":this.$route.params.avatar
+                          }, 
+              "toUser":{"id":this.$store.getters.userId, 
+                        "nickName":this.$store.getters.userNickname, 
+                        "avatar": this.$store.getters.userAvatar
+                        }, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
+          else {
+            param = {
+              "fromUser":{"id":this.$store.getters.userId, 
+                          "nickName":this.$store.getters.userNickname, 
+                          "avatar": this.$store.getters.userAvatar
+                          },
+              "toUser":{"id":this.$route.params.friendId,
+                        "nickName": this.$route.params.name,
+                        "avatar":this.$route.params.avatar
+                        }, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
+        }
+        else if (data.type === "FILE_IMG_SINGLE_SENDING"){
+          //先留下口子
+        }
+        this.messageList.push(param);
+      })
     },
-    beforeRead(file, detail){
-      // console.log("!!!!!!!!!!!!!!!!!!!!!",file, detail);
+    sendMsg(){
+      let data = null;
+      let param = null;
+      if (this.message.trim() === "" && this.imageFile.length < 3 && this.fileName.length < 3){
+        this.$toast("输入信息不能为空");
+        return
+      }
+      if (this.fileName.length === 3) {
+        data = {
+          "fromUserId" : ""+this.userId,
+          "toUserId" : ""+this.friendId,
+          "originalFileName" : ""+this.fileName[0],
+          "fileUrl":"" + this.fileName[1],
+          "fileSize":"" + this.file[2],
+          "type" : "FILE_IMG_SINGLE_SENDING"
+        };
+        param = {
+          "fromUser":{"id":this.$store.getters.userId,
+                      "nickName":this.$store.getters.userNickname,
+                      "avatar":this.$store.getters.userAvatar}, 
+          "toUser":{"id":this.$route.params.friendId, 
+                    "nickName":this.$route.params.name, 
+                    "avatar":this.$route.params.avatar}, 
+          "message":this.fileName,
+          "id": 2
+        }
+      }
+      if(this.imageFile.length === 3){
+        data = {                    
+          "fromUserId" : ""+this.userId,
+          "toUserId" : ""+this.friendId,
+          "originalFileName":"" + this.imageFile[0],
+          "fileUrl": "" + this.imageFile[1],
+          "fileSize":"" + this.imageFile[2],
+          "type" : "FILE_IMG_SINGLE_SENDING"
+        };
+        param = {
+          "fromUser":{"id":this.$store.getters.userId,
+                      "nickName":this.$store.getters.userNickname,
+                      "avatar":this.$store.getters.userAvatar}, 
+          "toUser":{"id":this.$route.params.friendId, 
+                    "nickName":this.$route.params.name, 
+                    "avatar":this.$route.params.avatar}, 
+          "message":this.imageFile,
+          "id": 1
+        };
+      }
+      if(this.message !== ""){
+        data = {                    
+          "fromUserId" : ""+this.userId,
+          "toUserId" : ""+this.friendId,
+          "content" : ""+this.message,
+          "type" : "SINGLE_SENDING"
+        };
+        param = {
+          "fromUser":{"id":this.$store.getters.userId,
+                      "nickName":this.$store.getters.userNickname,
+                      "avatar":this.$store.getters.userAvatar}, 
+          "toUser":{"id":this.$route.params.friendId, 
+                    "nickName":this.$route.params.name, 
+                    "avatar":this.$route.params.avatar}, 
+          "message":this.message,
+          "id": 0
+        };
+      }
+      this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId]);
+      this.currendStartChatList.push(data);
+      // console.log(this.currendStartChatList)
+      this.messageList.push(param);
+      this.message = "";
+      this.imageFile = [];
+      this.fileName = []
+      this.websockOnMessage();
+    },
+    beforeReadImg(file, detail){
       return true;
     },
-    afterRead(file, detail){
-      console.log("!!!!!!!!!!!!!!!!!!!!!",file, detail);
+    afterReadImg(file, detail){
+      // let url = URL.createObjectURL(file);
+      // console.log(url);
+      this.imageFile = [file.name, file.content, file.size];
+      this.sendMsg()
+      // console.log("!!!!!!!!!!!!!!!!!!!!!",file);
+      // console.log("@@@@@@@", detail)
+    },
+    beforeReadFile(file, detail){
+      return true;
+    },
+    afterReadFile(file, detail){
+      console.log("!!!!!!!!!!!!!!!!!!!!!",file);
+      // console.log("@@@@@@@", detail)
+      // let url = URL.createObjectURL(file)
+      // console.log(url)
+      this.fileName = [file.name,file,file.size];
+      this.sendMsg()
     },
     onConfirm(){
       this.$refs.item.toggle();
@@ -157,11 +324,10 @@ export default {
     getUnreadList(fromId, toId){
       getUnreadMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
+        // console.log(this.unreadList);
         if(this.unreadList){
           this.unreadList.forEach((data) =>{
             if(data.fromUser.id == this.userid){
-              data.id = this.messageId;
-              this.messageId = this.messageId + 1;
               if(!this.messageList){
                 this.messageList = [data]; 
               }else{
@@ -184,7 +350,15 @@ export default {
   },
   mounted() {
     this.init();
-    },
+  },
+  beforeMount() {
+    // console.log(this);
+    this.init();
+  },
+  beforeDestroy(){
+    this.$websocket.state.privateMessage[this.friendId] = this.currendStartChatList;
+    this.$websocket.dispatch("StopChatId");
+  }
 };
 </script>
 

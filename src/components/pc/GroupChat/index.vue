@@ -10,6 +10,7 @@
           <h2 style="margin-top:0.3rem;margin-bottom:0.5rem"><strong>群名：</strong>{{form.name}}</h2>
           <span ><strong>群描述：</strong>{{form.descriptor}}</span>
           <div style="position:absolute;bottom:1rem;left:0.1rem;right:0.1rem;">
+            <el-button type="primary" plain @click="toGroupChatPage">进入群聊</el-button>
             <el-button type="primary" plain @click="dialogTableVisible = true">添加新成员</el-button>
             <el-button type="primary" plain @click="dialogFormVisible = true">修改群组信息</el-button>
             <el-button type="primary" plain @click="getGroupMember">群成员</el-button>
@@ -108,6 +109,9 @@ export default {
       this.form.name = "" + this.groupDetail.groupName;
       this.form.descriptor = "" + this.groupDetail.description;
       this.form.groupId = this.groupDetail.id;
+    },
+    toGroupChatPage(){
+      this.$router.push({name: "groupChatPage", params:{groupId: this.form.groupId, myId: this.myId, name:this.form.name}})
     },
     handleChange(){
       if(this.form.name.trim() === ""){

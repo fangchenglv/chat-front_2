@@ -65,7 +65,7 @@ export default {
       historyMessageList:[],    //历史消息列表
       unreadList:[],    //未读消息列表
       pic:this.$route.params.avatar,
-      friendId:this.$route.params.friendId,
+      friendId:""+this.$route.params.friendId,
       userId:this.$store.getters.userId,
       messageList:[],
       myNickName:this.$store.getters.userNickname,
@@ -98,6 +98,9 @@ export default {
   },
   methods: {
     init(){
+      // console.log(typeof this.friendId)
+      //要把未读数清零
+      this.$websocket.state.privateUnreadNumber[this.friendId] = 0;
       this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
       this.ParparePrivateChatMessage();
@@ -142,16 +145,14 @@ export default {
           } else{
           // else if (data.data.fromUserId !== this.friendId){
             //不是自己这个聊天框的信息，怎么处理。
-            if (/Android|iPhone|SymbianOS|iPad|iPod/i.test(navigator.userAgent)){
-              this.$toast("新的好友信息，请注意查看");
-            } else {
-              this.$message("新的好友信息，请注意查看");
-            }
-            console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
+            this.$message("新的好友信息，请注意查看");
+            // console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
             if(this.$websocket.state.privateMessage.find((val, ind) => {return (""+ind) === data.data.fromUserId })){
               this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
+              this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = this.$websocket.state.privateUnreadNumber[data.data.fromUserId] + 1;
             } else{
               this.$websocket.state.privateMessage[data.data.fromUserId] = [data.data];
+              this.$websocket.state.privateUnreadNumber[ata.data.fromUserId] = 1;
             }
             // if(this.otherChatList.find((val, ind) => {
             //   console.log("ind", typeof ind, ind);
@@ -161,7 +162,7 @@ export default {
             // } else{
             //   this.otherChatList[data.data.fromUserId] = [data.data];
             // }
-            console.log("其他人发送消息以后是否更新", this.$websocket.state.privateMessage)
+            // console.log("其他人发送消息以后是否更新", this.$websocket.state.privateMessage)
           }
         }
       }
@@ -176,6 +177,7 @@ export default {
       this.currendStartChatList.forEach(data => {
         if(data.type === "SINGLE_SENDING"){
           msgId = 0;
+          console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
           if (data.fromUserId === this.friendId) {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
@@ -213,16 +215,27 @@ export default {
     },
     handleFile(event){
       let data = event.target.files[0];
+      // console.log(data);
       let toId = this.$route.params.friendId;
       if(/.jpg|.jpeg|.png|.img/ig.test(data.name)){
         //处理图片
         let me = this;
-        let reader = new FileReader();
-        reader.onload = function(e){
-          me.imageFile = e.target.result;
-          me.sendMsg();
-        } 
-        reader.readAsDataURL(data);
+        //方式一：内存url   eg:blob:http://localhost:8080/b077141c-9d62-487b-9e3a-c8b93058aa10
+        me.imageFile = URL.createObjectURL(data);
+        console.log(me.imageFile);
+        me.sendMsg();
+        
+        //方式二：filereader
+        // let reader = new FileReader();
+        // reader.onload = function(e){
+          
+        //   console.log("读取到的图片",e)
+        //   me.imageFile = e.target.result;
+        //   me.sendMsg();
+        // } 
+        // reader.readAsDataURL(data);
+        //唉到底选哪个啊
+
       } else if(!data) {
         //没数据，退出
         return;
@@ -321,8 +334,6 @@ export default {
     this.init();
   },
   beforeDestroy(){
-    // this.otherChatList[this.friendId] = this.currendStartChatList;
-    // this.$websocket.state.privateMessage = this.otherChatList;
     this.$websocket.state.privateMessage[this.friendId] = this.currendStartChatList;
     this.$websocket.dispatch("StopChatId");
   }

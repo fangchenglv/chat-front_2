@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { Toast } from 'vant'
 import { Message } from 'element-ui'
+import createPersistedState from "vuex-persistedstate"
 
 Vue.use(Vuex)
 
@@ -10,13 +11,18 @@ export default new Vuex.Store({
     websock: null,
     regisMsg: "",
     privateMessage: new Array(),
-    groupMessage: {},
+    privateUnreadNumber: new Array(),
+    groupMessage: new Array(),
+    groupUnreadNumber: new Array(),
     currentFriendId:-1,
     currendGroupId:-1,
   },
   getters:{
     privateMessage:state => id => {
       return state.privateMessage[id];
+    },
+    groupMessage: state => id => {
+      return state.groupMessage[id];
     }
   },
   mutations:{
@@ -35,23 +41,28 @@ export default new Vuex.Store({
         // console.log("总数据", state.privateMessage);
         console.log("这是在websocket里面");
         let data = JSON.parse(e.data);
-        let friendId = parseInt(data.data.fromUserId);
         if(data.status === 200){
           //单聊信息
           if (data.data.type === "SINGLE_SENDING" || data.data.type === "FILE_MSG_SINGLE_SENDING"){
             // console.log("数据变化前", state.privateMessage);
             // console.log("有没有包含到底", state.privateMessage.count())
+            let friendId = parseInt(data.data.fromUserId);
             if(state.privateMessage.find((val, ind) => {
               return ind === friendId;
             })){
               state.privateMessage[friendId].push(data.data);
+              state.privateUnreadNumber[friendId] = state.privateUnreadNumber[friendId] + 1;
             } else{
               state.privateMessage[friendId] = [data.data];
+              state.privateUnreadNumber[friendId] = 1;
             }
             // console.log("数据变化后", state.privateMessage);
             // console.log("有没有包含到底", state.privateMessage.count())
             if (/Android|iPhone|SymbianOS|iPad|iPod/i.test(navigator.userAgent)){
-              Toast("新的好友信息，请注意查看");
+              Toast({
+                message:"新的好友信息，请注意查看",
+                position: "top"
+              });
             } else {
               Message("新的好友信息，请注意查看");
             }
@@ -59,11 +70,28 @@ export default new Vuex.Store({
           //群聊信息
           if (data.data.type === "GROUP_SENDING" || data.data.type === "FILE_MSG_GROUP_SENDING") {
             //仿照单聊信息实现
+            let GroupId = parseInt(data.data.toGroupId);
+            if (state.groupMessage.find((val, ind) => {
+                return ind === GroupId;
+              })) {
+              state.groupMessage[GroupId].push(data.data);
+              state.groupUnreadNumber[friendId] = state.groupUnreadNumber[friendId] + 1
+            } else {
+              state.groupMessage[GroupId] = [data.data];
+              state.groupUnreadNumber[friendId] = 1;
+            }
+            if (/Android|iPhone|SymbianOS|iPad|iPod/i.test(navigator.userAgent)) {
+              Toast({
+                message: "新的群信息，请注意查看",
+                position: "top"
+              });
+            } else {
+              Message("新的群信息，请注意查看");
+            }
           }
         } else {
           state.websock.send(state.regisMsg);
         }
-        // console.log("总数据", state.privateMessage);
       }
       state.websock.οnerrοr = function (e) { //错误
         console.log("ws错误!");
@@ -80,20 +108,33 @@ export default new Vuex.Store({
         }
       }, 30000)
     },
-
     WEBSOCKET_SEND(state, data) {
-      console.log("ws发送！");
       let id = data[1];
-      // console.log("privateMessage的数据类型是", typeof state.privateMessage, state.privateMessage instanceof Array, state.privateMessage instanceof Object)
+      console.log("!!!!", state.currendGroupId, this.state.currentFriendId)
       // if (state.privateMessage.has(id)) {
-      if (state.privateMessage.find((val, ind) => {
-        return ind === id;
-      })) {
-        state.privateMessage[id].push(JSON.parse( data[0] ));
-      } else {
-        state.privateMessage[id] = [JSON.parse( data[0] )];
+      if (state.currentFriendId !== -1) {
+        if (state.privateMessage.find((val, ind) => {
+            return ind === id;
+          })) {
+          state.privateMessage[id].push(JSON.parse(data[0]));
+        } else {
+          state.privateMessage[id] = [JSON.parse(data[0])];
+        }
+        state.websock.send(data[0]);
+        console.log("ws发送！", data[0]);
       }
-      state.websock.send(data[0]);
+      if (state.currendGroupId !== -1) {
+        console.log("应该发东西", data[0])
+        if (state.groupMessage.find((val, ind) => {
+            return ind === id;
+          })) {
+          state.groupMessage[id].push(JSON.parse(data[0]));
+        } else {
+          state.groupMessage[id] = [JSON.parse(data[0])];
+        }
+        state.websock.send(data[0]);
+        console.log("ws发送！", data[0]);
+      }
       // console.log("信息发送出去以后", state.privateMessage)
     },
     WEBSOCKET_FRIENDID(state, id){
@@ -118,7 +159,7 @@ export default new Vuex.Store({
     SendWebsocketMessage({
       commit
     }, data) {
-      // console.log(id);
+      // console.log(data);
       commit('WEBSOCKET_SEND', data)
     },
     StartChatId({commit},data){
@@ -130,11 +171,14 @@ export default new Vuex.Store({
       }
     },
     StopChatId({commit, state}){
-      console.log("销毁页面以后是否提交之前的聊天", state.privateMessage)
+      // console.log("销毁页面以后是否提交之前的聊天", state.privateMessage)
       commit("WEBSOCKET_FRIENDID", -1);
       commit("WEBSOCKET_GROUPID", -1);
     }
-  }
+  },
+  plugins: [new createPersistedState({
+    storage: window.sessionStorage,
+  })]
 })
 
 // function require(r) {

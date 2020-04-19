@@ -55,6 +55,15 @@ let router = new Router({
         keepAlive:true,
       }
     },
+    //具体的群聊里面
+    {
+      path: "/groupChatPage/:groupId/:myId/:name",
+      name:"groupChatPage",
+      component:() => import("../../components/pc/groupChatPage/index.vue"),
+      meta:{
+        keepAlive:true,
+      }
+    },
     //添加新好友
     {
       path:'/requestFriend',

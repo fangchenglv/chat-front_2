@@ -16,9 +16,12 @@ import FastClick from 'fastclick'
 //按需使用vantUi,主文件导入全部使用的组件
 import '../../utils/vant'
 
+import Websocket from "../../stores/WebSocket";
+
 Vue.use(VueAxios, axios)
 Vue.use(Vuex)
 
+Vue.prototype.$websocket = Websocket
 Vue.config.productionTip = false
 FastClick.attach(document.body)
 

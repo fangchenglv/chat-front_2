@@ -69,13 +69,16 @@ export default {
           //产品环境地址
           // const wsUrl = "wss://127.0.0.1:8081/ws";
           let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
-          this.$store.dispatch('StartWebsocket',  [wsUrl, "聊天系统", regisMsg]).then(res =>{
-            // console.log("页面连接成功websocket");
-          }).catch(err =>{
-            console.log(err);
-          });
-          this.websock = this.$store.getters.sock;
-          this.websock.connect(JSON.stringify({"userId" : "" + this.userId,"type" : "REGISTER"}));
+          this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg]).then((res) =>{
+            // console.log("可能登录了吧", res);
+          })
+          // this.$store.dispatch('StartWebsocket',  [wsUrl, "聊天系统", regisMsg]).then(res =>{
+          //   // console.log("页面连接成功websocket");
+          // }).catch(err =>{
+          //   console.log(err);
+          // });
+          // this.websock = this.$store.getters.sock;
+          // this.websock.connect(JSON.stringify({"userId" : "" + this.userId,"type" : "REGISTER"}));
           this.loading = false;
           this.$router.replace({path:'/chatList'});
           // this.$router.push({path: '/home'});

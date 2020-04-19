@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="11" v-for="item in this.unreadFriend" :key="item.friendId" :offset="1">
+      <el-col :span="11" v-for="(item,ind) in this.unreadFriend" :key="ind" :offset="1">
         <el-card >
           <img :src=item.fromUser.avatar alt="图片不存在" class="image" />
             <p style="font-size:0.5rem; ">昵称:{{item.fromUser.nickName}}</p>
@@ -42,24 +42,35 @@ export default {
   data(){
     return{
       unreadFriend:[],
+      unreadLeaveFriend:[],
+      privateUnreadNumber: this.$websocket.state.privateUnreadNumber,
+      groupUnreadNumber: this.$websocket.state.groupUnreadNumber,
+      // allFriend: [],
     }
   },
-  mounted(){
+  beforeMount(){
     this.init();
   },
   methods:{
     init(){
       this.$store
         .dispatch("GetMyFriendList", this.$store.getters.userId)
-        .then(response => {})
-        .catch(error => {
+        .then(response => {}).catch(error => {
           console.log(error);
         });
       getUnreadMsgList(this.$store.getters.userId).then(response =>{
-        // console.log("发来信息的人",response);
-        this.unreadFriend = response.data.data;
-        // console.log(this.unreadFriend);
+        this.unreadLeaveFriend = response.data.data;
+        // console.log(this.unreadLeaveFriend);
       })
+      let allFriend = this.$store.getters.allFriend;
+      let tmp = []
+      for (let i = 0; i < this.allFriend.length; i++) {
+        if (this.privateUnreadNumber[i] > 0 || this.privateUnreadNumber[i] !== undefined || i < this.privateUnreadNumber.length) {
+          tmp.push(this.allFriend[i])
+        }
+      }
+      //把tmp和unreadLeaveFriend合并然后渲染
+      // console.log("好友删掉部分的情况", tmp);
     },
     toHistoryPage(toId){
       this.$router.push({
