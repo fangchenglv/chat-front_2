@@ -93,6 +93,15 @@ let router = new Router({
         keepAlive:false,
       }
     },
+    //进入具体的群聊页
+    {
+      path: "/groupChatPage/:groupId/:myId/:name",
+      name: "groupChatPage",
+      component: () => import("../../components/mobile/groupChatPage/index"),
+      meta:{
+        keepAlive:false,
+      }
+    },
     //某群聊信息页
     {
       path: "/groupChat/:groupNum",

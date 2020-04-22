@@ -64,11 +64,11 @@ export default {
       })
       let allFriend = this.$store.getters.allFriend;
       let tmp = []
-      for (let i = 0; i < this.allFriend.length; i++) {
-        if (this.privateUnreadNumber[i] > 0 || this.privateUnreadNumber[i] !== undefined || i < this.privateUnreadNumber.length) {
-          tmp.push(this.allFriend[i])
-        }
-      }
+      // for (let i = 0; i < this.allFriend.length; i++) {
+      //   if (this.privateUnreadNumber[i] > 0 || this.privateUnreadNumber[i] !== undefined || i < this.privateUnreadNumber.length) {
+      //     tmp.push(this.allFriend[i])
+      //   }
+      // }
       //把tmp和unreadLeaveFriend合并然后渲染
       // console.log("好友删掉部分的情况", tmp);
     },

@@ -6,11 +6,8 @@ import {
   searchFriend,
   getMyFriendList,
   getUnreadMsgList,
+  getMyGroupChatPerson,
 } from "../../api/friendOperation.js";
-import service from "@/utils/request";
-import {
-  resolve
-} from "path";
 
 const user = {
   state: {
@@ -28,6 +25,7 @@ const user = {
     userAvatar:"",
     unreadList:[],
     myGroupChat:[],
+    myGroupFriends: {},
   },
   mutations: {
     SET_USERID: (state, id) => {
@@ -65,13 +63,12 @@ const user = {
     },
     SET_MYGROUPCHAT(state, data){
       state.myGroupChat = data;
+    },
+    SET_GROUPFRIENDS(state, data){
+      state.myGroupFriends[data[1]] = data[0];
     }
   },
   actions: {
-    //保存后台地址
-    // priserveUrl({commit}, str){
-    //   commit("UPDATE_WEBSOCKET", str);
-    // },
     // 登录,同时连接上websocket并保持连接状态
     Login({
       commit
@@ -136,6 +133,22 @@ const user = {
     //得到自己加的群聊的详细数据
     GetMyGroupChat({commit}, data){
       commit("SET_MYGROUPCHAT", data);
+      let result = {};
+      for(let i = 0; i < data.length; i++){
+        getMyGroupChatPerson(data[i].id).then((res) => {
+          // console.log("取群成员",  res.data.data);
+          let oldGroupFriend = res.data.data
+          for (let i = 0; i < oldGroupFriend.length; i++) {
+            let tmp = {
+              friendId: oldGroupFriend[i].user.id,
+              friendName: oldGroupFriend[i].user.nickName,
+              friendAvatar: oldGroupFriend[i].user.avatar
+            }
+            result["" + oldGroupFriend[i].user.id] = tmp
+          }
+          commit("SET_GROUPFRIENDS", [result, data[i].id])
+        })
+      }
     },
     //得到离线消息列表
     GetUnreadMsgList({commit}, id){
@@ -151,18 +164,6 @@ const user = {
         })
       })
     },
-    // //删除自己的某位好友并且更新自己保存的好友列表
-    // DeleteMyFriend({
-    //   commit
-    // }, myId, friendId) {
-    //   return new Promise((resolve, reject) => {
-    //     deleteMyFriend(myId, friendId).then(response => {
-    //       resolve(response);
-    //     }).catch(error => {
-    //       reject(error);
-    //     })
-    //   })
-    // },
     //申请添加好友时的寻找好友
     SearchFriend({
       commit
@@ -174,6 +175,28 @@ const user = {
           .then(response => {
             const data = response.data.data; //是接口返回的参数
             commit("SET_SEARCHFRIEND", data);
+            resolve(response);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    //注册
+    Register(userRegisInfo) {
+      console.log(typeof userRegisInfo.userName);
+      const userName = userRegisInfo.userName.trim();
+      const password = userRegisInfo.password.trim();
+      const nickname = userRegisInfo.nickname.trim();
+      const gender = userRegisInfo.gender.trim();
+      const email = userRegisInfo.email.trim();
+      const phone = userRegisInfo.phone.trim();
+      // const roleCode = userRegisInfo.roleCode.trim()
+
+      return new Promise((resolve, reject) => {
+        register(userName, password, nickname, gender, email, phone)
+          .then(response => {
+            const data = response.data;
             resolve(response);
           })
           .catch(error => {
@@ -198,28 +221,18 @@ const user = {
     //       });
     //   });
     // },
-    //注册
-    Register(userRegisInfo) {
-      console.log(typeof userRegisInfo.userName);
-      const userName = userRegisInfo.userName.trim();
-      const password = userRegisInfo.password.trim();
-      const nickname = userRegisInfo.nickname.trim();
-      const gender = userRegisInfo.gender.trim();
-      const email = userRegisInfo.email.trim();
-      const phone = userRegisInfo.phone.trim();
-      // const roleCode = userRegisInfo.roleCode.trim()
-
-      return new Promise((resolve, reject) => {
-        register(userName, password, nickname, gender, email, phone)
-          .then(response => {
-            const data = response.data;
-            resolve(response);
-          })
-          .catch(error => {
-            reject(error);
-          });
-      });
-    }
+    // //删除自己的某位好友并且更新自己保存的好友列表
+    // DeleteMyFriend({
+    //   commit
+    // }, myId, friendId) {
+    //   return new Promise((resolve, reject) => {
+    //     deleteMyFriend(myId, friendId).then(response => {
+    //       resolve(response);
+    //     }).catch(error => {
+    //       reject(error);
+    //     })
+    //   })
+    // },
   }
 };
 export default user;

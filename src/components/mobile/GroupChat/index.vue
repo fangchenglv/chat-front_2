@@ -103,7 +103,9 @@ export default {
       this.$router.push({name:"newGroupChatMember", params:{groupNum: this.groupNum, groupId:this.form.groupId}});
     },
 
-    toGroupChatroom(){},
+    toGroupChatroom(){
+      this.$router.push({name: "groupChatPage", params:{groupId: this.form.groupId, myId: this.myId, name:this.form.name}})
+    },
     toGroupHistoryPage(){},
     checkFriend(){},
     handleChange(){

@@ -75,10 +75,10 @@ export default new Vuex.Store({
                 return ind === GroupId;
               })) {
               state.groupMessage[GroupId].push(data.data);
-              state.groupUnreadNumber[friendId] = state.groupUnreadNumber[friendId] + 1
+              state.groupUnreadNumber[GroupId] = state.groupUnreadNumber[GroupId] + 1
             } else {
               state.groupMessage[GroupId] = [data.data];
-              state.groupUnreadNumber[friendId] = 1;
+              state.groupUnreadNumber[GroupId] = 1;
             }
             if (/Android|iPhone|SymbianOS|iPad|iPod/i.test(navigator.userAgent)) {
               Toast({
@@ -110,7 +110,7 @@ export default new Vuex.Store({
     },
     WEBSOCKET_SEND(state, data) {
       let id = data[1];
-      console.log("!!!!", state.currendGroupId, this.state.currentFriendId)
+      // console.log("!!!!", state.currendGroupId, this.state.currentFriendId)
       // if (state.privateMessage.has(id)) {
       if (state.currentFriendId !== -1) {
         if (state.privateMessage.find((val, ind) => {

@@ -13,5 +13,6 @@ const getters = {
   sock: state => state.websock.sock,
   unreadList: state => state.user.unreadList,
   myGroupChat: state => state.user.myGroupChat,
+  myGroupFriends: state => state.user.myGroupFriends,
 }
 export default getters

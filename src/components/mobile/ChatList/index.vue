@@ -3,7 +3,7 @@
     <div v-for="(item, ind) in unreadFriend" :key="ind">
       <van-card
         :thumb=item.fromUser.avatar
-        style="margin-bottom:0.05rem;margin-top:0.05rem;font-size:0.5rem;width:100%"
+        style="margin-bottom:0.05rem;margin-top:0.05rem;font-size:0.5rem;width:100%;background-color:rgb(252,252,252)"
       >
         <div slot="title">
           <p>用户:{{item.fromUser.userName}}</p>

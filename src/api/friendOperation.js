@@ -33,7 +33,7 @@ export function getMyGroupList(userId){
 //获取群成员
 export function getMyGroupChatPerson(id){
   return request({
-    url:"/groupUser/getMemberByGroupId" + `?groupId=${id}`,
+    url:`/groupUser/getMemberByGroupId?groupId=${id}`,
     method:"get",
   })
 }
