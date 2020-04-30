@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="11" v-for="item in this.friendList" :key="item.friendId" :offset="1">
+      <el-col :span="11" v-for="(item,ind) in this.friendList" :key="ind" :offset="1">
         <el-card >
           <img :src=item.friendInfo.avatar alt="图片不存在" class="image" />
             <p style="font-size:0.5rem; ">昵称:{{item.friendInfo.nickName}}</p>
@@ -27,7 +27,32 @@
                 type="info"
                 @click="toHistoryPage(item.friendId)"
               >历史记录</el-button> 
+              <el-button 
+                plain
+                type="info"
+                @click="dialogTableVisible = true"
+              >移动分组</el-button> 
             </div>
+            <el-dialog title="分组" :visible.sync="dialogTableVisible">
+                <el-table
+                  ref="singleTable"
+                  :data="tableData"
+                  highlight-current-row
+                  @current-change="handleCurrentChange"
+                  style="width: 100%; ">
+                  <el-table-column
+                    type="index"
+                    width="150%">
+                  </el-table-column>
+                  <el-table-column
+                    property="typeName"
+                    label="分组名"
+                    width="300%">
+                  </el-table-column>
+                </el-table>
+                <el-button @click="changeFriendGroup(item.friendId)">确认</el-button>
+                <el-button @click="resetFriendGroup()">取消</el-button>
+            </el-dialog>
         </el-card>
       </el-col>
     </el-row>
@@ -37,17 +62,18 @@
 <script>
 import { GetMyFriendList } from "@/stores/modules/user";
 import { deleteMyFriend, getHistoryReadList } from "@/api/friendOperation";
-import {getMyFriendList} from "./../../../api/friendOperation"
+import {getMyFriendList, changeFriendGroup} from "./../../../api/friendOperation"
 
 export default {
   components: {},
   data() {
-    //这里存放数据
     return {
       messagelist:[],
+      dialogTableVisible: false,
+      tableData:this.$store.getters.myFriendList,
+      currentRow: null
     };
   },
-  //监听属性 类似于data概念
   computed: {
     friendList: function() {
       const all = this.$store.getters.myFriendList;
@@ -63,9 +89,29 @@ export default {
     }
   },
   mounted(){
-    // console.log("好友列表", this.friendList)
+    // console.log("好友列表", this.friendList, this.tableData)
   },
   methods: {
+    changeFriendGroup(id){
+      if (!id || this.currentRow === null) {
+        return
+      }
+      changeFriendGroup(this.$store.getters.userId, id, this.currentRow.id).then(res => {
+        this.$store.dispatch("GetMyFriendList", this.$store.getters.userId).then(res => {
+          // this.friendList = this.
+          this.dialogTableVisible = false;
+        })
+      })
+      // console.log(id)
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
+      // console.log(val)
+    },
+    resetFriendGroup(){
+      this.currentRow = null;
+      this.dialogTableVisible = false;
+    },
     toHistoryPage(toId){
       this.$router.push({
         name: "privateHistoryPage",

@@ -23,6 +23,39 @@ export function buildNewGroupChat(userId, groupName, description){
     }
   })
 }
+//修改好友的好友分组
+export function changeFriendGroup(userId, friendId, toTypeId) {
+  return request({
+    url: "/friendType/updateToOtherType",
+    method: "post",
+    data: {
+      userId,
+      friendId,
+      toTypeId
+    }
+  })
+}
+//删除好友分组
+export function deleteFriendGroup(id) {
+  return request({
+    url: "/friendType/deleteById",
+    method: 'post',
+    data:{
+      id
+    }
+  })
+}
+//更改分组名称
+export function changeFriendGroupName(id, newName) {
+  return request({
+    url: "/friendType/updateById",
+    method: "post",
+    data:{
+      id,
+      newName
+    }
+  })
+}
 //得到自己的群组列表
 export function getMyGroupList(userId){
   return request({

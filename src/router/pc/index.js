@@ -38,6 +38,14 @@ let router = new Router({
         keepAlive:true,
       }
     },
+    //删除好友分组
+    {
+      path: "/deleteFriendGroup",
+      component: () => import("../../components/pc/LeftSide/DeleteFriendGroup/index"),
+      meta:{
+        keepAlive:true,
+      }
+    },
     //新建群聊
     {
       path:'/newGroupChat',

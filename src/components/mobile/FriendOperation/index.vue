@@ -2,6 +2,7 @@
   <div class="head">
     <van-cell-group title="好友操作">
       <van-cell title="新建好友分组" is-link @click="newGroup" />
+      <van-cell title="删除好友分组" is-link @click="changeFriendGroup" />
       <van-cell title="添加新的好友" is-link @click="newFriend" />
       <van-cell title="查询好友申请并处理申请" is-link @click="checkAndReselve"/>
       <van-cell title="查询已经处理的好友申请" is-link @click="historyRequest" />
@@ -17,6 +18,9 @@
 export default {
   name:"friendOperation",
   methods:{
+    changeFriendGroup(){
+      this.$router.push({path:"/changeFriendGroup"})
+    },
     newFriendChat(){
       this.$router.push({path:"/newGroupChat"});
     },

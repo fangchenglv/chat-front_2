@@ -7,7 +7,7 @@
         icon="arrow-down" 
         @click="onClickLeft(item.id)"
         style="text-align:left;background-color:rgb(250,250,250)"/>
-      <div v-show="show === item.id" v-for="data in item.friends" :key="data.friendId">
+      <div v-show="show === item.id" v-for="(data, ind) in item.friends" :key="ind">
         <van-cell 
         :icon="data.friendInfo.avatar"
           :title="data.friendInfo.nickName" 

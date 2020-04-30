@@ -7,6 +7,7 @@ import {
   getMyFriendList,
   getUnreadMsgList,
   getMyGroupChatPerson,
+  getMyGroupList
 } from "../../api/friendOperation.js";
 
 const user = {
@@ -111,7 +112,7 @@ const user = {
             }
           }
           commit("SET_ALLFRIEND", allFriend);
-          // console.log(allFriend);
+          // console.log("整形后的全部好友",allFriend);
           resolve(response);
         })
         .catch(error => {
@@ -129,6 +130,13 @@ const user = {
         }
       }
       commit("SET_ALLFRIEND", allFriend);
+    },
+    //得到自己的群组
+    GetMyGroupList({commit}, id){
+      getMyGroupList(id).then(res => {
+        commit("SET_MYGROUPCHAT", res.data.data);
+        // console.log("全部群组列表", res.data.data);
+      })
     },
     //得到自己加的群聊的详细数据
     GetMyGroupChat({commit}, data){

@@ -59,3 +59,13 @@ Vue.use(Overlay);
 
 import { Form } from 'vant';
 Vue.use(Form);
+
+import {
+  Popup
+} from 'vant';
+Vue.use(Popup);
+
+import {
+  SwipeCell
+} from 'vant';
+Vue.use(SwipeCell);

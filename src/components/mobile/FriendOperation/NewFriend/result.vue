@@ -57,7 +57,7 @@ export default {
     },
   },
   mounted(){
-    console.log(this.friendGroupList);
+    // console.log(this.friendGroupList);
   },
   methods:{
     changeShow(){

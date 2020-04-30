@@ -46,10 +46,26 @@ let router = new Router({
         keepAlive:true,
       },
     },
+    {
+      path: "/changeFriendGroup/:friendId",
+      name: "changeFriendGroup",
+      component:() => import("../../components/mobile/FriendList/FriendPage/changeFriendGroup"),
+      meta:{
+        keepAlive:false,
+      }
+    },
     //新建好友分组
     {
       path:'/newFriendGroup',
       component:() => import('../../components/mobile/FriendOperation/NewGroup/index.vue'),
+      meta:{
+        keepAlive:false,
+      }
+    },
+    //修改好友分组
+    {
+      path: "/changeFriendGroup",
+      component:() => import("../../components/mobile/FriendOperation/ChangeFriendGroup/index"),
       meta:{
         keepAlive:false,
       }

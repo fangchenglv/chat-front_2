@@ -88,13 +88,13 @@ export default {
       set(val){
       }
     },
-    otherChatList:{
-      get(){
-        return this.$websocket.state.privateMessage
-      },
-      set(){
-      }
-    }
+    // otherChatList:{
+    //   get(){
+    //     return this.$websocket.state.privateMessage
+    //   },
+    //   set(){
+    //   }
+    // }
   },
   methods: {
     init(){
@@ -103,7 +103,7 @@ export default {
       this.$websocket.state.privateUnreadNumber[this.friendId] = 0;
       this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
-      this.ParparePrivateChatMessage();
+      // this.ParparePrivateChatMessage();
       this.websockOnMessage();
     },
     websockOnMessage(){
@@ -111,6 +111,9 @@ export default {
       this.$websocket.state.websock.onmessage = e =>{
         const data = JSON.parse(e.data);
         // console.log("得到的数据啊", data);
+        if (data.status === -1) {
+          return
+        }
         if(data.data.type !== "REGISTER" && data.status === 200){
           if (data.data.fromUserId == this.friendId){
             // console.log("难道走了这儿")
@@ -308,24 +311,30 @@ export default {
     getUnreadList(fromId, toId){
       getUnreadMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
-        // console.log(this.unreadList);
+        console.log("getUnreadList接受到的具体未读信息", this.unreadList);
+        // console.log(fromId, response);
         if(this.unreadList){
           this.unreadList.forEach((data) =>{
-            if(data.fromUser.id == this.userid){
-              if(!this.messageList){
-                this.messageList = [data]; 
-              }else{
-                this.messageList.push(data);
-              }
+            let t = {};
+            if (!data.type || data.type === "SINGLE_SENDING") {
+              t.fromUser = data.fromUser;
+              t.toUser = data.toUser;
+              t.message = data.message;
+              t.id = 0;
+            }
+            //要是未读信息是文件图片咋整
+            else if (data.type === "") {
+              //先留下口子
+            }
+
+            if(!this.messageList){
+              this.messageList = [t]; 
             }else{
-              if(!this.messageList){
-                this.messageList = [data]; 
-              }else{
-                this.messageList.push(data);
-              }            
+              this.messageList.push(t);
             }
           })
         }
+        this.ParparePrivateChatMessage()
       }).catch()
     },
   },

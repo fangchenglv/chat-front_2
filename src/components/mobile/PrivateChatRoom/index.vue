@@ -83,17 +83,11 @@ export default {
   },
   methods: {
     init(){
-      // console.log(typeof this.friendId)
-      // this.websock = this.$store.getters.sock;
-      // this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
-      // console.log(this.websock);
-      // this.websock.connect(JSON.stringify({"userId" : this.userId,"type" : "REGISTER"}));
       this.$websocket.state.privateUnreadNumber[this.friendId] = 0;
       this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
-      this.ParparePrivateChatMessage();
+      // this.ParparePrivateChatMessage();
       this.websockOnMessage();
-      // this.websockOnMessage();
     },
     websockOnMessage(){
       let param = null;
@@ -101,11 +95,11 @@ export default {
         const data = JSON.parse(e.data);
         console.log("得到的数据啊", data);
         if(data.status === -1){
-          this.$toast({
-            message:"请注意，用户离线",
-            position:"top"
-          })
-          this.websockOnMessage();
+          // this.$toast({
+          //   message:"请注意，用户离线",
+          //   position:"top"
+          // })
+          // this.websockOnMessage();
           return;
         }
         if(data.data.type !== "REGISTER" && data.status === 200){
@@ -139,17 +133,10 @@ export default {
             this.currendStartChatList.push(data.data)
             // console.log("得到的数据放入数组中了", this.currendStartChatList)
           } else{
-          // else if (data.data.fromUserId !== this.friendId){
-            //不是自己这个聊天框的信息，怎么处理。
-            // if (/Android|iPhone|SymbianOS|iPad|iPod/i.test(navigator.userAgent)){
-              // this.$toast("新的好友信息，请注意查看");
               this.$toast({
                 message:"新的好友信息，请注意查看",
                 position:"top",
               })
-            // } else {
-            //   this.$message("新的好友信息，请注意查看");
-            // }
             // console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
             if(this.$websocket.state.privateMessage.find((val, ind) => {return (""+ind) === data.data.fromUserId })){
               this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
@@ -165,17 +152,15 @@ export default {
     },
     ParparePrivateChatMessage(){
       //初始化数据吧
-      if (this.currendStartChatList.lenght <= 0) {
+      if (!this.currendStartChatList) {
         // this.currendStartChatList = [];
         return ;
       }
-      console.log(this.currendStartChatList)
       let param = null, msgId = -1;
       this.currendStartChatList.forEach(data => {
-        console.log("哪儿不对啊", data)
         if(data.type === "SINGLE_SENDING"){
           msgId = 0;
-          // console.log("!!!!!!!!!", typeof data.fromUserId, typeof this.friendId)
+          console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
           if (data.fromUserId === this.friendId) {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
@@ -205,7 +190,7 @@ export default {
             };
           }
         }
-        else if (data.type === "FILE_IMG_SINGLE_SENDING"){
+        else if (data.type === "SINGLE_SENDING_IMG"){
           //先留下口子
         }
         this.messageList.push(param);
@@ -311,7 +296,7 @@ export default {
       this.$refs.item.toggle();
     },
     getTime(){
-      let myTime = new Data('December 17, 1995 03:24:00');
+      let myTime = new Date('December 17, 1995 03:24:00');
       let y = myTime.getFullYear();
       let m = myTime.getMonth() + 1;
       let d = myTime.getData();
@@ -324,33 +309,39 @@ export default {
     getUnreadList(fromId, toId){
       getUnreadMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
-        // console.log(this.unreadList);
+        // console.log("getUnreadList接受到的具体未读信息", this.unreadList);
+        // console.log(fromId, response);
         if(this.unreadList){
           this.unreadList.forEach((data) =>{
-            if(data.fromUser.id == this.userid){
-              if(!this.messageList){
-                this.messageList = [data]; 
-              }else{
-                this.messageList.push(data);
-              }
+            let t = {};
+            if (!data.type || data.type === "SINGLE_SENDING") {
+              t.fromUser = data.fromUser;
+              t.toUser = data.toUser;
+              t.message = data.message;
+              t.id = 0;
+            }
+            //要是未读信息是文件图片咋整
+            else if (data.type === "") {
+              //先留下口子
+            }
+
+            if(!this.messageList){
+              this.messageList = [t]; 
             }else{
-              if(!this.messageList){
-                this.messageList = [data]; 
-              }else{
-                this.messageList.push(data);
-              }            
+              this.messageList.push(t);
             }
           })
         }
+        this.ParparePrivateChatMessage()
       }).catch()
     },
     onClickLeft(){
       this.$router.push({name:"FriendPage", params:{id: this.$route.params.friendId}})
     }
   },
-  mounted() {
-    this.init();
-  },
+  // mounted() {
+  //   this.init();
+  // },
   beforeMount() {
     // console.log(this);
     this.init();

@@ -22,6 +22,9 @@
               <el-menu-item index="/friendGroup">
                 <span @click="toPath0">新建好友分组</span>
               </el-menu-item>
+              <el-menu-item index="/friendNewGroup">
+                <span @click="toPath5">修改好友分组</span>
+              </el-menu-item>
               <el-menu-item index="/requestFriend">
                 <span @click="toPath1">添加新的好友</span>
               </el-menu-item>
@@ -159,6 +162,9 @@ export default {
     },
     toPath4(){
       this.$router.push({path:"/newGroupChat"});
+    },
+    toPath5(){
+      this.$router.push({path:"/deleteFriendGroup"});
     },
     toPath(groupid) {
       this.$router.push({ name: "friendList", params: { groupId: groupid } });

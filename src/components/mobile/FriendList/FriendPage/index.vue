@@ -18,6 +18,7 @@
         <span v-else><van-icon name="closed-eye"/>用户离线</span>
       </div>
       <van-divider/>
+      <van-button @click="topath()" style="margin-top:0.1rem;width:100%">移动分组</van-button>
     </div>
 
     <van-tabbar v-model="active" id='foot'>
@@ -25,11 +26,26 @@
       <van-tabbar-item icon="more-o" @click="toHistoryPage">查看历史记录</van-tabbar-item>
       <van-tabbar-item icon="ellipsis" @click="deleteFriend">删除好友</van-tabbar-item>
     </van-tabbar>
+    <!-- <van-dialog 
+      v-model="dialogTableVisible" 
+      title="分组" 
+      show-cancel-button
+      :confirm="changeFriendGroup()"
+      :cancel="resetFriendGroup">
+      <van-dropdown-menu>
+        <van-dropdown-item v-model="radio" :options="tableData" />
+      </van-dropdown-menu>
+      <van-radio-group v-model="radio" style="padding-left:0.5rem;padding-bottom:0.2rem" >
+        <div v-for="(item, ind) in tableData" :key="ind" style="padding-bottom:0.2rem">
+          <van-radio name=item.id icon-size="24px" :click="handleCurrentChange()">{{item.typeName}}</van-radio>
+        </div>
+      </van-radio-group>
+    </van-dialog> -->
   </div>
 </template>
 
 <script>
-import {deleteMyFriend} from '../../../../api/friendOperation'
+import {deleteMyFriend, changeFriendGroup} from '../../../../api/friendOperation'
 
 export default {
   name:"friendPage",
@@ -40,9 +56,14 @@ export default {
       nname:'',
       status: 0,
       friendId: this.$route.params.id,
+      // dialogTableVisible: false,
     }
   },
   methods:{
+    topath(){
+      this.$router.push({name:"changeFriendGroup", params:{friendId:this.friendId}});
+    },
+    
     toHistoryPage(){
       this.$router.push({
         name: "privateHistoryPage",
