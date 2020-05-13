@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     init(){
-      this.$websocket.state.privateUnreadNumber[this.friendId] = 0;
+      this.$websocket.state.privateUnreadNumber[this.friendId] = undefined;
       this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
       // this.ParparePrivateChatMessage();
@@ -157,6 +157,7 @@ export default {
         return ;
       }
       let param = null, msgId = -1;
+      this.$websocket.state.privateUnreadNumber[this.friendId] = 0
       this.currendStartChatList.forEach(data => {
         if(data.type === "SINGLE_SENDING"){
           msgId = 0;
@@ -314,15 +315,22 @@ export default {
         if(this.unreadList){
           this.unreadList.forEach((data) =>{
             let t = {};
-            if (!data.type || data.type === "SINGLE_SENDING") {
+            if (data.type == "0") {
               t.fromUser = data.fromUser;
-              t.toUser = data.toUser;
+              // t.toUser = data.toUser;
               t.message = data.message;
               t.id = 0;
             }
-            //要是未读信息是文件图片咋整
-            else if (data.type === "") {
-              //先留下口子
+            //要是未读信息是图片咋整
+            else if (data.type == "1") {
+              t.fromUser = data.fromUser;
+              // t.toUser = data.toUser;
+              t.message = data.message;
+              t.id = 1;
+            }
+            //要是未读消息的文件
+            else if(data.type == "2") {
+              //只能先留口子
             }
 
             if(!this.messageList){
@@ -336,7 +344,7 @@ export default {
       }).catch()
     },
     onClickLeft(){
-      this.$router.push({name:"FriendPage", params:{id: this.$route.params.friendId}})
+      this.$router.back();
     }
   },
   // mounted() {

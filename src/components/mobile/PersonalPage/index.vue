@@ -11,7 +11,7 @@
     </p>
     <van-divider style="margin: 0.1rem;"/>
     <div style="background-color:rgb(250, 250, 250);">
-      <p @click="beforeunloadHandler" style="margin: 0rem;padding:0.25rem 0rem;font-size:0.5rem">登出</p>
+      <p @click="exit" style="margin: 0rem;padding:0.25rem 0rem;font-size:0.5rem">登出</p>
     </div>
     
   </div>
@@ -30,11 +30,23 @@ export default {
       myNickname: this.$store.getters.userNickname,
     }
   },
+  // beforeDestroy(){
+  //   exit()
+  // },
   methods:{
-    beforeunloadHandler(){
-      this.$router.push({path:"/login"});
-      logout_(this.$store.getters.userId);
+    beforeunloadHandler: async function(){
+      this.$websocket.state.websock.onclose = function (e) {
+        console.log(this.$websocket.state.websock);
+        this.$websocket.state.regisMsg = undefined;
+      };
     },
+    exit(){
+      this.beforeunloadHandler().then((result) => {
+        logout_(this.$store.getters.userId);
+        this.$router.push({path:"/login"});
+      })
+    }
+    
   }
 }
 </script>

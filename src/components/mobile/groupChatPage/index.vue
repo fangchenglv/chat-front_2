@@ -42,7 +42,7 @@
 <script>
 import GroupFriendItem from "../groupChatPage/groupFriendItem";
 import GroupMyItem from "../groupChatPage/groupMyItem";
-import { getMyGroupChatPerson } from "../../../api/friendOperation";
+import { getMyGroupChatPerson, getUnreadGroupMessageList } from "../../../api/friendOperation";
 
 export default {
   components:{
@@ -99,9 +99,9 @@ export default {
       this.$refs.item.toggle();
     },
     init(){
-      // this.getGroupFriend();
+      // this.$websocket.state.groupUnreadNumber[this.groupId] = undefined;
       this.$websocket.dispatch("StartChatId", [this.groupId, "group"]);
-      this.ParparePrivateChatMessage();
+      this.getUnreadList(this.$store.getters.userId, this.groupId);
       this.websockOnMessage();
     },
     getGroupFriend(data){
@@ -254,7 +254,6 @@ export default {
       this.currendStartChatList.forEach(data => {
         if(data.type === "GROUP_SENDING"){
           msgId = 0;
-          
           if (+data.fromUserId === +this.userId) {
             param = {
               "fromUser":{"id":this.$store.getters.userId,
@@ -265,7 +264,7 @@ export default {
             };
           }
           else {
-            console.log( this.newGroupFriend, this.newGroupFriend[+data.fromUserId] , data.fromUserId)
+            // console.log( this.newGroupFriend, this.newGroupFriend[+data.fromUserId] , data.fromUserId)
             param = {
               "toUser": {"id":+data.fromUserId, 
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
@@ -275,11 +274,44 @@ export default {
             };
           }
         }
-        else if (data.type === "SINGLE_SENDING_IMG"){
+        else if (data.type === "GROUP_SENDING_IMG"){
           //先留下口子
+          msgId = 1;
         }
         this.messageList.push(param);
       })
+    },
+    getUnreadList(fromId, toId){
+      getUnreadGroupMessageList(fromId, toId).then(response =>{
+        this.unreadList = response.data.data;
+        console.log("getUnreadList接受到的具体未读信息", this.unreadList);
+        if(this.unreadList){
+          this.unreadList.forEach((data) =>{
+            let t = {};
+            if (data.type == "0") {
+              t.toUser = data.fromUser;
+              t.message = data.message;
+              t.id = 0;
+            }
+            //要是未读信息是图片咋整
+            else if (data.type == "1") {
+              t.toUser = data.fromUser;
+              t.message = data.message;
+              t.id = 1;
+            }
+            //要是未读消息的文件
+            else if(data.type == "2") {
+              //只能先留口子
+            }
+            if(!this.messageList){
+              this.messageList = [t]; 
+            }else{
+              this.messageList.push(t);
+            }
+          })
+        }
+        this.ParparePrivateChatMessage()
+      }).catch()
     },
   }
 }

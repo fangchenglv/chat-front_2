@@ -109,6 +109,10 @@ export default {
       this.form.name = "" + this.groupDetail.groupName;
       this.form.descriptor = "" + this.groupDetail.description;
       this.form.groupId = this.groupDetail.id;
+      getMyGroupList(this.myId)
+      .then(res => {
+        this.$store.dispatch("GetMyGroupChat", res.data.data);
+      })
     },
     toGroupChatPage(){
       this.$router.push({name: "groupChatPage", params:{groupId: this.form.groupId, myId: this.myId, name:this.form.name}})
