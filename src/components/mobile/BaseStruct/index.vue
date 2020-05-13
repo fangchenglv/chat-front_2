@@ -1,8 +1,11 @@
 <template>
   <div style="height:100%">
-    <div class="head">
+    <van-nav-bar
+      :title= tit
+    />
+    <!-- <div class="head">
       <span>{{tit}}</span>
-    </div>
+    </div> -->
     <!-- <van-nav-bar
       :title="tit"
     /> -->
@@ -73,10 +76,10 @@ export default {
   line-height: 1rem;
   margin-bottom: 0.1rem;
 }
-.medium{
+/* .medium{
   height: 100%;
   margin-top: 1.1rem; 
-}
+} */
 .foot{
   width: 100%;
 }

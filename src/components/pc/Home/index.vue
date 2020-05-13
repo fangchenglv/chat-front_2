@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="11" v-for="(item,ind) in this.unreadFriend" :key="ind" :offset="1">
+      <el-col :span="11" v-for="(item,ind) in this.unreadFriendGroup" :key="ind" :offset="1">
         <el-card>
           <img :src=item.avatar alt="图片不存在" class="image" />
           <p style="font-size:0.5rem; ">昵称:{{item.nickName}}</p>
@@ -16,7 +16,7 @@
             <el-button
               plain
               type="primary"
-              @click="toChatroom(item.id, item.nickName, item.avatar)"
+              @click="toChatroom(item.id, item.nickName, item.avatar, item.groupNum)"
             >聊天</el-button>
             <el-button 
               plain
@@ -37,24 +37,40 @@ export default {
   name: 'homePage',
   data(){
     return{
-      unreadFriend:[],
-      unreadGroup:[],
+      // unreadFriend:[],
+      // unreadGroup:[],
+      unreadFriendGroup:[],
       unreadLeaveFriend:[],
-      privateUnreadNumber: this.$websocket.state.privateUnreadNumber,
-      groupUnreadNumber: this.$websocket.state.groupUnreadNumber,
+      privateUnreadNumber: [],
+      groupUnreadNumber: [],
       allFriend: {},
       allGroup:{}
     }
   },
-  beforeMount(){
-    this.init();
-  },
+  // beforeMount(){
+  //   this.init();
+  // },
   mounted(){
+    this.init()
     // this.parpareData();
     // console.log("应该有未读信息吧",this.unreadFriend)
   },
   methods:{
+    // toPath(id, groupNum){
+    //   if (groupNum === null) {
+    //     // this.$websocket.state.privateUnreadNumber[id] = undefined;
+    //     this.$router.push({name:"FriendPage", params:{id:id}});
+    //   }
+    //   else{
+    //     // this.$websocket.state.groupUnreadNumber[id] = undefined;
+    //     this.$router.push({name: "groupChat", params: {groupNum: groupNum}});
+    //   }
+    // },
     init(){
+      // this.$store.dispatch("GetMyGroupChat", )
+      this.privateUnreadNumber = this.$websocket.state.privateUnreadNumber;
+      this.groupUnreadNumber = this.$websocket.state.groupUnreadNumber;
+      // console.log(" this.groupUnreadNumber", this.groupUnreadNumber)
       this.$store.dispatch("GetMyFriendList", this.$store.getters.userId)
         .then(response => {
           let friend = this.$store.getters.allFriend;
@@ -69,7 +85,7 @@ export default {
               }
               getUnreadMsgList(this.$store.getters.userId).then(response =>{
                 this.unreadLeaveFriend = response.data.data;
-                // console.log("未读信息",this.unreadLeaveFriend);
+                console.log("未读信息",this.unreadLeaveFriend);
                 this.parpareData();
               }).catch(err => {
                 // console.log(error);
@@ -82,55 +98,117 @@ export default {
         });
     },
     parpareData(){
-      // console.log("parpareData未读信息",this.unreadLeaveFriend);
       for (let i = 0; i < this.unreadLeaveFriend.length; i++) {
-        if (this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] > 0) {
-          let t = {
-            id: this.unreadLeaveFriend[i].fromUser.id, 
-            nickName: this.unreadLeaveFriend[i].fromUser.nickName, 
-            avatar: this.unreadLeaveFriend[i].fromUser.avatar, 
-            count: this.unreadLeaveFriend[i].count + this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id],
-            status: this.unreadLeaveFriend[i].status
-          };
-          this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] = undefined;
-          this.unreadFriend.push(t);
-        }else{
-          let t = {
-            id: this.unreadLeaveFriend[i].fromUser.id, 
-            nickName: this.unreadLeaveFriend[i].fromUser.nickName, 
-            avatar: this.unreadLeaveFriend[i].fromUser.avatar, 
-            count: this.unreadLeaveFriend[i].count,
-            status: this.unreadLeaveFriend[i].status
-          };
-          this.unreadFriend.push(t);
+        // console.log("parpareData未读信息数量", this.unreadLeaveFriendS);
+        //用户离线时的未读消息展示逻辑,群聊
+        if (this.unreadLeaveFriend[i].fromUser == undefined) {
+          if (this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] > 0) {
+            let t = {
+              id: this.unreadLeaveFriend[i].groupDO.id,
+              groupNum:this.unreadLeaveFriend[i].groupDO.groupNum,
+              nickName: this.unreadLeaveFriend[i].groupDO.groupName,
+              avatar: this.unreadLeaveFriend[i].groupDO.avatar,
+              count: this.unreadLeaveFriend[i].count + this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id],
+              status: this.unreadLeaveFriend[i].status
+            };
+            this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] = undefined;
+            // this.unreadGroup.push(t);
+            this.unreadFriendGroup.push(t)
+          }
+          else {
+            // console.log("parpareData未读消息进来了吗2");
+            // console.log(i, "走路3");
+            let t = {
+              id: this.unreadLeaveFriend[i].groupDO.id,
+              groupNum:this.unreadLeaveFriend[i].groupDO.groupNum,
+              nickName: this.unreadLeaveFriend[i].groupDO.groupName,
+              avatar: this.unreadLeaveFriend[i].groupDO.avatar,
+              count: this.unreadLeaveFriend[i].count,
+              status: this.unreadLeaveFriend[i].status
+            };
+            // this.unreadGroup.push(t);
+            this.unreadFriendGroup.push(t)
+          }
+        }
+        //单聊
+        else{
+          if (this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] > 0) {
+            // console.log(i,"走路1");
+            let t = {
+              id: this.unreadLeaveFriend[i].fromUser.id,
+              groupNum: null,
+              nickName: this.unreadLeaveFriend[i].fromUser.nickName,
+              avatar: this.unreadLeaveFriend[i].fromUser.avatar,
+              count: this.unreadLeaveFriend[i].count + this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id],
+              status: this.unreadLeaveFriend[i].status
+            };
+            this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] = undefined;
+            // this.unreadFriend.push(t);
+            this.unreadFriendGroup.push(t)
+          }else{
+            // console.log(i,"走路2");
+            let t = {
+              id: this.unreadLeaveFriend[i].fromUser.id,
+              groupNum: null,
+              nickName: this.unreadLeaveFriend[i].fromUser.nickName,
+              avatar: this.unreadLeaveFriend[i].fromUser.avatar,
+              count: this.unreadLeaveFriend[i].count,
+              status: this.unreadLeaveFriend[i].status
+            };
+            // this.unreadFriend.push(t);
+            this.unreadFriendGroup.push(t)
+          }
         }
       }
-      for (let i = 0; i < this.privateUnreadNumber.length; i++) {
-        if (this.privateUnreadNumber[i] > 0) {
-          let t = {
-            id: i, 
-            nickName: this.allFriend[i].friendInfo.nickName, 
-            avatar: this.allFriend[i].friendInfo.avatar, 
-            count: this.privateUnreadNumber[i],
-            status: this.allFriend[i].status
-          };
-          this.unreadFriend.push(t);
-        }
-      }
-      // console.log(this.unreadFriend)
+      // //用户在线时的未读消息展示逻辑
+      // for (let i = 0; i < this.privateUnreadNumber.length; i++) {
+      //   // console.log("d单聊未读信息数量",this.privateUnreadNumber.length);
+      //   if (this.privateUnreadNumber[i] > 0) {
+      //     let t = {
+      //       id: i,
+      //       nickName: this.allFriend[i].friendInfo.nickName,
+      //       avatar: this.allFriend[i].friendInfo.avatar,
+      //       count: this.privateUnreadNumber[i],
+      //       status: this.allFriend[i].status
+      //     };
+      //     this.unreadFriend.push(t);
+      //   }
+      // }
+      // for (let i = 0; i < this.groupUnreadNumber.length; i++) {
+      //   // console.log("d群聊未读信息数量",this.groupUnreadNumber.length);
+      //   if (this.groupUnreadNumber[i] > 0) {
+      //     console.log("aaaa",this.allGroup[i].groupNum)
+      //     let t = {
+      //       id: this.allGroup[i].groupNum,
+      //       groupName: this.allGroup[i].groupName,
+      //       avatar: this.allGroup[i].avatar,
+      //       count: this.groupUnreadNumber[i],
+      //       status: this.allGroup[i].status
+      //     };
+      //     this.unreadGroup.push(t);
+      //   }
+      // }
+      // console.log("整形之后的未读信息列表", this.unreadFriend)
     },
-
     toHistoryPage(toId){
       this.$router.push({
         name: "privateHistoryPage",
         params: {fromId: this.$store.getters.userId, toId: toId},
       });
     },
-    toChatroom(id, name, pic) {
-      this.$router.push({
-        name: "privateChatRoom",
-        params: { friendId: id, name: name, avatar: pic},
-      });
+    toChatroom(id, name, pic, groupNum) {
+      if (groupNum === null) {
+        this.$router.push({
+          name: "privateChatRoom",
+          params: { friendId: id, name: name, avatar: pic},
+        });
+      }
+      else{
+        this.$router.push({
+          name: "groupChat",
+          params: {groupNum: groupNum}
+        })
+      }
     },
   }
 }

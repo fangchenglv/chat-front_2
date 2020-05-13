@@ -28,7 +28,7 @@ html,body,#app {
   text-align:center;
   color: #2c3e50;
   margin-top: 0rem;
-  height: 100%;
+  /* height: 100%; */
   background-color:whitesmoke;
 }
 </style>

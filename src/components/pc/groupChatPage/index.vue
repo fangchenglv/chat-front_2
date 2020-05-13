@@ -47,7 +47,7 @@
 <script>
 import GroupFriendItem from "../groupChatPage/groupFriendItem";
 import GroupMyItem from "../groupChatPage/groupMyItem";
-import { getMyGroupChatPerson } from "../../../api/friendOperation";
+import { getMyGroupChatPerson, getUnreadGroupMessageList } from "../../../api/friendOperation";
 
 export default {
   components:{
@@ -81,6 +81,7 @@ export default {
     },
   },
   mounted() {
+    // console.log("newGroupFriend", this.newGroupFriend);
     this.init();
   },
   beforeDestroy(){
@@ -89,12 +90,13 @@ export default {
   },
   methods:{
     init(){
-      // this.getGroupFriend();
+      // console.log("到底渲染了几次")
       this.$websocket.dispatch("StartChatId", [this.groupId, "group"]);
-      this.ParparePrivateChatMessage();
+      this.getUnreadList(this.$store.getters.userId, this.groupId);
       this.websockOnMessage();
     },
     getGroupFriend(data){
+      // console.log("到底渲染了几次", this.newGroupFriend, )
       getMyGroupChatPerson(this.$route.params.groupId).then((res) => {
         let oldGroupFriend = res.data.data
         for (let i = 0; i < oldGroupFriend.length; i++) {
@@ -191,6 +193,7 @@ export default {
         const data = JSON.parse(e.data);
         console.log("这是在群聊里面得到的数据啊", data);
         if (data.data.type !== "REGISTER" && data.status === 200 && data.data.toGroupId == this.groupId && !this.newGroupFriend[data.data.fromUserId]) {
+          
           this.getGroupFriend(data)
           return
         }
@@ -240,8 +243,11 @@ export default {
         return ;
       }
       let param = null, msgId = -1;
-      // console.log("查看全局保持的信息")
+      // console.log("currendStartChatList", this.currendStartChatList)
+      // console.log("到底渲染了几次", this.currendStartChatList)
+      
       this.currendStartChatList.forEach(data => {
+        // console.log("newGroupFriend", this.newGroupFriend)
         if(data.type === "GROUP_SENDING"){
           msgId = 0;
           
@@ -255,7 +261,6 @@ export default {
             };
           }
           else {
-            console.log( this.newGroupFriend, this.newGroupFriend[+data.fromUserId] , data.fromUserId)
             param = {
               "toUser": {"id":+data.fromUserId, 
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
@@ -267,8 +272,45 @@ export default {
         }
         else if (data.type === "SINGLE_SENDING_IMG"){
           //先留下口子
+          msgId = 1;
         }
         this.messageList.push(param);
+        console.log(this.messageList)
+      })
+    },
+    getUnreadList(fromId, toId){
+      // console.log("到底渲染了几次")
+      getUnreadGroupMessageList(fromId, toId).then(response =>{
+        this.unreadList = response.data.data;
+        // console.log("getUnreadList接受到的具体未读信息", this.unreadList, fromId, toId);
+        if(this.unreadList){
+          this.unreadList.forEach((data) =>{
+            let t = {};
+            if (data.type == "0") {
+              t.toUser = data.fromUser;
+              t.message = data.message;
+              t.id = 0;
+            }
+            //要是未读信息是图片咋整
+            else if (data.type == "1") {
+              t.toUser = data.fromUser;
+              t.message = data.message;
+              t.id = 1;
+            }
+            //要是未读消息的文件
+            else if(data.type == "2") {
+              //只能先留口子
+            }
+            if(!this.messageList){
+              this.messageList = [t]; 
+            }else{
+              this.messageList.push(t);
+            }
+          })
+        }
+        this.ParparePrivateChatMessage()
+      }).catch(err =>{
+        // console.log("!!!!!!!!!!!!", err)
       })
     },
   }
