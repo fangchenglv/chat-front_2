@@ -100,7 +100,7 @@ export default {
     init(){
       // console.log(typeof this.friendId)
       //要把未读数清零
-      //this.$websocket.state.privateUnreadNumber[this.friendId] = 0;
+      this.$websocket.state.privateUnreadNumber[this.friendId] = 0;
       this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
       // this.ParparePrivateChatMessage();
@@ -111,9 +111,9 @@ export default {
       this.$websocket.state.websock.onmessage = e =>{
         const data = JSON.parse(e.data);
         // console.log("得到的数据啊", data);
-        //if (data.status === -1) {
-        //  return
-        //}
+        if (data.status === -1) {
+          return
+        }
         if(data.data.type !== "REGISTER" && data.status === 200){
           if (data.data.fromUserId == this.friendId){
             // console.log("难道走了这儿")
@@ -133,24 +133,21 @@ export default {
               };
             }
             else if (data.data.type === "SINGLE_SENDING_IMG"){
-              //2
               let dat = data.data;
-              msgId = 0;
+              msgId = 1;
               param = {
                 "fromUser":{"id":this.$route.params.friendId,
                             "nickName": this.$route.params.name,
-                            "avatar":this.$route.params.avatar},
-                "toUser":{"id":this.$store.getters.userId,
-                          "nickName":this.$store.getters.userNickname,
-                          "avatar": this.$store.getters.userAvatar},
+                            "avatar":this.$route.params.avatar}, 
+                "toUser":{"id":this.$store.getters.userId, 
+                          "nickName":this.$store.getters.userNickname, 
+                          "avatar": this.$store.getters.userAvatar}, 
                 "message":dat.content,
                 "id": msgId
               };
-
-
-              //2
-            } else {return;}
-
+            } else {
+              //留下口子
+            }
             //添加到信息列表，以便展示信息
             if (! this.messageList){
               this.messageList = [param];
@@ -172,15 +169,6 @@ export default {
               this.$websocket.state.privateMessage[data.data.fromUserId] = [data.data];
               this.$websocket.state.privateUnreadNumber[ata.data.fromUserId] = 1;
             }
-            // if(this.otherChatList.find((val, ind) => {
-            //   console.log("ind", typeof ind, ind);
-            //   console.log("fromUser", typeof data.data.fromUserId, data.data.fromUserId)
-            //   return ind === data.data.fromUserId })){
-            //   this.otherChatList[data.data.fromUserId].push(data.data);
-            // } else{
-            //   this.otherChatList[data.data.fromUserId] = [data.data];
-            // }
-            // console.log("其他人发送消息以后是否更新", this.$websocket.state.privateMessage)
           }
         }
       }
@@ -192,10 +180,11 @@ export default {
         return ;
       }
       let param = null, msgId = -1;
+      console.log("currendStartChatList", this.currendStartChatList)
       this.currendStartChatList.forEach(data => {
         if(data.type === "SINGLE_SENDING"){
           msgId = 0;
-          console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
+          // console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
           if (data.fromUserId === this.friendId) {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
@@ -226,46 +215,36 @@ export default {
           }
         }
         else if (data.type === "SINGLE_SENDING_IMG"){
-
-
-        //1
-          msgId = 0;
-          base64 = getBase64Image(data);
-          console.log(data);
-          $('#imgContainer').html("<img src='" + objURL + "' width='"+data.width+"' height='"+image.height+"' id='target'/>")
-
-                    console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
-                    if (data.fromUserId === this.friendId) {
-
-                      param = {
-                        "fromUser":{"id":this.$route.params.friendId,
-                                    "nickName": this.$route.params.name,
-                                    "avatar":this.$route.params.avatar
-                                    },
-                        "toUser":{"id":this.$store.getters.userId,
-                                  "nickName":this.$store.getters.userNickname,
-                                  "avatar": this.$store.getters.userAvatar
-                                  },
-                        "message":data.content,
-                        "id": msgId
-                      };
-                    }
-                    else {
-                      param = {
-                        "fromUser":{"id":this.$store.getters.userId,
-                                    "nickName":this.$store.getters.userNickname,
-                                    "avatar": this.$store.getters.userAvatar
-                                    },
-                        "toUser":{"id":this.$route.params.friendId,
-                                  "nickName": this.$route.params.name,
-                                  "avatar":this.$route.params.avatar
-                                  },
-                        "message":data.content,
-                        "id": msgId
-                      };
-                    }
-
-                    //1
+          msgId = 1;
+          // console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
+          if (data.fromUserId === this.friendId) {
+            param = {
+              "fromUser":{"id":this.$route.params.friendId,
+                          "nickName": this.$route.params.name,
+                          "avatar":this.$route.params.avatar
+                          }, 
+              "toUser":{"id":this.$store.getters.userId, 
+                        "nickName":this.$store.getters.userNickname, 
+                        "avatar": this.$store.getters.userAvatar
+                        }, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
+          else {
+            param = {
+              "fromUser":{"id":this.$store.getters.userId, 
+                          "nickName":this.$store.getters.userNickname, 
+                          "avatar": this.$store.getters.userAvatar
+                          },
+              "toUser":{"id":this.$route.params.friendId,
+                        "nickName": this.$route.params.name,
+                        "avatar":this.$route.params.avatar
+                        }, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
         }
         this.messageList.push(param);
       })
@@ -282,16 +261,15 @@ export default {
         console.log(me.imageFile);
         me.sendMsg();
         
-        //方式二：filereader
+        // //方式二：filereader
         // let reader = new FileReader();
         // reader.onload = function(e){
-          
         //   console.log("读取到的图片",e)
         //   me.imageFile = e.target.result;
         //   me.sendMsg();
         // } 
         // reader.readAsDataURL(data);
-        //唉到底选哪个啊
+        // //唉到底选哪个啊
 
       } else if(!data) {
         //没数据，退出
@@ -325,7 +303,7 @@ export default {
           "id": 1
         };
       }
-      if(this.message !== ""){
+      else if(this.message !== ""){
         data = {                    
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
@@ -346,7 +324,8 @@ export default {
       this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId]);
       this.currendStartChatList.push(data);
       // console.log(this.currendStartChatList)
-      this.messageList.push(param);
+      console.log(param)
+      this.messageList.push("怎么会没有fromUser", param);
       this.message = "";
       this.imageFile = "";
       this.websockOnMessage();
@@ -366,20 +345,26 @@ export default {
       getUnreadMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
         console.log("getUnreadList接受到的具体未读信息", this.unreadList);
-        //console.log("啦啦啦");
-        //console.log(fromId, response);
+        // console.log(fromId, response);
         if(this.unreadList){
           this.unreadList.forEach((data) =>{
             let t = {};
-            if (!data.type || data.type === "SINGLE_SENDING") {
+            if (data.type == "0") {
               t.fromUser = data.fromUser;
-              t.toUser = data.toUser;
+              // t.toUser = data.fromUser;
               t.message = data.message;
               t.id = 0;
             }
-            //要是未读信息是文件图片咋整
-            else if (data.type === "") {
-              //先留下口子
+            //要是未读信息是图片咋整
+            else if (data.type == "1") {
+              t.fromUser = data.fromUser;
+              // t.toUser = data.fromUser;
+              t.message = data.message;
+              t.id = 1;
+            }
+            //要是未读消息的文件
+            else if(data.type == "2") {
+              //只能先留口子
             }
 
             if(!this.messageList){
@@ -402,34 +387,6 @@ export default {
     this.$websocket.dispatch("StopChatId");
   }
 };
-
-//base64编码
-function getBase64Image(img) {
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, img.width, img.height);
-        //var ext = img.src.substring(img.src.lastIndexOf(".")+1).toLowerCase();
-        //var dataURL = canvas.toDataURL("image/"+ext);
-        var dataURL = canvas.toDataURL("image/jpeg");
-        return dataURL;
-    }
-//base64解码
-function dataURLtoFile(dataurl, filename) {
-        var arr = dataurl.split(',');
-        var mime = arr[0].match(/:(.*?);/)[1];
-        var bytes = window.atob(arr[1]);            // 去掉url的头，并转化为byte
-        //let n = new ArrayBuffer(bytes.length);    // 处理异常,将ascii码小于0的转换为大于0
-        var n = bytes.length,
-        u8arr = new Uint8Array(n);                  // 生成视图（直接针对内存）：8位无符号整数，长度1个字节
-        while(n--){
-            u8arr[n] = bytes.charCodeAt(n);
-        }
-        console.log(u8arr,"==>",[u8arr])
-        return new File([u8arr], filename, {type:mime});
-    }
-
 </script>
 <style scoped>
 .el-container{

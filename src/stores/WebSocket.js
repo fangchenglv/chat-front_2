@@ -43,7 +43,7 @@ export default new Vuex.Store({
         let data = JSON.parse(e.data);
         if(data.status === 200){
           //单聊信息
-          if (data.data.type === "SINGLE_SENDING" || data.data.type === "FILE_MSG_SINGLE_SENDING"){
+          if (data.data.type === "SINGLE_SENDING" || data.data.type === "SINGLE_SENDING_IMG" || data.data.type === "FILE_MSG_SINGLE_SENDING") {
             // console.log("数据变化前", state.privateMessage);
             // console.log("有没有包含到底", state.privateMessage.count())
             let friendId = parseInt(data.data.fromUserId);
@@ -68,7 +68,7 @@ export default new Vuex.Store({
             }
           } 
           //群聊信息
-          if (data.data.type === "GROUP_SENDING" || data.data.type === "FILE_MSG_GROUP_SENDING") {
+          if (data.data.type === "GROUP_SENDING" || data.data.type === "GROUP_SENDING_IMG" || data.data.type === "FILE_MSG_GROUP_SENDING") {
             //仿照单聊信息实现
             let GroupId = parseInt(data.data.toGroupId);
             if (state.groupMessage.find((val, ind) => {
