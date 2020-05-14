@@ -9,12 +9,20 @@
     />
 
     <!-- 聊天内容主体 -->
-    <div id="body">
-      <div v-for="(item, ind) in this.messageList" :key="ind">
+    <div id="body" >
+      <div v-for="(item, ind) in this.messageList" :key="ind" >
         <GroupMyItem v-if="item.fromUser" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></GroupMyItem>
         <GroupFriendItem v-else :img="item.toUser.avatar" :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
       </div>
+      <!-- <ul style="height:95%">
+        <li v-for="(item, ind) in this.messageList" :key="ind">
+          <GroupMyItem v-if="item.fromUser" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></GroupMyItem>
+          <GroupFriendItem v-else :img="item.toUser.avatar" :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
+        </li> -->
+
+      </ul>
     </div>
+    
     
     <!-- 聊天底部 -->
     <van-tabbar>
@@ -90,7 +98,18 @@ export default {
     beforeReadImg(){
       return true;
     },
-    afterReadImg(){},
+    afterReadImg(file, detail){
+      // console.log(file, detail);
+      if (file.file.size > 65530) {
+        this.$toast({
+          message: "图片过大，请转换为文件发送",
+          position: "top",
+        })
+        return
+      }
+      this.imageFile = file.content;
+      this.sendMsg()
+    },
     beforeReadFile(){
       return true;
     },
@@ -131,7 +150,15 @@ export default {
           };
         }
         else if (data.data.type === "GROUP_SENDING_IMG"){
-          //先留下口子
+          let dat = data.data;
+          msgId = 1; 
+          param = {
+            "toUser":{"id":+dat.fromUserId, 
+                      "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
+                      "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+            "message":dat.content,
+            "id": msgId
+          };
         } else {
           return;
         }
@@ -157,9 +184,9 @@ export default {
       if(this.imageFile !== ""){
         data = {                    
           "fromUserId" : ""+this.userId,
-          "toUserId" : ""+this.friendId,
+          "toGroupId" : ""+this.groupId,
           "content" : ""+this.imageFile,
-          "type" : "SINGLE_SENDING_IMG"
+          "type" : "GROUP_SENDING_IMG"
         };
         param = {
           // "user":1,
@@ -200,6 +227,7 @@ export default {
       this.$websocket.state.websock.onmessage = e =>{
         const data = JSON.parse(e.data);
         console.log("这是在群聊里面得到的数据啊", data);
+        // console.log("this.newGroupFriend", this.newGroupFriend)
         if (data.data.type !== "REGISTER" && data.status === 200 && data.data.toGroupId == this.groupId && !this.newGroupFriend[data.data.fromUserId]) {
           this.getGroupFriend(data)
           return
@@ -220,7 +248,16 @@ export default {
               };
             }
             else if (data.data.type === "GROUP_SENDING_IMG"){
-              //先留下口子
+              let dat = data.data;
+              // console.log("在接受信息里面", this.newGroupFriend)
+              msgId = 1; 
+              param = {
+                "toUser":{"id":+dat.fromUserId, 
+                          "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
+                          "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+                "message":dat.content,
+                "id": msgId
+              };
             } else {return;}
 
             //添加到信息列表，以便展示信息
@@ -250,7 +287,7 @@ export default {
         return ;
       }
       let param = null, msgId = -1;
-      // console.log("查看全局保持的信息")
+      console.log("currendStartChatList", this.currendStartChatList)
       this.currendStartChatList.forEach(data => {
         if(data.type === "GROUP_SENDING"){
           msgId = 0;
@@ -277,6 +314,24 @@ export default {
         else if (data.type === "GROUP_SENDING_IMG"){
           //先留下口子
           msgId = 1;
+          if (+data.fromUserId === +this.userId) {
+            param = {
+              "fromUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
+                          "avatar":this.$store.getters.userAvatar},  
+              "message":data.content,
+              "id": msgId
+            };
+          }
+          else {
+            param = {
+              "toUser": {"id":+data.fromUserId, 
+                          "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
+                          "avatar": this.newGroupFriend[+data.fromUserId].friendAvatar}, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
         }
         this.messageList.push(param);
       })
@@ -317,6 +372,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+/* #body{
+  padding-bottom: 1.3rem;
+} */
 </style>

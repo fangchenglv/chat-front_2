@@ -11,8 +11,8 @@
     <!-- 聊天内容主体 -->
     <div id="body">
       <div v-for="(item, ind) in this.messageList" :key="ind">
-        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></FriendItem>
-        <MyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
+        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName" me="true" ></FriendItem>
+        <MyItem v-else :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
       </div>
     </div>
     
@@ -25,7 +25,7 @@
         <div style="width:0.5rem; float:right">
           <van-dropdown-menu direction="up">
             <van-dropdown-item ref="item">
-              <van-uploader :before-read="beforeReadImg" :after-read="afterReadImg">
+              <van-uploader accept="image/gif,image/jpeg,image/jpg,image/png" :before-read="beforeReadImg" :after-read="afterReadImg">
                 <van-button type="primary" plain style="padding-left:3.9rem;padding-right:3.9rem" >上传图片</van-button>
               </van-uploader >
               <van-uploader accept=".xls,.doc,.txt,.pdf" result-type="file" :before-read="beforeReadFile" :after-read="afterReadFile">
@@ -65,8 +65,8 @@ export default {
       // messageId : 1,
       friendName:this.$route.params.name,
       // files:null,
-      imageFile:[],
-      fileName:[],
+      imageFile: "",
+      fileName: null,
       };
   },
   computed:{
@@ -80,6 +80,13 @@ export default {
       set(val){
       }
     },
+  },
+  mounted() {
+    this.init();
+  },
+  beforeDestroy(){
+    this.$websocket.state.privateMessage[this.friendId] = this.currendStartChatList;
+    this.$websocket.dispatch("StopChatId");
   },
   methods: {
     init(){
@@ -95,11 +102,6 @@ export default {
         const data = JSON.parse(e.data);
         console.log("得到的数据啊", data);
         if(data.status === -1){
-          // this.$toast({
-          //   message:"请注意，用户离线",
-          //   position:"top"
-          // })
-          // this.websockOnMessage();
           return;
         }
         if(data.data.type !== "REGISTER" && data.status === 200){
@@ -120,9 +122,21 @@ export default {
               };
             }
             else if (data.data.type === "SINGLE_SENDING_IMG"){
-              //先留下口子
-            } else {return;}
-
+              let dat = data.data;
+              msgId = 1;
+              param = {
+                "fromUser":{"id":this.$route.params.friendId,
+                            "nickName": this.$route.params.name,
+                            "avatar":this.$route.params.avatar}, 
+                "toUser":{"id":this.$store.getters.userId, 
+                          "nickName":this.$store.getters.userNickname, 
+                          "avatar": this.$store.getters.userAvatar}, 
+                "message":dat.content,
+                "id": msgId
+              };
+            } else {
+              //留下口子
+            }
             //添加到信息列表，以便展示信息
             if (! this.messageList){
               this.messageList = [param];
@@ -157,11 +171,11 @@ export default {
         return ;
       }
       let param = null, msgId = -1;
-      this.$websocket.state.privateUnreadNumber[this.friendId] = 0
+      // console.log("currendStartChatList", this.currendStartChatList)
       this.currendStartChatList.forEach(data => {
         if(data.type === "SINGLE_SENDING"){
           msgId = 0;
-          console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
+          // console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
           if (data.fromUserId === this.friendId) {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
@@ -192,7 +206,36 @@ export default {
           }
         }
         else if (data.type === "SINGLE_SENDING_IMG"){
-          //先留下口子
+          msgId = 1;
+          // console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
+          if (data.fromUserId === this.friendId) {
+            param = {
+              "fromUser":{"id":this.$route.params.friendId,
+                          "nickName": this.$route.params.name,
+                          "avatar":this.$route.params.avatar
+                          }, 
+              "toUser":{"id":this.$store.getters.userId, 
+                        "nickName":this.$store.getters.userNickname, 
+                        "avatar": this.$store.getters.userAvatar
+                        }, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
+          else {
+            param = {
+              "fromUser":{"id":this.$store.getters.userId, 
+                          "nickName":this.$store.getters.userNickname, 
+                          "avatar": this.$store.getters.userAvatar
+                          },
+              "toUser":{"id":this.$route.params.friendId,
+                        "nickName": this.$route.params.name,
+                        "avatar":this.$route.params.avatar
+                        }, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
         }
         this.messageList.push(param);
       })
@@ -200,11 +243,14 @@ export default {
     sendMsg(){
       let data = null;
       let param = null;
-      if (this.message.trim() === "" && this.imageFile.length < 3 && this.fileName.length < 3){
-        this.$toast("输入信息不能为空");
+      if (this.message.trim() === "" && this.imageFile.trim() === "" && !this.fileName){
+        this.$toast({
+          message: "输入信息不能为空",
+          position:"top"
+        });
         return
       }
-      if (this.fileName.length === 3) {
+      if (this.fileName) {
         data = {
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
@@ -224,14 +270,13 @@ export default {
           "id": 2
         }
       }
-      if(this.imageFile.length === 3){
+      else if(this.imageFile !== ""){
+        // console.log("imagefile", this.imageFile)
         data = {                    
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
-          "originalFileName":"" + this.imageFile[0],
-          "fileUrl": "" + this.imageFile[1],
-          "fileSize":"" + this.imageFile[2],
-          "type" : "FILE_IMG_SINGLE_SENDING"
+          "content": this.imageFile,
+          "type" : "SINGLE_SENDING_IMG"
         };
         param = {
           "fromUser":{"id":this.$store.getters.userId,
@@ -266,9 +311,10 @@ export default {
       this.currendStartChatList.push(data);
       // console.log(this.currendStartChatList)
       this.messageList.push(param);
+      // console.log("this.messageList", this.messageList);
       this.message = "";
-      this.imageFile = [];
-      this.fileName = []
+      this.imageFile = "";
+      this.fileName = null;
       this.websockOnMessage();
     },
     beforeReadImg(file, detail){
@@ -276,11 +322,16 @@ export default {
     },
     afterReadImg(file, detail){
       // let url = URL.createObjectURL(file);
-      // console.log(url);
-      this.imageFile = [file.name, file.content, file.size];
+      // console.log(file, detail);
+      if (file.file.size > 65530) {
+        this.$toast({
+          message: "图片过大，请转换为文件发送",
+          position: "top",
+        })
+        return
+      }
+      this.imageFile = file.content;
       this.sendMsg()
-      // console.log("!!!!!!!!!!!!!!!!!!!!!",file);
-      // console.log("@@@@@@@", detail)
     },
     beforeReadFile(file, detail){
       return true;
@@ -341,23 +392,14 @@ export default {
           })
         }
         this.ParparePrivateChatMessage()
-      }).catch()
+      }).catch(err => {
+        console.log(err)
+      })
     },
     onClickLeft(){
       this.$router.back();
     }
   },
-  // mounted() {
-  //   this.init();
-  // },
-  beforeMount() {
-    // console.log(this);
-    this.init();
-  },
-  beforeDestroy(){
-    this.$websocket.state.privateMessage[this.friendId] = this.currendStartChatList;
-    this.$websocket.dispatch("StopChatId");
-  }
 };
 </script>
 

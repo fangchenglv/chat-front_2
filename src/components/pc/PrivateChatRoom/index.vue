@@ -20,12 +20,12 @@
         <el-dropdown-menu slot="dropdown" >
 
           <el-dropdown-item style="display:relative">
-            <input type="file" name="file" id="file" class="inputfile" @change="handleFile($event)" />
+            <input type="file" name="file" id="file" accept=".xls,.doc,.txt,.pdf" class="inputfile" @change="handleFile($event)" />
             <label for="file">上传文件</label>
           </el-dropdown-item>
 
           <el-dropdown-item style="display:relative">
-            <input type="file" name="image" id="image" class="inputfile" @change="handleFile($event)" />
+            <input type="file" name="image" id="image" accept="image/gif,image/jpeg,image/jpg,image/png" class="inputfile" @change="handleFile($event)" />
             <label for="file">上传图片</label>
           </el-dropdown-item>
 
@@ -72,9 +72,6 @@ export default {
       myAvator:this.$store.getters.userAvatar,
       friendNickName:this.$route.params.name,
       friendAvator:this.$route.params.avatar,
-      // currendStartChatList:this.$websocket.getters.privateMessage(this.friendId),
-      // sendImage:this.sendMsg,
-      // messageId : 1,
       };
   },
   computed:{
@@ -88,17 +85,17 @@ export default {
       set(val){
       }
     },
-    // otherChatList:{
-    //   get(){
-    //     return this.$websocket.state.privateMessage
-    //   },
-    //   set(){
-    //   }
-    // }
+  },
+  mounted() {
+    // console.log(this);
+    this.init();
+  },
+  beforeDestroy(){
+    this.$websocket.state.privateMessage[this.friendId] = this.currendStartChatList;
+    this.$websocket.dispatch("StopChatId");
   },
   methods: {
     init(){
-      // console.log(typeof this.friendId)
       //要把未读数清零
       this.$websocket.state.privateUnreadNumber[this.friendId] = 0;
       this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
@@ -180,7 +177,7 @@ export default {
         return ;
       }
       let param = null, msgId = -1;
-      console.log("currendStartChatList", this.currendStartChatList)
+      // console.log("currendStartChatList", this.currendStartChatList)
       this.currendStartChatList.forEach(data => {
         if(data.type === "SINGLE_SENDING"){
           msgId = 0;
@@ -251,25 +248,30 @@ export default {
     },
     handleFile(event){
       let data = event.target.files[0];
-      // console.log(data);
+      // console.log("有大小吗", data);
+      if (data.size > 65530) {
+        this.$message("图片太大，请转换为文件上传")
+        return
+      }
       let toId = this.$route.params.friendId;
       if(/.jpg|.jpeg|.png|.img/ig.test(data.name)){
         //处理图片
         let me = this;
-        //方式一：内存url   eg:blob:http://localhost:8080/b077141c-9d62-487b-9e3a-c8b93058aa10
-        me.imageFile = URL.createObjectURL(data);
-        console.log(me.imageFile);
-        me.sendMsg();
+
+        // //方式一：内存url   eg:blob:http://localhost:8080/b077141c-9d62-487b-9e3a-c8b93058aa10
+        // me.imageFile = URL.createObjectURL(data);
+        // console.log(me.imageFile);
+        // me.sendMsg();
         
-        // //方式二：filereader
-        // let reader = new FileReader();
-        // reader.onload = function(e){
-        //   console.log("读取到的图片",e)
-        //   me.imageFile = e.target.result;
-        //   me.sendMsg();
-        // } 
-        // reader.readAsDataURL(data);
-        // //唉到底选哪个啊
+        //方式二：filereader
+        let reader = new FileReader();
+        reader.onload = function(e){
+          console.log("读取到的图片",e)
+          me.imageFile = e.target.result;
+          me.sendMsg();
+        } 
+        reader.readAsDataURL(data);
+        //唉到底选哪个啊
 
       } else if(!data) {
         //没数据，退出
@@ -302,8 +304,7 @@ export default {
           "message":this.imageFile,
           "id": 1
         };
-      }
-      else if(this.message !== ""){
+      } else if (this.message !== ""){
         data = {                    
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
@@ -324,8 +325,8 @@ export default {
       this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId]);
       this.currendStartChatList.push(data);
       // console.log(this.currendStartChatList)
-      console.log(param)
-      this.messageList.push("怎么会没有fromUser", param);
+      console.log("怎么会没有fromUser", param)
+      this.messageList.push(param);
       this.message = "";
       this.imageFile = "";
       this.websockOnMessage();
@@ -378,14 +379,6 @@ export default {
       }).catch()
     },
   },
-  beforeMount() {
-    // console.log(this);
-    this.init();
-  },
-  beforeDestroy(){
-    this.$websocket.state.privateMessage[this.friendId] = this.currendStartChatList;
-    this.$websocket.dispatch("StopChatId");
-  }
 };
 </script>
 <style scoped>
