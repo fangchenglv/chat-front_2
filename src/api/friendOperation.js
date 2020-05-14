@@ -202,6 +202,8 @@ export function sendMessage(param, toId){
     data:param,
   })
 }
+
+
 //聊天：获得离线好友个人信息的列表，不是具体聊天内容
 export function getUnreadMsgList(userId){
   return request({
@@ -229,17 +231,7 @@ export function getUnreadMessageList(toUserId, fromUserId){
     }
   })
 }
-//群聊，获取离线好友具体消息
-export function getUnreadGroupMessageList(toUserId, groupId) {
-  return request({
-    url: "/chat/offline/message",
-    method: "post",
-    data: {
-      groupId,
-      toUserId
-    }
-  })
-}
+
 // //登出
 // export function logout_(userId){
 //   return request({
