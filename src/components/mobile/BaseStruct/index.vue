@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%">
+  <div >
     <van-nav-bar
       :title= tit
     />
