@@ -195,4 +195,5 @@ export default {
 .el-form{
   margin: 0 3rem 0 3rem;
 }
+
 </style>
