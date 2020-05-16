@@ -176,13 +176,7 @@ export default {
         } else {
           console.log("参数验证不合法");
           return false;
-        }
-        if (this.ruleForm2.gender === "1") {
-                    this.ruleForm2.gender = "男";
-                  } else {
-                    this.ruleForm2.gender = "女";
-                  }
-        });
+        }});
     },
     gotoLogin(){
       this.$router.push({path: '/login'});
@@ -195,5 +189,4 @@ export default {
 .el-form{
   margin: 0 3rem 0 3rem;
 }
-
 </style>

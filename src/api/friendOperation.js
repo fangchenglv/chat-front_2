@@ -17,8 +17,8 @@ export function buildNewGroupChat(userId, groupName, description){
     url: "/group/add",
     method: "post",
     data: {
-      userId:userId,
-      groupName:groupName,
+      userId:userId, 
+      groupName:groupName, 
       description:description
     }
   })

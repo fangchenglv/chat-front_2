@@ -34,17 +34,16 @@ export default {
   //   exit()
   // },
   methods:{
-    beforeunloadHandler: async function(){
-      this.$websocket.state.websock.onclose = function (e) {
-        console.log(this.$websocket.state.websock);
-        this.$websocket.state.regisMsg = undefined;
-      };
-    },
+    // beforeunloadHandler: async function(){
+    //   this.$websocket.state.websock.onclose = function (e) {
+    //     console.log(this.$websocket.state.websock);
+    //     this.$websocket.state.regisMsg = undefined;
+    //   };
+    // },
     exit(){
-      this.beforeunloadHandler().then((result) => {
-        logout_(this.$store.getters.userId);
-        this.$router.push({path:"/login"});
-      })
+      // this.$websocket.websock.close()
+      this.$router.push({path:"/login"})
+      logout_(this.$store.getters.userId);
     }
     
   }
