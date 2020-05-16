@@ -26,10 +26,15 @@ export default new Vuex.Store({
     }
   },
   mutations:{
-     WEBSOCKET_INIT(state, data){
-      let [url, regisMsg] = data
-      state.websock = new WebSocket(url);
+    SET_WEBSOCKET(state, sock){
+      state.websock = sock;
+    },
+    SET_REGISTERMSG(state, regisMsg){
       state.regisMsg = regisMsg;
+    },
+    WEBSOCKET_INIT(state, data){
+      let [url, regisMsg] = data
+      
       // console.log(regisMsg, state.regisMsg);
       state.websock.onopen = function () {
         if (state.regisMsg !== undefined && state.websock.readyState === 1) {
@@ -97,17 +102,17 @@ export default new Vuex.Store({
         console.log("ws错误!");
         console.log(e);
       }
-      state.websock.onclose = function (e) { //关闭
-        console.log("ws关闭！");
-        console.log(e);
-      }
+      // state.websock.onclose = function (e) { //关闭
+      //   console.log("ws关闭！");
+      //   console.log(e);
+      // }
       //保活
-      // setInterval(() => {
-      //   if (state.websock.readyState === 1) {
-      //     state.websock.send(state.regisMsg);
-      //     // console.log('发送心跳信息ping');
-      //   }
-      // }, 30000)
+      setInterval(() => {
+        if (state.websock.readyState === 1) {
+          state.websock.send(state.regisMsg);
+          // console.log('发送心跳信息ping');
+        }
+      }, 30000)
     },
     WEBSOCKET_SEND(state, data) {
       let id = data[1];
@@ -155,6 +160,10 @@ export default new Vuex.Store({
     StartWebsocket({
       commit
     }, msg) {
+      let [url, regisMsg] = msg;
+      let web = new WebSocket(""+url);
+      commit("SET_WEBSOCKET", web);
+      commit("SET_REGISTERMSG", regisMsg);
       commit('WEBSOCKET_INIT', msg);
     },
     SendWebsocketMessage({

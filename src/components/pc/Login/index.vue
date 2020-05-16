@@ -99,9 +99,7 @@ export default {
               // const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
 
               //产品环境地址
-              // const wsUrl = "wss://localhost:8081/ws";
-              // const wsUrl = "wss://123.56.232.247:8081/ws"
-              const wsUrl = "wss://127.0.0.1:8081/ws"
+              const wsUrl = "wss://123.56.232.247:8081/ws"
 
               let uid = this.userId;
               uid = "" + uid;
