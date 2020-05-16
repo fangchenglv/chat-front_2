@@ -23,7 +23,12 @@
     <div class="secondPart" id="secondPart">
       <div><el-button type="text" icon="el-icon-close" style="float:right" @click="handleClose"></el-button></div>
       <!-- 动态添加群信息吧 -->
-      
+      <ul>
+        <li v-for="(item, ind) in groupFriend" :key="ind">
+          <el-avatar :src="item.avatar"></el-avatar>
+          <p>{{item.userName}}</p>
+        </li>
+      </ul>
       <!-- 用一个表格展示吧准备 -->
     </div>
 
@@ -85,7 +90,7 @@ export default {
         groupId:undefined,
       },
       myId:this.$store.getters.userId,
-      groupFriend:this.$store.getters.allFriend,
+      groupFriend:[],
       multipleSelection: [],
       
     }
@@ -163,12 +168,19 @@ export default {
     getGroupMember(){
       getMyGroupChatPerson(this.form.groupId)
         .then(res =>{
-          console.log(res);
+          console.log("群成员信息", res);
           var obj = document.getElementById("secondPart");
           obj.setAttribute("class", "secondPartChange");
           var obj = document.getElementById("firstPart");
           obj.setAttribute("class", "firstPartChange");
-          this.groupFriend = res.data.data;
+          let tmpGroupFriend = res.data.data;
+          let len = tmpGroupFriend.length;
+          for (let i = 0; i < len; i++) {
+            this.groupFriend.push({
+              userName: tmpGroupFriend[i].user.nickName, 
+              avatar: tmpGroupFriend[i].user.avatar
+            })
+          }
         })
     },
     handleClose(){
@@ -176,6 +188,7 @@ export default {
       obj.setAttribute("class", "secondPart");
       var obj = document.getElementById("firstPart");
       obj.setAttribute("class", "firstPart");
+      this.groupFriend = [];
     },
     quitGroupChat(){
       quitOneGroupChat(this.form.groupId, this.myId)
