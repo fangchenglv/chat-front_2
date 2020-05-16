@@ -139,6 +139,7 @@ export default {
     logout(){
       // const sock = this.$store.getters.sock;
       // sock.closeMyself();
+      // this.$websocket.websock.close()
       this.$router.push({path:"/login"})
       logout_(this.$store.getters.userId);
     },

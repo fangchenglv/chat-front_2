@@ -145,15 +145,6 @@ let router = new Router({
         keepAlive:false,
       }
     },
-    //查看群成员
-    {
-      path: "/checkGroupFriend/:groupId",
-      name: "checkGroupFriend",
-      component: () => import("../../components/mobile/GroupChat/checkGroupFriend"),
-      meta: {
-        keepAlive: false,
-      }
-    },
     //好友列表页
     {
       path:'/friendList',
