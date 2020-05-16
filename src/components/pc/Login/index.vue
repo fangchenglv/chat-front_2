@@ -95,20 +95,18 @@ export default {
           this.$store
             .dispatch("Login", this.ruleForm1) //调用的是store里面的Login函数，传入参数是自己的表单
             .then(() => {
-              // 开发环境地址
-              const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
+              // // 开发环境地址
+              // const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
+
               //产品环境地址
-              // const wsUrl = "wss://127.0.0.1:8081/ws";
+              // const wsUrl = "wss://localhost:8081/ws";
               // const wsUrl = "wss://123.56.232.247:8081/ws"
+              const wsUrl = "wss://127.0.0.1:8081/ws"
+
               let uid = this.userId;
               uid = "" + uid;
               // url, msgCallback, name, regisMsg
               let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
-              // this.$store.dispatch('StartWebsocket',  [wsUrl,  "网页聊天", regisMsg]).then(res =>{
-              //   // console.log("页面连接成功websocket");
-              // }).catch();
-              // this.websock = this.$store.getters.sock;
-              // this.websock.connect(JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"}));
               this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg]).then((res) =>{
                 // console.log("可能登录了吧", res);
               })

@@ -69,3 +69,15 @@ import {
   SwipeCell
 } from 'vant';
 Vue.use(SwipeCell);
+
+import {
+  Grid,
+  GridItem
+} from 'vant';
+Vue.use(Grid);
+Vue.use(GridItem);
+
+import {
+  Image as VanImage
+} from 'vant';
+Vue.use(VanImage);

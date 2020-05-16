@@ -76,6 +76,9 @@ export default {
     onClickLeft(){
       this.$router.push({path:"/friendList"});
     },
+    checkFriend(){
+      this.$router.push({name: "checkGroupFriend", params: {groupId: this.form.groupId}})
+    },
     quitGroupChat(){
       quitOneGroupChat(this.form.groupId, this.myId)
         .then(res => {
@@ -89,7 +92,7 @@ export default {
     quitAndDismissGroup(){
       deleteMyGroupChat(this.form.groupId)
         .then(res => {
-          this.$message(群聊已经删除);
+          this.$message("群聊已经删除");
           this.$router.replace({path: "/friendList"});
         })
         .catch(e => {
@@ -107,9 +110,6 @@ export default {
       this.$router.push({name: "groupChatPage", params:{groupId: this.form.groupId, myId: this.myId, name:this.form.name}})
     },
     toGroupHistoryPage(){},
-    checkFriend(){
-      this.$router.push({name: "checkGroupFriend", params: {groupId: this.form.groupId}})
-    },
     handleChange(){
       if(this.form.name.trim() === ""){
         this.init();

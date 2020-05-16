@@ -151,7 +151,7 @@ let router = new Router({
       name: "checkGroupFriend",
       component: () => import("../../components/mobile/GroupChat/checkGroupFriend"),
       meta: {
-        keepAlive: false,
+        keepAlive:false,
       }
     },
     //好友列表页

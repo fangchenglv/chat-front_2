@@ -101,12 +101,13 @@ export default new Vuex.Store({
         console.log("ws关闭！");
         console.log(e);
       }
-      setInterval(() => {
-        if (state.websock.readyState === 1) {
-          state.websock.send(state.regisMsg);
-          // console.log('发送心跳信息ping');
-        }
-      }, 30000)
+      //保活
+      // setInterval(() => {
+      //   if (state.websock.readyState === 1) {
+      //     state.websock.send(state.regisMsg);
+      //     // console.log('发送心跳信息ping');
+      //   }
+      // }, 30000)
     },
     WEBSOCKET_SEND(state, data) {
       let id = data[1];

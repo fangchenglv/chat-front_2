@@ -46,7 +46,7 @@
         </div>
         <div style="display:inline-block">
           <van-cell title="女性" clickable @click="gender = '0'">
-            <van-radio slot="right-icon" name="0" style="padding-left:0.3rem"/>
+            <van-radio slot="right-icon" name="2" style="padding-left:0.3rem"/>
           </van-cell>
         </div>
       </van-cell-group>
@@ -66,15 +66,15 @@
       :error-message="errorPhone"
     />
     <div >
-      <van-button
-        plain
-        type="primary"
+      <van-button 
+        plain 
+        type="primary" 
         style="margin-right:1rem"
         :loading='loading'
         @click="handleResgister">注册</van-button>
-      <van-button
-        plain
-        type="info"
+      <van-button 
+        plain 
+        type="info" 
         style="margin-left:1rem;"
         @click="gotoLogin">登录</van-button>
     </div>
