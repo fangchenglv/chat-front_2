@@ -210,12 +210,15 @@ export function getUnreadMsgList(userId){
     data:{userId},
   })
 }
-//聊天：获取历史消息
-export function getHistoryReadList(fromId, toId){
+//聊天：获取历史消息,不是后台说的我是to，我应该是from
+export function getHistoryReadList(fromUserId, toUserId){
   return request({
-    url:"/chat/self/" + fromId + "/" + toId,
-    method:"get",
-    // data:{},
+    url:"/chat/singleHistory",
+    method:"post",
+    data:{
+      fromUserId,
+      toUserId
+    },
   })
 }
 //聊天，获取离线好友具体消息
