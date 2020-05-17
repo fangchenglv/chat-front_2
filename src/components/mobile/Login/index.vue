@@ -64,11 +64,11 @@ export default {
         .dispatch('Login', {'userName': this.username, 'password': this.password})
         .then(response => {
           // 连接成功https后连接websocket
-          // // 开发环境地址
-          // const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
+          // 开发环境地址
+          const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
 
-          //产品环境地址
-          const wsUrl = "wss://123.56.232.247:8081/ws"
+          // //产品环境地址
+          // const wsUrl = "wss://123.56.232.247:8081/ws"
 
           let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
           this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg]).then((res) =>{

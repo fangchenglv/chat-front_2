@@ -2,8 +2,8 @@
     <el-container>
         <el-main style="background-color:rgb(255,255,255)">
             <div v-for="(item, ind) in historyMessageList" :key="ind">
-                <FriendItem v-if="item.fromUser.id == userId" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></FriendItem>
-                <MyItem v-else :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
+                <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></FriendItem>
+                <MyItem v-else :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
             </div>
         </el-main>
     </el-container>
@@ -33,9 +33,22 @@ export default {
 
     methods:{
       getHistoryList(){
-        getHistoryReadList(this.$store.getters.userId, this.$route.params.toId).then(response =>{
-            this.historyMessageList = response.data.data;
-            // console.log("历史信息", this.historyMessageList);
+        getHistoryReadList(this.$route.params.toId, this.userId).then(response =>{
+            console.log("哪个是我", this.userId)
+            let hist = response.data.data;
+            for (let i = 0; i < hist.length; i++) {
+                let t = {fromUser:{
+                    id: hist[i].fromUserId,
+                    avatar: hist[i].fromAvatar,
+                    nickName: hist[i].fromName
+                    },
+                    message: hist[i].content,
+                    id:hist[i].type
+                }
+                this.historyMessageList.push(t)
+            }
+            // this.historyMessageList = response.data.data;
+            console.log("历史信息", this.historyMessageList);
         }).catch();
       },
     }

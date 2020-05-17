@@ -95,11 +95,11 @@ export default {
           this.$store
             .dispatch("Login", this.ruleForm1) //调用的是store里面的Login函数，传入参数是自己的表单
             .then(() => {
-              // // 开发环境地址
-              // const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
+              // 开发环境地址
+              const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
 
-              //产品环境地址
-              const wsUrl = "wss://123.56.232.247:8081/ws"
+              // //产品环境地址
+              // const wsUrl = "wss://123.56.232.247:8081/ws"
 
               let uid = this.userId;
               uid = "" + uid;
