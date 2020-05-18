@@ -34,7 +34,7 @@
 
       <!-- 弹出框 -->
       <el-dialog title="好友分组" :visible.sync="dialogVisible">
-        <div v-for="item in friendGroupList" :key="item.id" style="text-align:left">
+        <div v-for="item in friendGroupList" :key="ind" style="text-align:left">
           <el-radio-group v-model="choicedGroupId">
             <el-radio :label="item.id">{{item.typeName}}</el-radio>
           </el-radio-group>
@@ -125,11 +125,11 @@ export default {
         status = "2";
       }
       // console.log(this.choicedGroupId)
-      if (this.choicedGroupId == -1){
+      if (this.choicedGroupId == -1 && status === "1"){
         this.$message({
           message:"请选择分组",
           type:"error"
-        })
+        })          //同意时需要选择分组，不同意则不需要
         return 0
       }
       // console.log(friendTypeId)

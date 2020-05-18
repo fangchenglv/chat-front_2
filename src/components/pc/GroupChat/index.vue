@@ -13,7 +13,7 @@
             <el-button type="primary" plain @click="toGroupChatPage">进入群聊</el-button>
             <el-button type="primary" plain @click="dialogTableVisible = true">添加新成员</el-button>
             <el-button type="primary" plain @click="dialogFormVisible = true">修改群组信息</el-button>
-            <el-button type="primary" plain @click="getGroupMember">群成员</el-button>
+            <el-button type="primary" plain @click="getGroupMember">查看群成员</el-button>
             <el-button type="primary" plain @click="quitGroupChat">退出群聊</el-button>
             <el-button type="primary" plain @click="quitAndDismissGroup">解散群聊</el-button>
           </div>
@@ -22,6 +22,7 @@
     </div>
     <div class="secondPart" id="secondPart">
       <div><el-button type="text" icon="el-icon-close" style="float:right" @click="handleClose"></el-button></div>
+      <br style="clear:both"/>
       <!-- 动态添加群信息吧 -->
       <ul>
         <li v-for="(item, ind) in groupFriend" :key="ind">

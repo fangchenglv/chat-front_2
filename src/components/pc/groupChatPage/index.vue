@@ -20,12 +20,12 @@
         <el-dropdown-menu slot="dropdown" >
 
           <el-dropdown-item style="display:relative">
-            <input type="file" name="file" id="file" class="inputfile" @change="handleFile($event)" />
+            <input type="file" accept=".xls,.doc,.txt,.pdf" name="file" id="file" class="inputfile" @change="handleFile($event)" />
             <label for="file">上传文件</label>
           </el-dropdown-item>
 
           <el-dropdown-item style="display:relative">
-            <input type="file" name="image" id="image" class="inputfile" @change="handleFile($event)" />
+            <input type="file" name="image" id="image" accept="image/gif,image/jpeg,image/jpg,image/png" class="inputfile" @change="handleFile($event)" />
             <label for="file">上传图片</label>
           </el-dropdown-item>
 
@@ -123,7 +123,15 @@ export default {
           };
         }
         else if (data.data.type === "GROUP_SENDING_IMG"){
-          //先留下口子
+          let dat = data.data;
+          msgId = 1; 
+          param = {
+            "toUser":{"id":+dat.fromUserId, 
+                      "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
+                      "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+            "message":dat.content,
+            "id": msgId
+          };
         } else {
           return;
         }
@@ -139,6 +147,38 @@ export default {
         this.websockOnMessage()
       })
     },
+    handleFile(event){
+      let data = event.target.files[0];
+      // console.log("有大小吗", data);
+      if (data.size > 65530) {
+        this.$message("图片太大，请转换为文件上传")
+        return
+      }
+      let toId = this.$route.params.friendId;
+      if(/.jpg|.jpeg|.png|.img/ig.test(data.name)){
+        let me = this;
+        // //方式一：内存url   eg:blob:http://localhost:8080/b077141c-9d62-487b-9e3a-c8b93058aa10
+        // me.imageFile = URL.createObjectURL(data);
+        // console.log(me.imageFile);
+        // me.sendMsg();
+        
+        //方式二：filereader
+        let reader = new FileReader();
+        reader.onload = function(e){
+          console.log("读取到的图片",e)
+          me.imageFile = e.target.result;
+          me.sendMsg();
+        } 
+        reader.readAsDataURL(data);
+        //唉到底选哪个啊
+
+      } else if(!data) {
+        //没数据，退出
+        return;
+      } else{
+        //处理文件
+      }
+    },
     sendMsg(){
       let data = null;
       let param = null;
@@ -149,12 +189,11 @@ export default {
       if(this.imageFile !== ""){
         data = {                    
           "fromUserId" : ""+this.userId,
-          "toUserId" : ""+this.friendId,
+          "toGroupId" : ""+this.groupId,
           "content" : ""+this.imageFile,
-          "type" : "SINGLE_SENDING_IMG"
+          "type" : "GROUP_SENDING_IMG"
         };
         param = {
-          // "user":1,
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
                       "avatar":this.$store.getters.userAvatar}, 
@@ -162,7 +201,7 @@ export default {
           "id": 1
         };
       }
-      if(this.message !== ""){
+      else if(this.message !== ""){
         data = {                    
           "fromUserId" : ""+this.userId,
           "toGroupId" : ""+this.groupId,
@@ -170,7 +209,6 @@ export default {
           "type" : "GROUP_SENDING"
         };
         param = {
-          // "user":1,
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
                       "avatar":this.$store.getters.userAvatar}, 
@@ -191,9 +229,8 @@ export default {
       let param = null;
       this.$websocket.state.websock.onmessage = e =>{
         const data = JSON.parse(e.data);
-        console.log("这是在群聊里面得到的数据啊", data);
-        if (data.data.type !== "REGISTER" && data.status === 200 && data.data.toGroupId == this.groupId && !this.newGroupFriend[data.data.fromUserId]) {
-          
+        console.log("这是在群聊yemian里面得到的数据啊", data);
+        if (!this.newGroupFriend[data.data.fromUserId] && data.data.type !== "REGISTER") {
           this.getGroupFriend(data)
           return
         }
@@ -213,7 +250,16 @@ export default {
               };
             }
             else if (data.data.type === "GROUP_SENDING_IMG"){
-              //先留下口子
+              let dat = data.data;
+              // console.log("在接受信息里面", this.newGroupFriend)
+              msgId = 1; 
+              param = {
+                "toUser":{"id":+dat.fromUserId, 
+                          "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
+                          "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+                "message":dat.content,
+                "id": msgId
+              };
             } else {return;}
 
             //添加到信息列表，以便展示信息
@@ -243,14 +289,10 @@ export default {
         return ;
       }
       let param = null, msgId = -1;
-      // console.log("currendStartChatList", this.currendStartChatList)
-      // console.log("到底渲染了几次", this.currendStartChatList)
-      
       this.currendStartChatList.forEach(data => {
         // console.log("newGroupFriend", this.newGroupFriend)
         if(data.type === "GROUP_SENDING"){
           msgId = 0;
-          
           if (+data.fromUserId === +this.userId) {
             param = {
               "fromUser":{"id":this.$store.getters.userId,
@@ -270,12 +312,29 @@ export default {
             };
           }
         }
-        else if (data.type === "SINGLE_SENDING_IMG"){
-          //先留下口子
+        else if (data.type === "GROUP_SENDING_IMG"){
           msgId = 1;
+          if (+data.fromUserId === +this.userId) {
+            param = {
+              "fromUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
+                          "avatar":this.$store.getters.userAvatar},  
+              "message":data.content,
+              "id": msgId
+            };
+          }
+          else {
+            param = {
+              "toUser": {"id":+data.fromUserId, 
+                          "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
+                          "avatar": this.newGroupFriend[+data.fromUserId].friendAvatar}, 
+              "message":data.content,
+              "id": msgId
+            };
+          }
         }
         this.messageList.push(param);
-        console.log(this.messageList)
+        // console.log(this.messageList)
       })
     },
     getUnreadList(fromId, toId){

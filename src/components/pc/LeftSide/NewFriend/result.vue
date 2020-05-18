@@ -25,7 +25,7 @@
     
     <!-- 弹出框 -->
     <el-dialog title="好友分组" :visible.sync="dialogVisible">
-      <div v-for="item in friendGroupList" :key="item.id" style="text-align:left;">
+      <div v-for="item in friendGroupList" :key="ind" style="text-align:left;">
         <el-radio-group v-model="choicedGroupId">
           <el-radio :label="item.id" >{{item.typeName}}</el-radio>
         </el-radio-group>
