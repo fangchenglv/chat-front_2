@@ -21,12 +21,12 @@
         </div>
         <div slot="footer">
           <van-button @click="toGroup">选择好友分组</van-button>
-          <van-button 
+          <van-button
             type="info"
             plain
             @click="sendRequest(data.id, 1, data.friendTypeId)">
             同意</van-button>
-          <van-button 
+          <van-button
             plain
             type="warning"
             @click="sendRequest(data.id, 2, data.friendTypeId)">
@@ -44,11 +44,11 @@
     </div>
 
     <div v-if="show === true">
-      <van-pagination 
+      <van-pagination
         id="page"
         v-model="pageNum"
-        :total-items="total" 
-        :show-page-size="5" 
+        :total-items="total"
+        :show-page-size="5"
         :items-per-page="pageSize"
         force-ellipses
       />
@@ -81,13 +81,17 @@ export default {
     sendRequest(id, status, friendTypeId) {  //发送是否同意添加好友的请求
       if (status === 1) {
         status = "1";
+        if (this.choicedGroupId == -1){
+          this.$toast("请选择分组")
+          return 0
+        }
       } else if (status === 2) {
         status = "2";
       }
-      if (this.choicedGroupId == -1){
-        this.$toast("请选择分组")
-        return 0
-      }
+      // if (this.choicedGroupId == -1){
+      //   this.$toast("请选择分组")
+      //   return 0
+      // }
       // console.log(friendTypeId)
       solveRequest(id, status, this.choicedGroupId, friendTypeId) //同意添加好友，
         .then(response => {
