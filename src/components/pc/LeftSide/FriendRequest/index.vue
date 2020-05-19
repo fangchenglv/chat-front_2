@@ -125,7 +125,7 @@ export default {
         status = "2";
       }
       // console.log(this.choicedGroupId)
-      if (this.choicedGroupId == -1){
+      if (this.choicedGroupId == -1 && status === "1"){
         this.$message({
           message:"请选择分组",
           type:"error"
