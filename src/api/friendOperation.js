@@ -211,11 +211,21 @@ export function getUnreadMsgList(userId){
   })
 }
 //聊天：获取历史消息
-export function getHistoryReadList(fromId, toId){
+export function getHistoryReadList(fromUserId, toUserId){
   return request({
     url:"/chat/self/" + fromId + "/" + toId,
     method:"get",
     // data:{},
+  })
+}
+//群聊获取历史消息
+export function getGroupHistoryReadList(groupId) {
+  return request({
+    url:"/chat/groupHistory",
+    method:"post",
+    data:{
+      groupId
+    }
   })
 }
 //聊天，获取离线好友具体消息
@@ -240,13 +250,3 @@ export function getUnreadGroupMessageList(toUserId, groupId) {
     }
   })
 }
-// //登出
-// export function logout_(userId){
-//   return request({
-//     url:"/user/logout",
-//     method:"post",
-//     data:{
-//       userId,
-//     }
-//   })
-// }

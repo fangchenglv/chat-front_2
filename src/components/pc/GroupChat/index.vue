@@ -16,6 +16,7 @@
             <el-button type="primary" plain @click="getGroupMember">查看群成员</el-button>
             <el-button type="primary" plain @click="quitGroupChat">退出群聊</el-button>
             <el-button type="primary" plain @click="quitAndDismissGroup">解散群聊</el-button>
+            <el-button type="primary" plain @click="getGroupHistory">聊天记录</el-button>
           </div>
         </div>
       </el-card>
@@ -119,6 +120,9 @@ export default {
       .then(res => {
         this.$store.dispatch("GetMyGroupChat", res.data.data);
       })
+    },
+    getGroupHistory(){
+      this.$router.push({name: "groupHistoryPage", params: {id: this.form.groupId}})
     },
     toGroupChatPage(){
       this.$router.push({name: "groupChatPage", params:{groupId: this.form.groupId, myId: this.myId, name:this.form.name}})

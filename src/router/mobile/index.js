@@ -197,6 +197,15 @@ let router = new Router({
         keepAlive:false,
       }
     },
+    //群聊历史记录
+    {
+      path: "groupHistoryPage/:id",
+      name: "groupHistoryPage",
+      component: () => import("../../components/mobile/HistoryRecord/groupHistoryRecord/index"),
+      meta: {
+        keepAlive: false,
+      }
+    },
     //重定向
     {
       path: '/*',

@@ -109,7 +109,9 @@ export default {
     toGroupChatroom(){
       this.$router.push({name: "groupChatPage", params:{groupId: this.form.groupId, myId: this.myId, name:this.form.name}})
     },
-    toGroupHistoryPage(){},
+    toGroupHistoryPage(){
+      this.$router.push({name: "groupHistoryPage", params: {id: this.form.groupId}})
+    },
     handleChange(){
       if(this.form.name.trim() === ""){
         this.init();
