@@ -47,7 +47,12 @@ export default {
       this.$store.dispatch("SearchFriend", this.message)
       .then(response => {
         // let findFriendList = response.data.data;
-        this.$router.push({ path: "/newFriend/result" });
+        if(response.data.data.length==0){
+          this.$toast("该用户不存在");
+        }
+        else {
+          this.$router.push({ path: "/newFriend/result" });
+        }
       })
       .catch(err => {
         console.log("!!!!!!!!!!!!!!!", err);

@@ -36,7 +36,7 @@
 import {mapGetters} from "vuex"
 import { requestFriend, searchFriend } from "@/api/friendOperation"
 
-export default { 
+export default {
   name:"newFriendResult",
   data(){
     return{
@@ -64,7 +64,7 @@ export default {
       this.show = true;
     },
     sendRequest(friendId, userId){
-      
+
       if(this.group === -1){
         this.$toast("请选择好友分组再发送请求");
         this.group = -1;
@@ -75,9 +75,7 @@ export default {
         let data = response.data.data;
         if (data === "1") {
           this.$toast("好友申请已经发出");
-        } else if (data === 0) {
-          this.$toast("没有找到该用户");
-        } else if (data === -1 || data === "ALREADY_FRIENDS") {
+        }  else if (data === -1 || data === "ALREADY_FRIENDS") {
           this.$toast("该用户已经是你的好友");
         } else if (data === -2 || data === "NOT_YOURSELF") {
           this.$toast("无法添加自己为好友");
