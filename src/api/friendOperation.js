@@ -17,8 +17,8 @@ export function buildNewGroupChat(userId, groupName, description){
     url: "/group/add",
     method: "post",
     data: {
-      userId:userId, 
-      groupName:groupName, 
+      userId:userId,
+      groupName:groupName,
       description:description
     }
   })
@@ -210,14 +210,27 @@ export function getUnreadMsgList(userId){
     data:{userId},
   })
 }
-//聊天：获取历史消息
-export function getHistoryReadList(fromUserId, toUserId){
+// //聊天：获取历史消息
+// export function getHistoryReadList(fromUserId, toUserId){
+//   return request({
+//     url:"/chat/self/" + fromUserId + "/" + toUserId,
+//     method:"post",
+//     // data:{},
+//   })
+// }
+
+//单聊获取历史消息
+export function getSingleHistoryReadList(fromUserId, toUserId) {
   return request({
-    url:"/chat/self/" + fromId + "/" + toId,
-    method:"get",
-    // data:{},
+    url:"/chat/singleHistory",
+    method:"post",
+    data:{
+      fromUserId,
+      toUserId
+    },
   })
 }
+
 //群聊获取历史消息
 export function getGroupHistoryReadList(groupId) {
   return request({
