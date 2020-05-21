@@ -15,7 +15,7 @@
         <MyItem v-else :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
       </div>
     </div>
-    
+
     <!-- 聊天底部 -->
     <van-tabbar>
       <van-tabbar-item >
@@ -53,7 +53,7 @@ export default {
       FriendItem
   },
   data() {
-    return { 
+    return {
       message: "",
       websock: null,
       historyMessageList:[],    //历史消息列表
@@ -113,10 +113,10 @@ export default {
               param = {
                 "fromUser":{"id":this.$route.params.friendId,
                             "nickName": this.$route.params.name,
-                            "avatar":this.$route.params.avatar}, 
-                "toUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar}, 
+                            "avatar":this.$route.params.avatar},
+                "toUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
+                          "avatar": this.$store.getters.userAvatar},
                 "message":dat.content,
                 "id": msgId
               };
@@ -127,10 +127,10 @@ export default {
               param = {
                 "fromUser":{"id":this.$route.params.friendId,
                             "nickName": this.$route.params.name,
-                            "avatar":this.$route.params.avatar}, 
-                "toUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar}, 
+                            "avatar":this.$route.params.avatar},
+                "toUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
+                          "avatar": this.$store.getters.userAvatar},
                 "message":dat.content,
                 "id": msgId
               };
@@ -181,25 +181,25 @@ export default {
               "fromUser":{"id":this.$route.params.friendId,
                           "nickName": this.$route.params.name,
                           "avatar":this.$route.params.avatar
-                          }, 
-              "toUser":{"id":this.$store.getters.userId, 
-                        "nickName":this.$store.getters.userNickname, 
+                          },
+              "toUser":{"id":this.$store.getters.userId,
+                        "nickName":this.$store.getters.userNickname,
                         "avatar": this.$store.getters.userAvatar
-                        }, 
+                        },
               "message":data.content,
               "id": msgId
             };
           }
           else {
             param = {
-              "fromUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
+              "fromUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
                           "avatar": this.$store.getters.userAvatar
                           },
               "toUser":{"id":this.$route.params.friendId,
                         "nickName": this.$route.params.name,
                         "avatar":this.$route.params.avatar
-                        }, 
+                        },
               "message":data.content,
               "id": msgId
             };
@@ -213,25 +213,25 @@ export default {
               "fromUser":{"id":this.$route.params.friendId,
                           "nickName": this.$route.params.name,
                           "avatar":this.$route.params.avatar
-                          }, 
-              "toUser":{"id":this.$store.getters.userId, 
-                        "nickName":this.$store.getters.userNickname, 
+                          },
+              "toUser":{"id":this.$store.getters.userId,
+                        "nickName":this.$store.getters.userNickname,
                         "avatar": this.$store.getters.userAvatar
-                        }, 
+                        },
               "message":data.content,
               "id": msgId
             };
           }
           else {
             param = {
-              "fromUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
+              "fromUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
                           "avatar": this.$store.getters.userAvatar
                           },
               "toUser":{"id":this.$route.params.friendId,
                         "nickName": this.$route.params.name,
                         "avatar":this.$route.params.avatar
-                        }, 
+                        },
               "message":data.content,
               "id": msgId
             };
@@ -262,17 +262,17 @@ export default {
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
-          "toUser":{"id":this.$route.params.friendId, 
-                    "nickName":this.$route.params.name, 
-                    "avatar":this.$route.params.avatar}, 
+                      "avatar":this.$store.getters.userAvatar},
+          "toUser":{"id":this.$route.params.friendId,
+                    "nickName":this.$route.params.name,
+                    "avatar":this.$route.params.avatar},
           "message":this.fileName,
           "id": 2
         }
       }
       else if(this.imageFile !== ""){
         // console.log("imagefile", this.imageFile)
-        data = {                    
+        data = {
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
           "content": this.imageFile,
@@ -281,16 +281,16 @@ export default {
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
-          "toUser":{"id":this.$route.params.friendId, 
-                    "nickName":this.$route.params.name, 
-                    "avatar":this.$route.params.avatar}, 
+                      "avatar":this.$store.getters.userAvatar},
+          "toUser":{"id":this.$route.params.friendId,
+                    "nickName":this.$route.params.name,
+                    "avatar":this.$route.params.avatar},
           "message":this.imageFile,
           "id": 1
         };
       }
       if(this.message !== ""){
-        data = {                    
+        data = {
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
           "content" : ""+this.message,
@@ -299,10 +299,10 @@ export default {
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
-          "toUser":{"id":this.$route.params.friendId, 
-                    "nickName":this.$route.params.name, 
-                    "avatar":this.$route.params.avatar}, 
+                      "avatar":this.$store.getters.userAvatar},
+          "toUser":{"id":this.$route.params.friendId,
+                    "nickName":this.$route.params.name,
+                    "avatar":this.$route.params.avatar},
           "message":this.message,
           "id": 0
         };
@@ -385,7 +385,7 @@ export default {
             }
 
             if(!this.messageList){
-              this.messageList = [t]; 
+              this.messageList = [t];
             }else{
               this.messageList.push(t);
             }
@@ -397,7 +397,9 @@ export default {
       })
     },
     onClickLeft(){
-      this.$router.back();
+      // this.$router.back();
+      // this.$router.push({name:"FriendPage", params:{id:this.$route.params.friendId}});
+      this.$router.push({path:"/friendList"});
     }
   },
 };
