@@ -87,7 +87,7 @@ export default {
       currentPage: 1,
       total: 0,
       page: 1,
-      pageSize: 8,
+      pageSize: 100,
       pageNum:1,
       code:0,
       id:this.$store.getters.userId,
