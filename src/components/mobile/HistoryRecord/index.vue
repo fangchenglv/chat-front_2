@@ -9,9 +9,9 @@
     />
     <!-- 聊天内容主体 -->
     <div id="body">
-      <div v-for="item in this.historyMessageList" :key="item.id">
-        <FriendItem v-if="item.fromUser.id == userId" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></FriendItem>
-        <MyItem v-else :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
+      <div v-for="(item,ind) in this.historyMessageList" :key="ind">
+        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName" me="true" ></FriendItem>
+        <MyItem v-else :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
       </div>
     </div>
 
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {getHistoryReadList} from '@/api/friendOperation'
+import {getSingleHistoryReadList} from '@/api/friendOperation'
 import FriendItem from "../PrivateChatRoom/FriendItem"
 import MyItem from "../PrivateChatRoom/MyItem"
 
@@ -43,12 +43,29 @@ export default {
       this.$router.push({name:"FriendPage", params:{id:this.$route.params.toId}});
     },
     getHistoryList(){
-      getHistoryReadList(this.$store.getters.userId, this.$route.params.toId).then(response =>{
-        this.historyMessageList = response.data.data;
-        console.log("历史信息", this.historyMessageList);
-      }).catch();
+      console.log(this.$route.params.toId);
+      console.log(this.$store.getters.userId);
+      // getHistoryReadList(this.$store.getters.userId, this.$route.params.toId).then(response =>{
+      getSingleHistoryReadList(this.$store.getters.userId, this.$route.params.toId).then(response =>{
+        let hist = response.data.data;
+        for (let i = 0; i < hist.length; i++) {
+          let t = {fromUser:{
+              id: hist[i].fromUserId,
+              avatar: hist[i].fromAvatar,
+              nickName: hist[i].fromName
+            },
+            message: hist[i].content,
+            id:hist[i].type
+          }
+          this.historyMessageList.push(t)
+        }
+          console.log("历史信息", this.historyMessageList);
+        }).catch((error) => {
+          console.log("1111",error);
+        });
+      }
     },
-  }
+
 }
 </script>
 
