@@ -212,7 +212,7 @@ export default {
         })
     },
     quitAndDismissGroup(){
-      deleteMyGroupChat(this.form.groupId)
+      deleteMyGroupChat(this.form.groupId, this.myId)
         .then(res => {
           this.$message({
             message:"群聊已经删除",
