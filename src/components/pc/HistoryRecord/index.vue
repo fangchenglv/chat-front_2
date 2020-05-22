@@ -33,8 +33,10 @@ export default {
 
     methods:{
       getHistoryList(){
+        console.log(this.$route.params.toId);
+        console.log(this.$store.getters.userId);
         getSingleHistoryReadList(this.$route.params.toId, this.userId).then(response =>{
-            console.log("哪个是我", this.userId)
+
             let hist = response.data.data;
             for (let i = 0; i < hist.length; i++) {
                let t = {fromUser:{
