@@ -65,6 +65,7 @@ export default {
 
 <style scoped>
 #body{
+  margin-top: 1.1rem;
   padding: 0.2rem;
 }
 </style>
