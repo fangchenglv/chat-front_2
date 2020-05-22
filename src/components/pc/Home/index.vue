@@ -41,8 +41,8 @@ export default {
       // unreadGroup:[],
       unreadFriendGroup:[],
       unreadLeaveFriend:[],
-      privateUnreadNumber: [],
-      groupUnreadNumber: [],
+      privateUnreadNumber: this.$websocket.state.privateUnreadNumber,
+      groupUnreadNumber: this.$websocket.state.groupUnreadNumber,
       allFriend: {},
       allGroup:{}
     }

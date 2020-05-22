@@ -92,7 +92,7 @@ export default {
         groupId:undefined,
       },
       myId:this.$store.getters.userId,
-      groupFriend:[],
+      groupFriend:this.$store.getters.allFriend,
       multipleSelection: [],
       
     }
@@ -144,27 +144,27 @@ export default {
       }
     },
     appendGroupMember(){
-      if(this.multipleSelection.length === 0){
-        return;
-      }
-      let userIds = "";
-      for(let i = 0; i < this.multipleSelection.length; i++){
-        userIds = this.multipleSelection[i].friendId + ","
-      }
-      userIds = userIds.slice(0, userIds.length-1);
-      addNewGroupMember(this.form.groupId, userIds)
-        .then(res => {
-          this.$message({
-            message: "添加群成员成功",
-            type:"success"
-          })
-        })
-        .catch(e => {
-          this.$message({
-            message: "添加群成员失败",
-            type:"error"
-          })
-        })
+            if(this.multipleSelection.length === 0){
+              return;
+            }
+            let userIds = "";
+            for(let i = 0; i < this.multipleSelection.length; i++){
+              userIds = this.multipleSelection[i].friendId + ""
+            }
+            // userIds = userIds.slice(0, userIds.length-1);
+            addNewGroupMember(this.form.groupId, userIds)
+              .then(res => {
+                this.$message({
+                  message: "添加群成员成功",
+                  type:"success"
+                })
+              })
+              .catch(e => {
+                this.$message({
+                  message: "添加群成员失败",
+                  type:"error"
+                })
+              })
     },
     handleSelectionChange(val){
       this.multipleSelection = val;
@@ -182,7 +182,7 @@ export default {
           let len = tmpGroupFriend.length;
           for (let i = 0; i < len; i++) {
             this.groupFriend.push({
-              userName: tmpGroupFriend[i].user.nickName, 
+              userName: tmpGroupFriend[i].user.nickName,
               avatar: tmpGroupFriend[i].user.avatar
             })
           }
