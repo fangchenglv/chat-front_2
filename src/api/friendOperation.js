@@ -94,12 +94,13 @@ export function quitOneGroupChat(groupId, userId){
   })
 }
 //解散群聊
-export function deleteMyGroupChat(groupId){
+export function deleteMyGroupChat(groupId,userId){
   return request({
     url:"/group/delete",
     method: "post",
     data: {
-      groupId
+      groupId,
+      userId
     }
   })
 }
