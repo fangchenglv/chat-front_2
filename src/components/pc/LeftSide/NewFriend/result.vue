@@ -4,7 +4,11 @@
     <el-row>
       <el-col :span="10" v-for="item in findList" :key="item.id" :offset="1">
         <el-card >
-          <img :src="item.avatar" class="image"/>
+           <div class="image"   >
+                        <div>
+                          <el-avatar > {{item.userName}} </el-avatar>
+                        </div>
+           </div>
           <p style="font-size:0.5rem">好友名: {{item.userName}}</p>
           <div class="friendG">
             <el-button
