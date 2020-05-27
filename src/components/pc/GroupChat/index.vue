@@ -181,6 +181,7 @@ export default {
           let tmpGroupFriend = res.data.data;
           let len = tmpGroupFriend.length;
           for (let i = 0; i < len; i++) {
+
             this.groupFriend.push({
               userName: tmpGroupFriend[i].user.nickName,
               avatar: tmpGroupFriend[i].user.avatar
