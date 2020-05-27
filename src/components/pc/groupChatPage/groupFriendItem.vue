@@ -1,7 +1,7 @@
 <template>
 
   <div style="float:left; width:100%; margin-bottom:0.1rem">
-    <div class="demo-type" style="float:right;width: 1rem;height:1rem;">
+    <div class="demo-type" style="float:left;width: 1rem;height:1rem;">
 
                   <div>
                     <el-avatar > {{name}} </el-avatar>
