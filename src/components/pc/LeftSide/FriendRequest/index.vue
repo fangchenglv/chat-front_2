@@ -8,7 +8,7 @@
               <div class="image" >
 
                             <div>
-                              <el-avatar > {{data.fromUser.userName}} </el-avatar>
+                              <el-avatar shape="circle":size="80"> {{data.fromUser.userName}} </el-avatar>
                             </div>
               </div>
               <div style="font-size:0.4rem;">

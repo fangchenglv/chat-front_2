@@ -6,7 +6,7 @@
         <el-card >
            <div class="image"   >
                         <div>
-                          <el-avatar > {{item.userName}} </el-avatar>
+                          <el-avatar shape="circle":size="80"> {{item.userName}} </el-avatar>
                         </div>
            </div>
           <p style="font-size:0.5rem">好友名: {{item.userName}}</p>

@@ -8,7 +8,7 @@
             <div class="demo-type">
 
               <div>
-                <el-avatar > {{item.friendInfo.nickName}} </el-avatar>
+                <el-avatar shape="circle":size="70"> {{item.friendInfo.nickName}} </el-avatar>
               </div>
             </div>
           </template>
