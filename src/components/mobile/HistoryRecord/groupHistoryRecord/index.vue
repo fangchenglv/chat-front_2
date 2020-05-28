@@ -7,10 +7,11 @@
       @click-left="onClickLeft"
       id="head"
     />
-    <!-- 聊天内容主体 -->
-    <div id="body">
+    <!-- 聊天内容主体 :img="item.toUser.avatar"-->
+    <div id="body" style="margin-top: 1.1rem">
       <div v-for="(item, ind) in this.historyMessageList" :key="ind">
-        <GroupFriendItem v-if="item.toUser" :img="item.toUser.avatar" :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
+        <GroupFriendItem v-if="item.toUser"  :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
+<!--        <div style="float:right;width:1rem; height:1rem;background-color:#fcc">{{name}}</div>-->
       </div>
     </div>
 
@@ -49,7 +50,7 @@ export default {
             for (let i = 0; i < hist.length; i++) {
                 let t = {toUser:{
                     id: hist[i].userId,
-                    avatar: hist[i].fromAvatar,
+                    // avatar: hist[i].fromAvatar,
                     nickName: hist[i].fromName
                     },
                     message: hist[i].content,

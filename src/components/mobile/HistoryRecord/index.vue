@@ -8,10 +8,10 @@
       id="head"
     />
     <!-- 聊天内容主体 -->
-    <div id="body">
+    <div id="body" style="margin-top: 1.1rem">
       <div v-for="(item,ind) in this.historyMessageList" :key="ind">
-        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName" me="true" ></FriendItem>
-        <MyItem v-else :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
+        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName" me="true" ></FriendItem>
+        <MyItem v-else :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName"></MyItem>
       </div>
     </div>
 
@@ -51,7 +51,7 @@ export default {
         for (let i = 0; i < hist.length; i++) {
           let t = {fromUser:{
               id: hist[i].fromUserId,
-              avatar: hist[i].fromAvatar,
+              // avatar: hist[i].fromAvatar,
               nickName: hist[i].fromName
             },
             message: hist[i].content,
