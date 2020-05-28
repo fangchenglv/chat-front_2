@@ -64,7 +64,7 @@ export default {
       websock: null,
       historyMessageList:[],    //历史消息列表
       unreadList:[],    //未读消息列表
-      pic:this.$route.params.avatar,
+
       friendId:""+this.$route.params.friendId,
       userId:this.$store.getters.userId,
       messageList:[],

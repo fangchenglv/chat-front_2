@@ -3,7 +3,11 @@
     <div class="firstPart" id="firstPart">
       <el-card style="margin-top:0.5rem; height:90%;position:relative;">
         <div style="height:55%;width:30%;margin:0 auto">
-          <img :src=groupDetail.avatar alt="图片暂时无法显示" class="image">
+
+                            <div>
+                              <el-avatar shape="square":size="80"> {{form.name}} </el-avatar>
+                            </div>
+
         </div>
         
         <div>
@@ -26,10 +30,10 @@
       <br style="clear:both"/>
       <!-- 动态添加群信息吧 -->
       <ul>
-        <li v-for="(item, ind) in groupFriend" :key="ind">
-          <el-avatar :src="item.avatar"></el-avatar>
+        <div v-for="(item, ind) in groupFriend" :key="ind">
+          <el-avatar> {{item.userName}} </el-avatar>
           <p>{{item.userName}}</p>
-        </li>
+        </div>
       </ul>
       <!-- 用一个表格展示吧准备 -->
     </div>
@@ -181,10 +185,9 @@ export default {
           let tmpGroupFriend = res.data.data;
           let len = tmpGroupFriend.length;
           for (let i = 0; i < len; i++) {
-
             this.groupFriend.push({
               userName: tmpGroupFriend[i].user.nickName,
-              avatar: tmpGroupFriend[i].user.avatar
+
             })
           }
         })
