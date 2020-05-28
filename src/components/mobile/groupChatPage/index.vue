@@ -11,8 +11,8 @@
     <!-- 聊天内容主体 -->
     <div id="body" >
       <div v-for="(item, ind) in this.messageList" :key="ind" >
-        <GroupMyItem v-if="item.fromUser" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></GroupMyItem>
-        <GroupFriendItem v-else :img="item.toUser.avatar" :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
+        <GroupMyItem v-if="item.fromUser" :messageid="item.id"  me="true" :msg="item.message" :name="item.fromUser.nickName"></GroupMyItem>
+        <GroupFriendItem v-else  :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
       </div>
       <!-- <ul style="height:95%">
         <li v-for="(item, ind) in this.messageList" :key="ind">
@@ -20,10 +20,10 @@
           <GroupFriendItem v-else :img="item.toUser.avatar" :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
         </li> -->
 
-      </ul>
+<!--      </ul>-->
     </div>
-    
-    
+
+
     <!-- 聊天底部 -->
     <van-tabbar>
       <van-tabbar-item >
@@ -58,7 +58,7 @@ export default {
     GroupMyItem
   },
   data() {
-    return { 
+    return {
       title:this.$route.params.name,
       message: "",
       imageFile: "",
@@ -130,7 +130,7 @@ export default {
           let tmp = {
             friendId: oldGroupFriend[i].user.id,
             friendName: oldGroupFriend[i].user.nickName,
-            friendAvatar: oldGroupFriend[i].user.avatar
+            // friendAvatar: oldGroupFriend[i].user.avatar
           }
           res[""+oldGroupFriend[i].user.id] = tmp
           this.newGroupFriend[""+oldGroupFriend[i].user.id] = tmp
@@ -140,22 +140,24 @@ export default {
         let msgId = -1;
         if(data.data.type === "GROUP_SENDING"){
           let dat = data.data;
-          msgId = 0; 
+          msgId = 0;
           param = {
-            "toUser":{"id":+dat.fromUserId, 
-                      "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
-                      "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+            "toUser":{"id":+dat.fromUserId,
+                      "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
+                      // "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar
+            },
             "message":dat.content,
             "id": msgId
           };
         }
         else if (data.data.type === "GROUP_SENDING_IMG"){
           let dat = data.data;
-          msgId = 1; 
+          msgId = 1;
           param = {
-            "toUser":{"id":+dat.fromUserId, 
-                      "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
-                      "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+            "toUser":{"id":+dat.fromUserId,
+                      "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
+                      // "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar
+            },
             "message":dat.content,
             "id": msgId
           };
@@ -182,7 +184,7 @@ export default {
         return
       }
       if(this.imageFile !== ""){
-        data = {                    
+        data = {
           "fromUserId" : ""+this.userId,
           "toGroupId" : ""+this.groupId,
           "content" : ""+this.imageFile,
@@ -192,13 +194,14 @@ export default {
           // "user":1,
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
+                      // "avatar":this.$store.getters.userAvatar
+          },
           "message":this.imageFile,
           "id": 1
         };
       }
       if(this.message !== ""){
-        data = {                    
+        data = {
           "fromUserId" : ""+this.userId,
           "toGroupId" : ""+this.groupId,
           "content" : ""+this.message,
@@ -208,7 +211,8 @@ export default {
           // "user":1,
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
+                      // "avatar":this.$store.getters.userAvatar
+          },
           "message":this.message,
           "id": 0
         };
@@ -238,11 +242,12 @@ export default {
             if(data.data.type === "GROUP_SENDING"){
               let dat = data.data;
               // console.log("在接受信息里面", this.newGroupFriend)
-              msgId = 0; 
+              msgId = 0;
               param = {
-                "toUser":{"id":+dat.fromUserId, 
-                          "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
-                          "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+                "toUser":{"id":+dat.fromUserId,
+                          "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
+                          // "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar
+                },
                 "message":dat.content,
                 "id": msgId
               };
@@ -250,11 +255,12 @@ export default {
             else if (data.data.type === "GROUP_SENDING_IMG"){
               let dat = data.data;
               // console.log("在接受信息里面", this.newGroupFriend)
-              msgId = 1; 
+              msgId = 1;
               param = {
-                "toUser":{"id":+dat.fromUserId, 
-                          "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
-                          "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+                "toUser":{"id":+dat.fromUserId,
+                          "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
+                          // "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar
+                },
                 "message":dat.content,
                 "id": msgId
               };
@@ -295,7 +301,8 @@ export default {
             param = {
               "fromUser":{"id":this.$store.getters.userId,
                           "nickName":this.$store.getters.userNickname,
-                          "avatar":this.$store.getters.userAvatar},  
+                          // "avatar":this.$store.getters.userAvatar
+              },
               "message":data.content,
               "id": msgId
             };
@@ -303,9 +310,10 @@ export default {
           else {
             // console.log( this.newGroupFriend, this.newGroupFriend[+data.fromUserId] , data.fromUserId)
             param = {
-              "toUser": {"id":+data.fromUserId, 
-                          "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
-                          "avatar": this.newGroupFriend[+data.fromUserId].friendAvatar}, 
+              "toUser": {"id":+data.fromUserId,
+                          "nickName":this.newGroupFriend[+data.fromUserId].friendName,
+                          // "avatar": this.newGroupFriend[+data.fromUserId].friendAvatar
+              },
               "message":data.content,
               "id": msgId
             };
@@ -318,16 +326,18 @@ export default {
             param = {
               "fromUser":{"id":this.$store.getters.userId,
                           "nickName":this.$store.getters.userNickname,
-                          "avatar":this.$store.getters.userAvatar},  
+                          // "avatar":this.$store.getters.userAvatar
+              },
               "message":data.content,
               "id": msgId
             };
           }
           else {
             param = {
-              "toUser": {"id":+data.fromUserId, 
-                          "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
-                          "avatar": this.newGroupFriend[+data.fromUserId].friendAvatar}, 
+              "toUser": {"id":+data.fromUserId,
+                          "nickName":this.newGroupFriend[+data.fromUserId].friendName,
+                          // "avatar": this.newGroupFriend[+data.fromUserId].friendAvatar
+              },
               "message":data.content,
               "id": msgId
             };
@@ -359,7 +369,7 @@ export default {
               //只能先留口子
             }
             if(!this.messageList){
-              this.messageList = [t]; 
+              this.messageList = [t];
             }else{
               this.messageList.push(t);
             }
