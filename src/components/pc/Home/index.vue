@@ -3,11 +3,11 @@
     <el-row>
       <el-col :span="11" v-for="(item,ind) in this.unreadFriendGroup" :key="ind" :offset="1">
         <el-card>
-          <img :src=item.avatar alt="图片不存在" class="image" />
+           <el-avatar shape="circle":size="70"> {{item.nickName}} </el-avatar>
           <p style="font-size:0.5rem; ">昵称:{{item.nickName}}</p>
           <p style="font-size:0.4rem;float:right">未读信息数:{{item.count}}</p>
 
-          <div class="loc">
+          <div  v-if="item.status" class="loc">
             <span v-if="item.status == 1"><i class="el-icon-view"/>用户上线</span>
             <span v-else><i class="el-icon-view"/>用户离线</span>
           </div>
@@ -109,7 +109,7 @@ export default {
               nickName: this.unreadLeaveFriend[i].groupDO.groupName,
               avatar: this.unreadLeaveFriend[i].groupDO.avatar,
               count: this.unreadLeaveFriend[i].count + this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id],
-              status: this.unreadLeaveFriend[i].status
+              // status: this.unreadLeaveFriend[i].status
             };
             this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] = undefined;
             // this.unreadGroup.push(t);
@@ -124,7 +124,7 @@ export default {
               nickName: this.unreadLeaveFriend[i].groupDO.groupName,
               avatar: this.unreadLeaveFriend[i].groupDO.avatar,
               count: this.unreadLeaveFriend[i].count,
-              status: this.unreadLeaveFriend[i].status
+              // status: this.unreadLeaveFriend[i].status
             };
             // this.unreadGroup.push(t);
             this.unreadFriendGroup.push(t)
