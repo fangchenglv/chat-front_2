@@ -103,7 +103,7 @@ export default {
           let tmp = {
             friendId: oldGroupFriend[i].user.id,
             friendName: oldGroupFriend[i].user.nickName,
-            friendAvatar: oldGroupFriend[i].user.avatar
+
           }
           res[""+oldGroupFriend[i].user.id] = tmp
           this.newGroupFriend[""+oldGroupFriend[i].user.id] = tmp
@@ -117,7 +117,7 @@ export default {
           param = {
             "toUser":{"id":+dat.fromUserId, 
                       "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
-                      "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+                      },
             "message":dat.content,
             "id": msgId
           };
@@ -128,7 +128,7 @@ export default {
           param = {
             "toUser":{"id":+dat.fromUserId, 
                       "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
-                      "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+                      },
             "message":dat.content,
             "id": msgId
           };
@@ -196,7 +196,7 @@ export default {
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
+                      },
           "message":this.imageFile,
           "id": 1
         };
@@ -211,7 +211,7 @@ export default {
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
+                      },
           "message":this.message,
           "id": 0
         };
@@ -244,7 +244,7 @@ export default {
               param = {
                 "toUser":{"id":+dat.fromUserId, 
                           "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
-                          "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+                          },
                 "message":dat.content,
                 "id": msgId
               };
@@ -256,7 +256,7 @@ export default {
               param = {
                 "toUser":{"id":+dat.fromUserId, 
                           "nickName":this.newGroupFriend[+dat.fromUserId].friendName, 
-                          "avatar": this.newGroupFriend[+dat.fromUserId].friendAvatar}, 
+                          },
                 "message":dat.content,
                 "id": msgId
               };
@@ -297,7 +297,7 @@ export default {
             param = {
               "fromUser":{"id":this.$store.getters.userId,
                           "nickName":this.$store.getters.userNickname,
-                          "avatar":this.$store.getters.userAvatar},  
+                          },
               "message":data.content,
               "id": msgId
             };
@@ -306,7 +306,7 @@ export default {
             param = {
               "toUser": {"id":+data.fromUserId, 
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
-                          "avatar": this.newGroupFriend[+data.fromUserId].friendAvatar}, 
+                          },
               "message":data.content,
               "id": msgId
             };
@@ -318,7 +318,7 @@ export default {
             param = {
               "fromUser":{"id":this.$store.getters.userId,
                           "nickName":this.$store.getters.userNickname,
-                          "avatar":this.$store.getters.userAvatar},  
+                          },
               "message":data.content,
               "id": msgId
             };
@@ -327,7 +327,7 @@ export default {
             param = {
               "toUser": {"id":+data.fromUserId, 
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
-                          "avatar": this.newGroupFriend[+data.fromUserId].friendAvatar}, 
+                          },
               "message":data.content,
               "id": msgId
             };

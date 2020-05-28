@@ -17,6 +17,7 @@
       <el-tab-pane label="已经拒绝添加的好友" name="2">已经拒绝添加的好友</el-tab-pane>
     </el-tabs>
     <!-- 好友处理结果展示部分 -->
+
     <el-table
         :data="tableData"
         stripe
@@ -50,7 +51,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]"
+          :page-sizes="10"
           :page-size="pageSize"
           layout=" prev, pager, next, sizes, total"
           :total="total">
@@ -75,6 +76,7 @@ export default {
       pageSize: 10,
       pageNum:1,
       code:1,
+      index:0,
       id:this.$store.getters.userId,
       value:true,
       friendGroupList:this.$store.getters.myFriendList,
@@ -83,15 +85,18 @@ export default {
     }
   },
   methods:{
+
     handleClick(code) {
+
       this.tableData = [];
       searchFriendRequest(this.id, this.activeName, this.pageNum, this.pageSize)
       .then(response => {
         let data = response.data.data;
+        let i =0;
         if (data.total !== 0) {
           this.total = data.total;
           this.findList = data.list;
-          for(let i = 0; i < this.findList.length; i++){
+          for(; i < this.findList.length; i++){
             let tmp = {};
             tmp['applyTime'] = this.findList[i]['applyTime'];
             tmp['friendUserName'] = this.findList[i]['fromUser']['userName'];
@@ -113,7 +118,9 @@ export default {
     //pageNum改变时
     handleCurrentChange(val) {
         this.pageNum = val;
-        this.handleCommand();
+         // this.handleCommand();
+        console.log(this.pageNum);
+        this.handleClick(this.activeName);
     },
   },
 }

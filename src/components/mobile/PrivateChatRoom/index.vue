@@ -11,11 +11,11 @@
     <!-- 聊天内容主体 -->
     <div id="body">
       <div v-for="(item, ind) in this.messageList" :key="ind">
-        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName" me="true" ></FriendItem>
-        <MyItem v-else :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
+        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName" me="true" ></FriendItem>
+        <MyItem v-else :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName"></MyItem>
       </div>
     </div>
-    
+
     <!-- 聊天底部 -->
     <van-tabbar>
       <van-tabbar-item >
@@ -53,7 +53,7 @@ export default {
       FriendItem
   },
   data() {
-    return { 
+    return {
       message: "",
       websock: null,
       historyMessageList:[],    //历史消息列表
@@ -113,10 +113,12 @@ export default {
               param = {
                 "fromUser":{"id":this.$route.params.friendId,
                             "nickName": this.$route.params.name,
-                            "avatar":this.$route.params.avatar}, 
-                "toUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar}, 
+                            // "avatar":this.$route.params.avatar
+                },
+                "toUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
+                          // "avatar": this.$store.getters.userAvatar
+                },
                 "message":dat.content,
                 "id": msgId
               };
@@ -127,10 +129,12 @@ export default {
               param = {
                 "fromUser":{"id":this.$route.params.friendId,
                             "nickName": this.$route.params.name,
-                            "avatar":this.$route.params.avatar}, 
-                "toUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar}, 
+                            // "avatar":this.$route.params.avatar
+                },
+                "toUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
+                          // "avatar": this.$store.getters.userAvatar
+                },
                 "message":dat.content,
                 "id": msgId
               };
@@ -147,10 +151,10 @@ export default {
             this.currendStartChatList.push(data.data)
             // console.log("得到的数据放入数组中了", this.currendStartChatList)
           } else{
-              this.$toast({
-                message:"新的好友信息，请注意查看",
-                position:"top",
-              })
+            this.$toast({
+              message:"新的好友信息，请注意查看",
+              position:"top",
+            })
             // console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
             if(this.$websocket.state.privateMessage.find((val, ind) => {return (""+ind) === data.data.fromUserId })){
               this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
@@ -180,26 +184,26 @@ export default {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
                           "nickName": this.$route.params.name,
-                          "avatar":this.$route.params.avatar
-                          }, 
-              "toUser":{"id":this.$store.getters.userId, 
-                        "nickName":this.$store.getters.userNickname, 
-                        "avatar": this.$store.getters.userAvatar
-                        }, 
+                          // "avatar":this.$route.params.avatar
+                          },
+              "toUser":{"id":this.$store.getters.userId,
+                        "nickName":this.$store.getters.userNickname,
+                        // "avatar": this.$store.getters.userAvatar
+                        },
               "message":data.content,
               "id": msgId
             };
           }
           else {
             param = {
-              "fromUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar
+              "fromUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
+                          // "avatar": this.$store.getters.userAvatar
                           },
               "toUser":{"id":this.$route.params.friendId,
                         "nickName": this.$route.params.name,
-                        "avatar":this.$route.params.avatar
-                        }, 
+                        // "avatar":this.$route.params.avatar
+                        },
               "message":data.content,
               "id": msgId
             };
@@ -212,26 +216,26 @@ export default {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
                           "nickName": this.$route.params.name,
-                          "avatar":this.$route.params.avatar
-                          }, 
-              "toUser":{"id":this.$store.getters.userId, 
-                        "nickName":this.$store.getters.userNickname, 
-                        "avatar": this.$store.getters.userAvatar
-                        }, 
+                          // "avatar":this.$route.params.avatar
+                          },
+              "toUser":{"id":this.$store.getters.userId,
+                        "nickName":this.$store.getters.userNickname,
+                        // "avatar": this.$store.getters.userAvatar
+                        },
               "message":data.content,
               "id": msgId
             };
           }
           else {
             param = {
-              "fromUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar
+              "fromUser":{"id":this.$store.getters.userId,
+                          "nickName":this.$store.getters.userNickname,
+                          // "avatar": this.$store.getters.userAvatar
                           },
               "toUser":{"id":this.$route.params.friendId,
                         "nickName": this.$route.params.name,
-                        "avatar":this.$route.params.avatar
-                        }, 
+                        // "avatar":this.$route.params.avatar
+                        },
               "message":data.content,
               "id": msgId
             };
@@ -252,27 +256,32 @@ export default {
       }
       if (this.fileName) {
         data = {
-          "fromUserId" : ""+this.userId,
-          "toUserId" : ""+this.friendId,
-          "originalFileName" : ""+this.fileName[0],
-          "fileUrl":"" + this.fileName[1],
-          "fileSize":"" + this.file[2],
-          "type" : "FILE_IMG_SINGLE_SENDING"
+          "fromUserId": "" + this.userId,
+          "toUserId": "" + this.friendId,
+          "originalFileName": "" + this.fileName[0],
+          "fileUrl": "" + this.fileName[1],
+          "fileSize": "" + this.file[2],
+          "type": "FILE_IMG_SINGLE_SENDING"
         };
         param = {
-          "fromUser":{"id":this.$store.getters.userId,
-                      "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
-          "toUser":{"id":this.$route.params.friendId, 
-                    "nickName":this.$route.params.name, 
-                    "avatar":this.$route.params.avatar}, 
-          "message":this.fileName,
-          "id": 2
-        }
+          "fromUser": {
+            "id": this.$store.getters.userId,
+            "nickName": this.$store.getters.userNickname,
+            // "avatar":this.$store.getters.userAvatar},
+            "toUser": {
+              "id": this.$route.params.friendId,
+              "nickName": this.$route.params.name,
+              // "avatar":this.$route.params.avatar
+            },
+            "message": this.fileName,
+            "id": 2
+          }
+
+      }
       }
       else if(this.imageFile !== ""){
         // console.log("imagefile", this.imageFile)
-        data = {                    
+        data = {
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
           "content": this.imageFile,
@@ -281,16 +290,18 @@ export default {
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
-          "toUser":{"id":this.$route.params.friendId, 
-                    "nickName":this.$route.params.name, 
-                    "avatar":this.$route.params.avatar}, 
+                      // "avatar":this.$store.getters.userAvatar
+          },
+          "toUser":{"id":this.$route.params.friendId,
+                    "nickName":this.$route.params.name,
+                    // "avatar":this.$route.params.avatar
+          },
           "message":this.imageFile,
           "id": 1
         };
       }
       if(this.message !== ""){
-        data = {                    
+        data = {
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
           "content" : ""+this.message,
@@ -299,10 +310,12 @@ export default {
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
-          "toUser":{"id":this.$route.params.friendId, 
-                    "nickName":this.$route.params.name, 
-                    "avatar":this.$route.params.avatar}, 
+                      // "avatar":this.$store.getters.userAvatar
+          },
+          "toUser":{"id":this.$route.params.friendId,
+                    "nickName":this.$route.params.name,
+                    // "avatar":this.$route.params.avatar
+          },
           "message":this.message,
           "id": 0
         };
@@ -385,7 +398,7 @@ export default {
             }
 
             if(!this.messageList){
-              this.messageList = [t]; 
+              this.messageList = [t];
             }else{
               this.messageList.push(t);
             }
@@ -397,7 +410,9 @@ export default {
       })
     },
     onClickLeft(){
-      this.$router.back();
+      // this.$router.back();
+      // this.$router.push({name:"FriendPage", params:{id:this.$route.params.friendId}});
+      this.$router.push({path:"/friendList"});
     }
   },
 };
@@ -407,9 +422,9 @@ export default {
 #body{
   margin:0.1rem 0.1rem 0rem 0.1rem;
   width:98%;
-  height: 84%;
+  height: 84.5%;
   background-color:rgb(250, 250, 250);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.45rem;
   overflow:auto;
 }
 </style>

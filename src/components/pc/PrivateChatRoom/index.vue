@@ -64,14 +64,13 @@ export default {
       websock: null,
       historyMessageList:[],    //历史消息列表
       unreadList:[],    //未读消息列表
-      pic:this.$route.params.avatar,
+
       friendId:""+this.$route.params.friendId,
       userId:this.$store.getters.userId,
       messageList:[],
       myNickName:this.$store.getters.userNickname,
-      myAvator:this.$store.getters.userAvatar,
       friendNickName:this.$route.params.name,
-      friendAvator:this.$route.params.avatar,
+
       };
   },
   computed:{
@@ -121,10 +120,10 @@ export default {
               param = {
                 "fromUser":{"id":this.$route.params.friendId,
                             "nickName": this.$route.params.name,
-                            "avatar":this.$route.params.avatar}, 
+                            },
                 "toUser":{"id":this.$store.getters.userId, 
                           "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar}, 
+                          },
                 "message":dat.content,
                 "id": msgId
               };
@@ -135,10 +134,10 @@ export default {
               param = {
                 "fromUser":{"id":this.$route.params.friendId,
                             "nickName": this.$route.params.name,
-                            "avatar":this.$route.params.avatar}, 
+                            },
                 "toUser":{"id":this.$store.getters.userId, 
                           "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar}, 
+                          },
                 "message":dat.content,
                 "id": msgId
               };
@@ -186,11 +185,11 @@ export default {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
                           "nickName": this.$route.params.name,
-                          "avatar":this.$route.params.avatar
+
                           }, 
               "toUser":{"id":this.$store.getters.userId, 
                         "nickName":this.$store.getters.userNickname, 
-                        "avatar": this.$store.getters.userAvatar
+
                         }, 
               "message":data.content,
               "id": msgId
@@ -200,11 +199,11 @@ export default {
             param = {
               "fromUser":{"id":this.$store.getters.userId, 
                           "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar
+
                           },
               "toUser":{"id":this.$route.params.friendId,
                         "nickName": this.$route.params.name,
-                        "avatar":this.$route.params.avatar
+
                         }, 
               "message":data.content,
               "id": msgId
@@ -218,11 +217,11 @@ export default {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
                           "nickName": this.$route.params.name,
-                          "avatar":this.$route.params.avatar
+
                           }, 
               "toUser":{"id":this.$store.getters.userId, 
                         "nickName":this.$store.getters.userNickname, 
-                        "avatar": this.$store.getters.userAvatar
+                        r
                         }, 
               "message":data.content,
               "id": msgId
@@ -232,11 +231,11 @@ export default {
             param = {
               "fromUser":{"id":this.$store.getters.userId, 
                           "nickName":this.$store.getters.userNickname, 
-                          "avatar": this.$store.getters.userAvatar
+
                           },
               "toUser":{"id":this.$route.params.friendId,
                         "nickName": this.$route.params.name,
-                        "avatar":this.$route.params.avatar
+
                         }, 
               "message":data.content,
               "id": msgId
@@ -297,10 +296,10 @@ export default {
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
+                      },
           "toUser":{"id":this.$route.params.friendId, 
                     "nickName":this.$route.params.name, 
-                    "avatar":this.$route.params.avatar}, 
+                    },
           "message":this.imageFile,
           "id": 1
         };
@@ -314,10 +313,10 @@ export default {
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
-                      "avatar":this.$store.getters.userAvatar}, 
+                      },
           "toUser":{"id":this.$route.params.friendId, 
                     "nickName":this.$route.params.name, 
-                    "avatar":this.$route.params.avatar}, 
+                    },
           "message":this.message,
           "id": 0
         };

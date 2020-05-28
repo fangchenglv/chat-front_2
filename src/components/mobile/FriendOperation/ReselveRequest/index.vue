@@ -12,9 +12,10 @@
     <div v-for="data in findList" :key="data.id">
       <br/>
       <van-card
-        :thumb="data.fromUser.avatar"
+
         style="background-color:#fff;"
       >
+        <!--        :thumb="data.fromUser.avatar"-->
         <div slot="title" style="font-size:0.5rem;">
           <p>好友:{{data.fromUser.userName}}</p>
           <p>申请时间:{{data.applyTime}}</p>

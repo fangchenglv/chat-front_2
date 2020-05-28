@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <img src= "myAvator" style="background-color:rgb(250,250,250)"/>
+<!--    <img src= "myAvator" style="background-color:rgb(250,250,250)"/>-->
     <van-divider style="margin: 0rem;"/>
     <p style="margin: 0rem;padding:0.25rem 0rem;background-color: rgb(250, 250, 250);font-size:0.5rem">
       用户名:{{myName}}
@@ -13,7 +13,7 @@
     <div style="background-color:rgb(250, 250, 250);">
       <p @click="exit" style="margin: 0rem;padding:0.25rem 0rem;font-size:0.5rem">登出</p>
     </div>
-    
+
   </div>
   <!-- <van-button>退出</van-button> -->
 </template>
@@ -26,7 +26,7 @@ export default {
   data(){
     return{
       myName: this.$store.getters.userName,
-      myAvator: this.$store.getters.userAvatar,
+      // myAvator: this.$store.getters.userAvatar,
       myNickname: this.$store.getters.userNickname,
     }
   },
@@ -45,7 +45,7 @@ export default {
       this.$router.push({path:"/login"})
       logout_(this.$store.getters.userId);
     }
-    
+
   }
 }
 </script>

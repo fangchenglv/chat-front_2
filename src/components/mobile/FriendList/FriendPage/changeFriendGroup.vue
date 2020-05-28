@@ -62,7 +62,8 @@ export default {
       // console.log(val)
     },
     onClickLeft(){
-      this.$router.back()
+      // this.$router.back()
+      this.$router.push({path:"/friendList"});
     }
   }
 }

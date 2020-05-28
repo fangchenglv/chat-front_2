@@ -75,6 +75,7 @@ export default new Vuex.Store({
           //群聊信息
           if (data.data.type === "GROUP_SENDING" || data.data.type === "GROUP_SENDING_IMG" || data.data.type === "FILE_MSG_GROUP_SENDING") {
             //仿照单聊信息实现
+            console.log("未进入群聊信息的提醒", state.groupUnreadNumber)
             let GroupId = parseInt(data.data.toGroupId);
             if (state.groupMessage.find((val, ind) => {
                 return ind === GroupId;

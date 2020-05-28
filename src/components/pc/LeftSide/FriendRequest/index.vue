@@ -5,7 +5,12 @@
       <el-row>
         <el-col :span="10" v-for="data in findList" :key="data.id" :offset="2">
           <el-card shadow="hover">
-              <img :src=data.fromUser.avatar class="image"/>
+              <div class="image" >
+
+                            <div>
+                              <el-avatar shape="circle":size="80"> {{data.fromUser.userName}} </el-avatar>
+                            </div>
+              </div>
               <div style="font-size:0.4rem;">
                 <p>用户名: {{data.fromUser.userName}}</p>
                 <p>申请时间:{{data.applyTime}}</p>
@@ -87,7 +92,7 @@ export default {
       currentPage: 1,
       total: 0,
       page: 1,
-      pageSize: 8,
+      pageSize: 100,
       pageNum:1,
       code:0,
       id:this.$store.getters.userId,
@@ -125,7 +130,7 @@ export default {
         status = "2";
       }
       // console.log(this.choicedGroupId)
-      if (this.choicedGroupId == -1){
+      if (this.choicedGroupId == -1 && status === "1"){
         this.$message({
           message:"请选择分组",
           type:"error"

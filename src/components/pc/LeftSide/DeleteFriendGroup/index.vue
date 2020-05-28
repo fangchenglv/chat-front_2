@@ -24,7 +24,6 @@
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">删除分组</el-button>
           <el-button @click="handleChange(scope.row)" type="text" size="small">修改分组名</el-button>
-          <el-button @click="handleClick()" type="text" size="small">取消操作</el-button>
         </template>
       </el-table-column>
     </el-table>

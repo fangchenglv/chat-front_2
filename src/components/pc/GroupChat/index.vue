@@ -3,7 +3,9 @@
     <div class="firstPart" id="firstPart">
       <el-card style="margin-top:0.5rem; height:90%;position:relative;">
         <div style="height:55%;width:30%;margin:0 auto">
-          <img :src=groupDetail.avatar alt="图片暂时无法显示" class="image">
+          <div>
+            <el-avatar shape="square" :size="80"> {{form.name}} </el-avatar>
+          </div>
         </div>
         
         <div>
@@ -26,12 +28,11 @@
       <br style="clear:both"/>
       <!-- 动态添加群信息吧 -->
       <ul>
-        <li v-for="(item, ind) in groupFriend" :key="ind">
-          <el-avatar :src="item.avatar"></el-avatar>
+        <div v-for="(item, ind) in groupFriend" :key="ind">
+          <el-avatar> {{item.userName}} </el-avatar>
           <p>{{item.userName}}</p>
-        </li>
+        </div>
       </ul>
-      <!-- 用一个表格展示吧准备 -->
     </div>
 
     <el-dialog title="添加新群成员" :visible.sync="dialogTableVisible" >
@@ -92,7 +93,7 @@ export default {
         groupId:undefined,
       },
       myId:this.$store.getters.userId,
-      groupFriend:[],
+      groupFriend:this.$store.getters.allFriend,
       multipleSelection: [],
       
     }
@@ -144,27 +145,27 @@ export default {
       }
     },
     appendGroupMember(){
-      if(this.multipleSelection.length === 0){
-        return;
-      }
-      let userIds = "";
-      for(let i = 0; i < this.multipleSelection.length; i++){
-        userIds = this.multipleSelection[i].friendId + ","
-      }
-      userIds = userIds.slice(0, userIds.length-1);
-      addNewGroupMember(this.form.groupId, userIds)
-        .then(res => {
-          this.$message({
-            message: "添加群成员成功",
-            type:"success"
-          })
-        })
-        .catch(e => {
-          this.$message({
-            message: "添加群成员失败",
-            type:"error"
-          })
-        })
+            if(this.multipleSelection.length === 0){
+              return;
+            }
+            let userIds = "";
+            for(let i = 0; i < this.multipleSelection.length; i++){
+              userIds = this.multipleSelection[i].friendId + ""
+            }
+            // userIds = userIds.slice(0, userIds.length-1);
+            addNewGroupMember(this.form.groupId, userIds)
+              .then(res => {
+                this.$message({
+                  message: "添加群成员成功",
+                  type:"success"
+                })
+              })
+              .catch(e => {
+                this.$message({
+                  message: "添加群成员失败",
+                  type:"error"
+                })
+              })
     },
     handleSelectionChange(val){
       this.multipleSelection = val;
@@ -182,8 +183,8 @@ export default {
           let len = tmpGroupFriend.length;
           for (let i = 0; i < len; i++) {
             this.groupFriend.push({
-              userName: tmpGroupFriend[i].user.nickName, 
-              avatar: tmpGroupFriend[i].user.avatar
+              userName: tmpGroupFriend[i].user.nickName,
+
             })
           }
         })
@@ -212,7 +213,7 @@ export default {
         })
     },
     quitAndDismissGroup(){
-      deleteMyGroupChat(this.form.groupId)
+      deleteMyGroupChat(this.form.groupId, this.myId)
         .then(res => {
           this.$message({
             message:"群聊已经删除",

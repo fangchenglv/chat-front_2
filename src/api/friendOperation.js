@@ -17,8 +17,8 @@ export function buildNewGroupChat(userId, groupName, description){
     url: "/group/add",
     method: "post",
     data: {
-      userId:userId, 
-      groupName:groupName, 
+      userId:userId,
+      groupName:groupName,
       description:description
     }
   })
@@ -94,12 +94,13 @@ export function quitOneGroupChat(groupId, userId){
   })
 }
 //解散群聊
-export function deleteMyGroupChat(groupId){
+export function deleteMyGroupChat(groupId,userId){
   return request({
     url:"/group/delete",
     method: "post",
     data: {
-      groupId
+      groupId,
+      userId
     }
   })
 }
@@ -210,8 +211,17 @@ export function getUnreadMsgList(userId){
     data:{userId},
   })
 }
-//聊天：获取历史消息
-export function getHistoryReadList(fromUserId, toUserId){
+// //聊天：获取历史消息
+// export function getHistoryReadList(fromUserId, toUserId){
+//   return request({
+//     url:"/chat/self/" + fromUserId + "/" + toUserId,
+//     method:"post",
+//     // data:{},
+//   })
+// }
+
+//单聊获取历史消息
+export function getSingleHistoryReadList(fromUserId, toUserId) {
   return request({
     url:"/chat/singleHistory",
     method:"post",
@@ -221,6 +231,7 @@ export function getHistoryReadList(fromUserId, toUserId){
     },
   })
 }
+
 //群聊获取历史消息
 export function getGroupHistoryReadList(groupId) {
   return request({
@@ -253,13 +264,3 @@ export function getUnreadGroupMessageList(toUserId, groupId) {
     }
   })
 }
-// //登出
-// export function logout_(userId){
-//   return request({
-//     url:"/user/logout",
-//     method:"post",
-//     data:{
-//       userId,
-//     }
-//   })
-// }

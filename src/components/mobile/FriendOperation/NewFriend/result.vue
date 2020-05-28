@@ -3,9 +3,10 @@
     <br>
     <div v-for="item in findList" :key="item.id">
       <van-card
-        :thumb=item.avatar
+
         style="background-color:#fff"
       >
+        <!--        :thumb=item.avatar-->
         <!-- <div slot="thumb">
           <img :src=item.avatar />
         </div> -->

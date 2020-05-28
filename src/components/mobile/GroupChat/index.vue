@@ -27,15 +27,15 @@
         <van-tabbar-item icon="more-o" @click="toGroupHistoryPage">查看历史记录</van-tabbar-item>
         <van-tabbar-item icon="ellipsis" @click="checkFriend">查看群成员</van-tabbar-item>
       </van-tabbar>
-    
+
   </div>
-  
+
 </template>
 
 <script>
-import {getMyGroupChatPerson, 
-        quitOneGroupChat, 
-        deleteMyGroupChat, 
+import {getMyGroupChatPerson,
+        quitOneGroupChat,
+        deleteMyGroupChat,
         addNewGroupMember } from "../../../api/friendOperation"
 export default {
   data(){
@@ -90,13 +90,14 @@ export default {
         })
     },
     quitAndDismissGroup(){
-      deleteMyGroupChat(this.form.groupId)
+      console.log(this.form.groupId)
+      deleteMyGroupChat(this.form.groupId, this.myId)
         .then(res => {
-          this.$message("群聊已经删除");
+          this.$toast("群聊已经删除");
           this.$router.replace({path: "/friendList"});
         })
         .catch(e => {
-          this.$message("删除群聊失败");
+          this.$toast("删除群聊失败");
         })
     },
     newGroupMessage(){
@@ -172,38 +173,38 @@ export default {
       var obj = document.getElementById("firstPart");
       obj.setAttribute("class", "firstPart");
     },
-    quitGroupChat(){
-      quitOneGroupChat(this.form.groupId, this.myId)
-        .then(res => {
-          this.$message({
-            message:"您已退出群聊",
-            type:"success"
-          })
-          this.$router.replace({path:"/home"});
-        })
-        .catch(e => {
-          this.$message({
-            message:"您群聊失败",
-            type:"warning"
-          })
-        })
-    },
-    quitAndDismissGroup(){
-      deleteMyGroupChat(this.form.groupId)
-        .then(res => {
-          this.$message({
-            message:"群聊已经删除",
-            type:"success"
-          })
-          this.$router.replace({path: "/home"});
-        })
-        .catch(e => {
-          this.$message({
-            message:"删除群聊失败",
-            type:"warning"
-          })
-        })
-    },
+    // quitGroupChat(){
+    //   quitOneGroupChat(this.form.groupId, this.myId)
+    //     .then(res => {
+    //       this.$message({
+    //         message:"您已退出群聊",
+    //         type:"success"
+    //       })
+    //       this.$router.replace({path:"/home"});
+    //     })
+    //     .catch(e => {
+    //       this.$message({
+    //         message:"您群聊失败",
+    //         type:"warning"
+    //       })
+    //     })
+    // },
+    // quitAndDismissGroup(){
+    //   deleteMyGroupChat(this.form.groupId, this.myId)
+    //     .then(res => {
+    //       this.$message({
+    //         message:"群聊已经删除",
+    //         type:"success"
+    //       })
+    //       this.$router.replace({path: "/home"});
+    //     })
+    //     .catch(e => {
+    //       this.$message({
+    //         message:"删除群聊失败",
+    //         type:"warning"
+    //       })
+    //     })
+    // },
   }
 }
 </script>

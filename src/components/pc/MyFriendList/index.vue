@@ -3,8 +3,18 @@
     <el-row>
       <el-col :span="11" v-for="(item,ind) in this.friendList" :key="ind" :offset="1">
         <el-card >
-          <img :src=item.friendInfo.avatar alt="图片不存在" class="image" />
+
+          <template>
+            <div class="demo-type">
+
+              <div>
+                <el-avatar shape="circle":size="70"> {{item.friendInfo.nickName}} </el-avatar>
+              </div>
+            </div>
+          </template>
             <p style="font-size:0.5rem; ">昵称:{{item.friendInfo.nickName}}</p>
+
+
 
             <div class="loc">
               <span v-if="item.status == 1"><i class="el-icon-view"/>用户上线</span>
