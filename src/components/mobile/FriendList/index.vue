@@ -1,34 +1,34 @@
 <template>
   <div class="head">
     <div v-for="(item, id) in groupList" :key="id">
-      <van-cell 
-        :title=item.typeName 
-        :value=item.friends.length 
-        icon="arrow-down" 
+      <van-cell
+        :title=item.typeName
+        :value=item.friends.length
+        icon="arrow-down"
         @click="onClickLeft(item.id)"
         style="text-align:left;background-color:rgb(250,250,250)"/>
       <div v-show="show === item.id" v-for="(data, ind) in item.friends" :key="ind">
-        <van-cell 
-        :icon="data.friendInfo.avatar"
-          :title="data.friendInfo.nickName" 
-          @click="toFriend(data.friendId)" 
-          is-link 
-          style="text-align:left;border:solid 0.02rem #ddd; border-top:none; border-left:none; border-right:none"/>
+        <van-cell
+
+          :title="data.friendInfo.nickName"
+          @click="toFriend(data.friendId)"
+          is-link
+          style="text-align:left;border:solid 0.02rem #ddd; border-top:none; border-left:none; border-right:none">
+       </van-cell>
       </div>
     </div>
     <div>
-      <van-cell 
-        title="群组" 
-        :value="myGroupList.length" 
-        icon="arrow-down" 
+      <van-cell
+        title="群组"
+        :value="myGroupList.length"
+        icon="arrow-down"
         @click="onClickLeft(myGroupList.groupNum)"
         style="text-align:left;background-color:rgb(250,250,250)"/>
         <div v-show="show === myGroupList.groupNum" v-for="(data, id) in myGroupList" :key="id">
-          <van-cell 
-          :icon="data.avatar"
-            :title="data.groupName" 
-            @click="toPathGroup(data.groupNum)" 
-            is-link 
+          <van-cell
+            :title="data.groupName"
+            @click="toPathGroup(data.groupNum)"
+            is-link
             style="text-align:left;border:solid 0.02rem #ddd; border-top:none; border-left:none; border-right:none"/>
         </div>
     </div>
@@ -79,7 +79,7 @@ export default {
         return
       }
       this.show = i;
-      
+
     },
     toFriend(friend){
       this.$router.push({name:"FriendPage", params:{id:friend}});
@@ -91,6 +91,6 @@ export default {
 <style scoped>
 .head{
   margin-top: 1rem;
-  margin-bottom: 1rem; 
+  margin-bottom: 1rem;
 }
 </style>

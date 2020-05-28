@@ -8,7 +8,7 @@
       id="head"
     />
     <div class="body">
-      <img :src=this.avatar />
+<!--      <img :src=this.avatar />-->
       <van-divider />
       <p>用户:{{nname}}</p>
       <van-divider/>
@@ -26,9 +26,9 @@
       <van-tabbar-item icon="more-o" @click="toHistoryPage">查看历史记录</van-tabbar-item>
       <van-tabbar-item icon="ellipsis" @click="deleteFriend">删除好友</van-tabbar-item>
     </van-tabbar>
-    <!-- <van-dialog 
-      v-model="dialogTableVisible" 
-      title="分组" 
+    <!-- <van-dialog
+      v-model="dialogTableVisible"
+      title="分组"
       show-cancel-button
       :confirm="changeFriendGroup()"
       :cancel="resetFriendGroup">
@@ -45,10 +45,14 @@
 </template>
 
 <script>
-import {deleteMyFriend, changeFriendGroup} from '../../../../api/friendOperation'
 
+import {deleteMyFriend, changeFriendGroup} from '../../../../api/friendOperation'
+import Avatar from 'vue-avatar'
 export default {
   name:"friendPage",
+  components:{
+    Avatar
+  },
   data(){
     return{
       active:-1,
@@ -60,10 +64,11 @@ export default {
     }
   },
   methods:{
+
     topath(){
       this.$router.push({name:"changeFriendGroup", params:{friendId:this.friendId}});
     },
-    
+
     toHistoryPage(){
       this.$router.push({
         name: "privateHistoryPage",
@@ -74,7 +79,7 @@ export default {
       const allFriend = this.$store.getters.allFriend;
       for(let i = 0; i < allFriend.length; i ++){
         if(allFriend[i].friendId === this.friendId){
-          this.avatar = allFriend[i].friendInfo.avatar;
+          // this.avatar = allFriend[i].friendInfo.avatar;
           this.nname = allFriend[i].friendInfo.nickName;
           this.status = allFriend[i].status;
           break;
@@ -104,7 +109,7 @@ export default {
     toChatroom() {
       this.$router.push({
         name: "privateChatRoom",
-        params: { friendId: this.friendId, name: this.nname, avatar: this.avatar},
+        params: { friendId: this.friendId, name: this.nname},
       });
     },
   },

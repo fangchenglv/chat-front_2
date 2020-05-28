@@ -10,12 +10,15 @@
     <div style="margin-top:1.3rem">
       <van-grid :border="false" :column-num="5">
         <van-grid-item v-for="(item, ind) in groupFriend" :key="ind"  border>
-          <van-image :src="item.avatar" round/>
-            <p>{{item.userName}}</p>
+<!--          <van-image :src="item.avatar" round/>-->
+          <div style="float:left;width:1.3rem; height:1.3rem;background-color:rgba(100,100,100,0.45);margin-top: 0rem;border-radius:50%;">
+            <p style="color: #0c0c0c ;margin-top:0.39rem">{{item.userName}}</p>
+          </div>
+<!--            <p>{{item.userName}}</p>-->
         </van-grid-item>
       </van-grid>
     </div>
-      
+
   </div>
 
 </template>
@@ -44,7 +47,7 @@ export default {
           let len = tmpGroupFriend.length;
           for (let i = 0; i < len; i++) {
             this.groupFriend.push({
-              userName: tmpGroupFriend[i].user.nickName, 
+              userName: tmpGroupFriend[i].user.nickName,
               avatar: tmpGroupFriend[i].user.avatar
             })
           }
