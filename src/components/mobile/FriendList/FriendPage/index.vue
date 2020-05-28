@@ -45,14 +45,13 @@
 </template>
 
 <script>
-
 import {deleteMyFriend, changeFriendGroup} from '../../../../api/friendOperation'
-import Avatar from 'vue-avatar'
+// import Avatar from 'vue-avatar'
 export default {
   name:"friendPage",
-  components:{
-    Avatar
-  },
+  // components:{
+  //   Avatar
+  // },
   data(){
     return{
       active:-1,

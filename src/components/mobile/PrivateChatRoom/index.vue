@@ -151,10 +151,10 @@ export default {
             this.currendStartChatList.push(data.data)
             // console.log("得到的数据放入数组中了", this.currendStartChatList)
           } else{
-              this.$toast({
-                message:"新的好友信息，请注意查看",
-                position:"top",
-              })
+            this.$toast({
+              message:"新的好友信息，请注意查看",
+              position:"top",
+            })
             // console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
             if(this.$websocket.state.privateMessage.find((val, ind) => {return (""+ind) === data.data.fromUserId })){
               this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
@@ -422,9 +422,9 @@ export default {
 #body{
   margin:0.1rem 0.1rem 0rem 0.1rem;
   width:98%;
-  height: 84%;
+  height: 84.5%;
   background-color:rgb(250, 250, 250);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.45rem;
   overflow:auto;
 }
 </style>

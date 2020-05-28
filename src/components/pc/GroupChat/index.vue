@@ -3,11 +3,9 @@
     <div class="firstPart" id="firstPart">
       <el-card style="margin-top:0.5rem; height:90%;position:relative;">
         <div style="height:55%;width:30%;margin:0 auto">
-
-                            <div>
-                              <el-avatar shape="square":size="80"> {{form.name}} </el-avatar>
-                            </div>
-
+          <div>
+            <el-avatar shape="square" :size="80"> {{form.name}} </el-avatar>
+          </div>
         </div>
         
         <div>
@@ -35,7 +33,6 @@
           <p>{{item.userName}}</p>
         </div>
       </ul>
-      <!-- 用一个表格展示吧准备 -->
     </div>
 
     <el-dialog title="添加新群成员" :visible.sync="dialogTableVisible" >

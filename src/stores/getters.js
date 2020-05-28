@@ -14,5 +14,6 @@ const getters = {
   unreadList: state => state.user.unreadList,
   myGroupChat: state => state.user.myGroupChat,
   myGroupFriends: state => state.user.myGroupFriends,
+  leaveMessage: state => state.user.leaveMessage,
 }
 export default getters

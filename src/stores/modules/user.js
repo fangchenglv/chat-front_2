@@ -7,7 +7,8 @@ import {
   getMyFriendList,
   getUnreadMsgList,
   getMyGroupChatPerson,
-  getMyGroupList
+  getMyGroupList,
+  // getUnreadMsgList
 } from "../../api/friendOperation.js";
 
 const user = {
@@ -27,6 +28,7 @@ const user = {
     unreadList:[],
     myGroupChat:[],
     myGroupFriends: {},
+    leaveMessage:[]
   },
   mutations: {
     SET_USERID: (state, id) => {
@@ -67,6 +69,9 @@ const user = {
     },
     SET_GROUPFRIENDS(state, data){
       state.myGroupFriends[data[1]] = data[0];
+    },
+    SET_LEAVEMSG(state, data){
+      state.leaveMessage = data;
     }
   },
   actions: {
@@ -89,6 +94,9 @@ const user = {
             commit("SET_USERNAME", data.userName);
             commit("SET_USERAVATAR", data.avatar)
             // commit('UPDATE_WEBSOCKET', new WebSocket(wssUrl));
+            getUnreadMsgList(data.id).then(res => {
+              commit("SET_LEAVEMSG", res.data.data);
+            })
             resolve(response);
           })
           .catch(error => {

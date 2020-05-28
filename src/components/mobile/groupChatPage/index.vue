@@ -14,13 +14,6 @@
         <GroupMyItem v-if="item.fromUser" :messageid="item.id"  me="true" :msg="item.message" :name="item.fromUser.nickName"></GroupMyItem>
         <GroupFriendItem v-else  :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
       </div>
-      <!-- <ul style="height:95%">
-        <li v-for="(item, ind) in this.messageList" :key="ind">
-          <GroupMyItem v-if="item.fromUser" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></GroupMyItem>
-          <GroupFriendItem v-else :img="item.toUser.avatar" :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
-        </li> -->
-
-<!--      </ul>-->
     </div>
 
 
@@ -276,12 +269,17 @@ export default {
             this.currendStartChatList.push(data.data)
             // console.log("得到的数据放入数组中了", this.currendStartChatList)
           } else{
-            this.$message("新的群聊，请注意查看");
+            this.$toast({
+              message:"新的群聊，请注意查看",
+              position:"top"
+            });
             // console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
             if(this.$websocket.state.groupMessage.some((val, ind) => {return (""+ind) === data.data.toGroupId })){
               this.$websocket.state.groupMessage[data.data.toGroupId].push(data.data);
+              this.$websocket.state.groupUnreadNumber[data.data.toGroupId] = this.$websocket.state.groupUnreadNumber[data.data.toGroupId] + 1;
             } else{
               this.$websocket.state.groupMessage[data.data.toGroupId] = [data.data];
+              this.$websocket.state.groupUnreadNumber[data.data.toGroupId] = 1;
             }
           }
         }
@@ -383,7 +381,12 @@ export default {
 </script>
 
 <style scoped>
-/* #body{
-  padding-bottom: 1.3rem;
-} */
+#body{
+  margin:0.1rem 0.1rem 0rem 0.1rem;
+  width:98%;
+  height: 84.5%;
+  background-color:rgb(250, 250, 250);
+  margin-bottom: 1.5rem;
+  overflow:auto;
+}
 </style>
