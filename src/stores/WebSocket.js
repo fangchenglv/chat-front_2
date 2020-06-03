@@ -39,47 +39,62 @@ export default new Vuex.Store({
       state.websock.onopen = function () {
         if (state.regisMsg !== undefined && state.websock.readyState === 1) {
           state.websock.send(state.regisMsg);
+          // commit("WEBSOCKET_ONMESSAGE")
+          // this.WEBSOCKET_ONMESSAGE()
         }
       }
+      state.websock.οnerrοr = function (e) { //错误
+        console.log("ws错误!");
+        console.log(e);
+      }
+      state.websock.onclose = function (e) { //关闭
+        console.log("ws关闭！");
+        console.log(e);
+      }
+      //保活
+      setInterval(() => {
+        if (state.websock.readyState === 1) {
+          state.websock.send(state.regisMsg);
+          // console.log('发送心跳信息ping');
+        }
+      }, 30000)
+    },
+    WEBSOCKET_ONMESSAGE(state, data){
       state.websock.onmessage = function (e) {
-        // console.log(state.currentFriendId);
-        // console.log("总数据", state.privateMessage);
         console.log("这是在websocket里面");
         let data = JSON.parse(e.data);
-        if(data.status === 200){
+        if (data.status === 200) {
           //单聊信息
           if (data.data.type === "SINGLE_SENDING" || data.data.type === "SINGLE_SENDING_IMG" || data.data.type === "FILE_MSG_SINGLE_SENDING") {
             // console.log("数据变化前", state.privateMessage);
             // console.log("有没有包含到底", state.privateMessage.count())
+            console.log("websocket走这儿吗", state.privateMessage.find((val, ind) => ind == data.data.fromUserId))
             let friendId = parseInt(data.data.fromUserId);
-            if(state.privateMessage.find((val, ind) => {
-              return ind === friendId;
-            })){
+            if (state.privateMessage.find((val, ind) => ind == friendId) != null || state.privateMessage.find((val, ind) => ind == friendId) != undefined) {
               state.privateMessage[friendId].push(data.data);
               state.privateUnreadNumber[friendId] = state.privateUnreadNumber[friendId] + 1;
-            } else{
+            } else {
               state.privateMessage[friendId] = [data.data];
-              state.privateUnreadNumber[friendId] = 1;
+              state.privateUnreadNumber[friendId] = +1;
             }
             // console.log("数据变化后", state.privateMessage);
             // console.log("有没有包含到底", state.privateMessage.count())
-            if (/Android|iPhone|SymbianOS|iPad|iPod/i.test(navigator.userAgent)){
+            if (/Android|iPhone|SymbianOS|iPad|iPod/i.test(navigator.userAgent)) {
               Toast({
-                message:"新的好友信息，请注意查看",
+                message: "新的好友信息，请注意查看",
                 position: "top"
               });
             } else {
               Message("新的好友信息，请注意查看");
             }
-          } 
+          }
           //群聊信息
           if (data.data.type === "GROUP_SENDING" || data.data.type === "GROUP_SENDING_IMG" || data.data.type === "FILE_MSG_GROUP_SENDING") {
             //仿照单聊信息实现
             console.log("未进入群聊信息的提醒", state.groupUnreadNumber)
             let GroupId = parseInt(data.data.toGroupId);
-            if (state.groupMessage.find((val, ind) => {
-                return ind === GroupId;
-              })) {
+            console.log("!!!!@@@", state.groupUnreadNumber)
+            if (state.groupMessage.find((val, ind) => ind === GroupId) != null || state.groupMessage.find((val, ind) => ind === GroupId) != undefined) {
               state.groupMessage[GroupId].push(data.data);
               state.groupUnreadNumber[GroupId] = state.groupUnreadNumber[GroupId] + 1
             } else {
@@ -99,21 +114,6 @@ export default new Vuex.Store({
           state.websock.send(state.regisMsg);
         }
       }
-      state.websock.οnerrοr = function (e) { //错误
-        console.log("ws错误!");
-        console.log(e);
-      }
-      // state.websock.onclose = function (e) { //关闭
-      //   console.log("ws关闭！");
-      //   console.log(e);
-      // }
-      //保活
-      setInterval(() => {
-        if (state.websock.readyState === 1) {
-          state.websock.send(state.regisMsg);
-          // console.log('发送心跳信息ping');
-        }
-      }, 30000)
     },
     WEBSOCKET_SEND(state, data) {
       let id = data[1];
@@ -166,6 +166,7 @@ export default new Vuex.Store({
       commit("SET_WEBSOCKET", web);
       commit("SET_REGISTERMSG", regisMsg);
       commit('WEBSOCKET_INIT', msg);
+      commit("WEBSOCKET_ONMESSAGE")
     },
     SendWebsocketMessage({
       commit
@@ -185,13 +186,11 @@ export default new Vuex.Store({
       // console.log("销毁页面以后是否提交之前的聊天", state.privateMessage)
       commit("WEBSOCKET_FRIENDID", -1);
       commit("WEBSOCKET_GROUPID", -1);
+      commit("WEBSOCKET_ONMESSAGE");
+      console.log("执行到这句了")
     }
   },
   plugins: [new createPersistedState({
     storage: window.sessionStorage,
   })]
 })
-
-// function require(r) {
-//   return r 
-// }

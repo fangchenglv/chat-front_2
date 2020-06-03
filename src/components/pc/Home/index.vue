@@ -51,15 +51,15 @@ export default {
   // },
   mounted(){
     this.init()
+    console.log("这是home页", this.unreadLeaveFriend)
+    // console.log(this.privateUnreadNumber, this.groupUnreadNumber)
     // this.parpareData();
     // console.log("应该有未读信息吧",this.unreadFriend)
   },
   methods:{
     init(){
-      // this.$store.dispatch("GetMyGroupChat", )
       this.privateUnreadNumber = this.$websocket.state.privateUnreadNumber;
       this.groupUnreadNumber = this.$websocket.state.groupUnreadNumber;
-      // console.log(" this.groupUnreadNumber", this.groupUnreadNumber)
       this.$store.dispatch("GetMyFriendList", this.$store.getters.userId)
         .then(response => {
           let friend = this.$store.getters.allFriend;
@@ -73,17 +73,22 @@ export default {
                 this.allGroup[group[i].id] = group[i];
               }
               this.parpareData();
+              
             }).catch(err => {
-              // console.log(error);
             })
         }).catch(error => {
-          // console.log(error);
         });
     },
     parpareData(){
-      if (this.unreadLeaveFriend.length > 0) {
+      if (this.unreadLeaveFriend.length <= 0){
+        this.parpareOnlineData();
+        console.log("能正常初始化页面吗")
+        return
+      } else {
+        console.log("parpareData未读信息数量", this.unreadLeaveFriend);
+        this.parpareOnlineData();
+        console.log("能正常初始化页面吗")
         for (let i = 0; i < this.unreadLeaveFriend.length; i++) {
-          // console.log("parpareData未读信息数量", this.unreadLeaveFriendS);
           //用户离线时的未读消息展示逻辑,群聊
           if (this.unreadLeaveFriend[i].fromUser == undefined) {
             if (this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] > 0) {
@@ -144,40 +149,40 @@ export default {
             }
           }
         }
-        this.$store.state.leaveMessage = [];
       }
-      else{
-        //用户在线时的未读消息展示逻辑
-        for (let i = 0; i < this.privateUnreadNumber.length; i++) {
-          // console.log("d单聊未读信息数量",this.privateUnreadNumber.length);
-          if (this.privateUnreadNumber[i] > 0) {
-            let t = {
-              id: i,
-              groupNum: null,
-              nickName: this.allFriend[i].friendInfo.nickName,
-              avatar: this.allFriend[i].friendInfo.avatar,
-              count: this.privateUnreadNumber[i],
-              status: this.allFriend[i].status
-            };
-            // this.unreadFriend.push(t);
-            this.unreadFriendGroup.push(t)
-          }
+    },
+    parpareOnlineData(){
+      //用户在线时的未读消息展示逻辑
+      console.log("d单聊未读信息数量",this.privateUnreadNumber.length, this.privateUnreadNumber);
+      for (let i = 0; i < this.privateUnreadNumber.length; i++) {
+        if (this.privateUnreadNumber[i] > 0) {
+          let t = {
+            id: i,
+            groupNum: null,
+            nickName: this.allFriend[i].friendInfo.nickName,
+            avatar: this.allFriend[i].friendInfo.avatar,
+            count: this.privateUnreadNumber[i],
+            status: this.allFriend[i].status
+          };
+          // this.unreadFriend.push(t);
+          this.unreadFriendGroup.push(t)
         }
-        for (let i = 0; i < this.groupUnreadNumber.length; i++) {
-          // console.log("d群聊未读信息数量",this.groupUnreadNumber.length);
-          if (this.groupUnreadNumber[i] > 0) {
-            console.log("aaaa",this.allGroup[i])
-            let t = {
-              id: this.allGroup[i].id,
-              groupNum: this.allGroup[i].groupNum,
-              nickName: this.allGroup[i].groupName,
-              avatar: this.allGroup[i].avatar,
-              count: this.groupUnreadNumber[i],
-              // status: this.allGroup[i].status
-            };
-            // this.unreadGroup.push(t);
-            this.unreadFriendGroup.push(t)
-          }
+      }
+      console.log("群聊未读消息数", this.groupUnreadNumber);
+      for (let i = 0; i < this.groupUnreadNumber.length; i++) {
+        // console.log("d群聊未读信息数量",this.groupUnreadNumber.length);
+        if (this.groupUnreadNumber[i] > 0) {
+          console.log("aaaa",this.allGroup[i])
+          let t = {
+            id: this.allGroup[i].id,
+            groupNum: this.allGroup[i].groupNum,
+            nickName: this.allGroup[i].groupName,
+            avatar: this.allGroup[i].avatar,
+            count: this.groupUnreadNumber[i],
+            // status: this.allGroup[i].status
+          };
+          // this.unreadGroup.push(t);
+          this.unreadFriendGroup.push(t)
         }
       }
     },
