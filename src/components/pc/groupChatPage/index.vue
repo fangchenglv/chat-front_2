@@ -66,6 +66,7 @@ export default {
       myNickName:this.$store.getters.userNickname,
       groupId:"" + this.$route.params.groupId,
       newGroupFriend: this.$store.getters.myGroupFriends[this.$route.params.groupId],
+      unreadLeaveFriend:this.$store.getters.leaveMessage,
     };
   },
   computed:{
@@ -91,6 +92,7 @@ export default {
   methods:{
     init(){
       // console.log("到底渲染了几次")
+      this.$websocket.state.groupUnreadNumber[this.groupId] = null;
       this.$websocket.dispatch("StartChatId", [this.groupId, "group"]);
       this.getUnreadList(this.$store.getters.userId, this.groupId);
       this.websockOnMessage();
@@ -272,13 +274,38 @@ export default {
             this.currendStartChatList.push(data.data)
             // console.log("得到的数据放入数组中了", this.currendStartChatList)
           } else{
-            this.$message("新的群聊，请注意查看");
-            // console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
-            if(this.$websocket.state.groupMessage.some((val, ind) => {return (""+ind) === data.data.toGroupId })){
-              this.$websocket.state.groupMessage[data.data.toGroupId].push(data.data);
-            } else{
-              this.$websocket.state.groupMessage[data.data.toGroupId] = [data.data];
+            let re = /SINGLE/;
+            if (re.test(data.data.type) === true) {
+              this.$message("新的好友信息，请注意查看");
+              // console.log("走这儿吗",this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ))
+              if(this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ) != null || this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ) != undefined){
+                this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
+                this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = (+this.$websocket.state.privateUnreadNumber[data.data.fromUserId]) + 1;
+              } else{
+                this.$websocket.state.privateMessage[data.data.fromUserId] = [data.data];
+                this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = +1;
+              }
+              console.log(this.$websocket.state.privateUnreadNumber, this.$websocket.state.privateUnreadNumber.length)
+              console.log(this.$websocket.state.privateMessage)              
+            } else {
+              this.$message("新的群消息，请注意查收")
+              if(this.$websocket.state.groupMessage.find((val, ind) => ind == data.data.toGroupId ) != null || this.$websocket.state.groupMessage.find((val, ind) => ind == data.data.toGroupId ) != undefined){
+                this.$websocket.state.groupMessage[data.data.toGroupId].push(data.data);
+                this.$websocket.state.groupUnreadNumber[data.data.toGroupId] = this.$websocket.state.groupUnreadNumber[data.data.toGroupId] + 1;
+              } else{
+                this.$websocket.state.groupMessage[data.data.toGroupId] = [data.data];
+                this.$websocket.state.groupUnreadNumber[data.data.toGroupId] = +1;
+              }
+              console.log(this.$websocket.state.groupUnreadNumber)
+              console.log(this.$websocket.state.groupMessage) 
             }
+            // this.$message("新的群聊，请注意查看");
+            // // console.log("外人发来信息展示之前", this.$websocket.state.privateMessage)
+            // if(this.$websocket.state.groupMessage.some((val, ind) => {return (""+ind) === data.data.toGroupId }) != null){
+            //   this.$websocket.state.groupMessage[data.data.toGroupId].push(data.data);
+            // } else{
+            //   this.$websocket.state.groupMessage[data.data.toGroupId] = [data.data];
+            // }
           }
         }
       }
@@ -341,8 +368,20 @@ export default {
       // console.log("到底渲染了几次")
       getUnreadGroupMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
-        // console.log("getUnreadList接受到的具体未读信息", this.unreadList, fromId, toId);
-        if(this.unreadList){
+        console.log("群聊里面的，getUnreadList接受到的具体未读信息", this.unreadList, fromId, toId);
+        if (this.unreadLeaveFriend.length > 0) {
+          // console.log("zouzhermammmmmm")
+          for (let i = 0; i < this.unreadLeaveFriend.length; i++) {
+            if (this.unreadLeaveFriend[i].groupDO !== null && this.unreadLeaveFriend[i].groupDO.id == this.groupId) {
+              this.unreadLeaveFriend.splice(i, 1);
+              this.$store.state.leaveMessage = this.unreadLeaveFriend;
+              console.log("未读消息能消去吗", this.unreadLeaveFriend, this.$store.state.leaveMessage)
+              break
+            }
+          }
+        }
+        // console.log("会走这儿吗");
+        if(this.unreadList.length > 0){
           this.unreadList.forEach((data) =>{
             let t = {};
             if (data.type == "0") {

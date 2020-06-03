@@ -182,7 +182,7 @@ let router = new Router({
     //私人聊天主页
     {
       name: 'privateChatRoom',
-      path:"/privateChatRoom/:friendId/:name/:avatar",
+      path:"/privateChatRoom/:friendId/:name/",
       component:() => import('../../components/mobile/PrivateChatRoom/index.vue'),
       meta:{
         keepAlive:false,

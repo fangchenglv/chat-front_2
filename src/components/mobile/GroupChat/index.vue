@@ -106,8 +106,8 @@ export default {
     newGroupMember(){
       this.$router.push({name:"newGroupChatMember", params:{groupNum: this.groupNum, groupId:this.form.groupId}});
     },
-
     toGroupChatroom(){
+      console.log("!!!!", this.form)
       this.$router.push({name: "groupChatPage", params:{groupId: this.form.groupId, myId: this.myId, name:this.form.name}})
     },
     toGroupHistoryPage(){
