@@ -73,16 +73,16 @@ export default {
           let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
           this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg]).then((res) =>{
             // console.log("可能登录了吧", res);
+            this.loading = false;
+            this.$router.replace({path:'/chatList'});
+            // this.$router.push({path: '/home'});
+            this.$store
+              .dispatch("GetMyFriendList", this.$store.getters.userId)
+              .then(response => {})
+              .catch(error => {
+                console.log(error);
+              });
           })
-          this.loading = false;
-          this.$router.replace({path:'/chatList'});
-          // this.$router.push({path: '/home'});
-          this.$store
-            .dispatch("GetMyFriendList", this.$store.getters.userId)
-            .then(response => {})
-            .catch(error => {
-              console.log(error);
-            });
         })
         .catch(() => {
           this.loading = false;

@@ -105,11 +105,11 @@ export default {
               uid = "" + uid;
               // url, msgCallback, name, regisMsg
               let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
-              this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg]).then((res) =>{
-                // console.log("可能登录了吧", res);
+              this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg])
+              .then((res) =>{
+                this.loading = false;
+                this.$router.replace({ path: "/home" }); 
               })
-              this.loading = false;
-              this.$router.replace({ path: "/home" }); //这儿有问题，之后改路由的时候好好看看！
             })
             .catch(() => {
               this.loading = false;
