@@ -42,8 +42,12 @@ export default {
     // },
     exit(){
       // this.$websocket.websock.close()
-      this.$router.push({path:"/login"})
-      logout_(this.$store.getters.userId);
+      // this.$router.push({path:"/login"})
+      // logout_(this.$store.getters.userId);
+      logout_(this.$store.getters.userId).then(() => {
+        this.$store.commit("DELETE_TOKEN");
+        // console.log("@@@", this.$store.getters.tok)
+      })
     }
 
   }

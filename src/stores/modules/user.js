@@ -87,6 +87,7 @@ const user = {
         login(name, pass)
           .then(response => {
             const data = response.data.data; //是接口返回的参数
+            // console.log("@@@@@@@@@@@@@@@@@@@@@", data);
             commit("SET_USERID", data.id);
             commit("SET_USERROLE", data.userRole);
             commit("SET_USERSIGN", data.userSign);

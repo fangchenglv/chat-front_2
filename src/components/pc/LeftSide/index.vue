@@ -140,8 +140,11 @@ export default {
       // const sock = this.$store.getters.sock;
       // sock.closeMyself();
       // this.$websocket.websock.close()
-      this.$router.push({path:"/login"})
-      logout_(this.$store.getters.userId);
+      // this.$router.push({path:"/login"})
+      logout_(this.$store.getters.userId).then(() => {
+        this.$store.commit("DELETE_TOKEN");
+        // console.log("@@@", this.$store.getters.tok)
+      })
     },
     handleOpen(key, keyPath) {
       // console.log(key, keyPath);

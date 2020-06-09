@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import loginRouter from '../../components/pc/Login/index'
+import store from "../../stores"
 
 Vue.use(Router)
 
@@ -152,11 +153,19 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
     window.location.href = '/m_index.html#/'
-    // top.location.href = '/m_index.html'
-    // next()
     return
   }
-  // next({path:'/login'})
+  // if (to.path === '/login' || to.path === "/register") {
+  //   next();
+  // } else {
+  //   // console.log("@@@@@@@@@@", store.getters.tok)
+  //   let token = store.getters.tok;
+  //   if (token === 'null' || token === '' || token === undefined) {
+  //     next('/login');
+  //   } else {
+  //     next();
+  //   }
+  // }
   next()
 })
 
