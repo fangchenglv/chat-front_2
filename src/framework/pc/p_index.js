@@ -16,12 +16,15 @@ import "lib-flexible/flexible"
 
 import Websocket from "../../stores/WebSocket";
 
+
 Vue.use(ElementUI)
 Vue.use(VueAxios, axios)
 Vue.use(Vuex)
 Vue.prototype.$websocket = Websocket
 
 Vue.config.productionTip = false
+
+
 
 /* eslint-disable no-new */
 new Vue({

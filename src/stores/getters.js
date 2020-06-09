@@ -15,5 +15,6 @@ const getters = {
   myGroupChat: state => state.user.myGroupChat,
   myGroupFriends: state => state.user.myGroupFriends,
   leaveMessage: state => state.user.leaveMessage,
+  tok: state => state.token.tok,
 }
 export default getters

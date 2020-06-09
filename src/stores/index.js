@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
-import websock from './modules/websock'
+// import websock from './modules/websock'
 import getters from './getters'
 import createPersistedState from "vuex-persistedstate"
+import token from "./modules/token";
 
 
 Vue.use(Vuex)
@@ -11,7 +12,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     modules: {
       user,
-      websock,
+      token,
     },
     getters,
     plugins: [new createPersistedState({
