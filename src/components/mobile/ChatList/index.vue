@@ -73,84 +73,106 @@ export default {
               for (let i = 0; i < group.length; i++) {
                 this.allGroup[group[i].id] = group[i];
               }
-              this.parpareData();
+              // this.parpareData();
+              this.parpareLeaveData()
             }).catch(err => {
             })
         }).catch(error => {
         });
     },
-    parpareData(){
-      if (this.unreadLeaveFriend.length <= 0){
-        this.parpareOnlineData();
-        console.log("能正常初始化页面吗")
-        return
-      } else {
-        console.log("parpareData未读信息数量", this.unreadLeaveFriend);
-        this.parpareOnlineData();
-        console.log("能正常初始化页面吗")
+    parpareLeaveData(){
+      if(this.unreadLeaveFriend.length > 0){
         for (let i = 0; i < this.unreadLeaveFriend.length; i++) {
-          //用户离线时的未读消息展示逻辑,群聊
           if (this.unreadLeaveFriend[i].fromUser == undefined) {
             if (this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] > 0) {
-              let t = {
-                id: this.unreadLeaveFriend[i].groupDO.id,
-                groupNum:this.unreadLeaveFriend[i].groupDO.groupNum,
-                nickName: this.unreadLeaveFriend[i].groupDO.groupName,
-                avatar: this.unreadLeaveFriend[i].groupDO.avatar,
-                count: this.unreadLeaveFriend[i].count + this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id],
-                // status: this.unreadLeaveFriend[i].status
-              };
-              this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] = undefined;
-              // this.unreadGroup.push(t);
-              this.unreadFriendGroup.push(t)
+              this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] = this.unreadLeaveFriend[i].count + this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id];
+            } else {
+              this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] = this.unreadLeaveFriend[i].count
             }
-            else {
-              // console.log("parpareData未读消息进来了吗2");
-              // console.log(i, "走路3");
-              let t = {
-                id: this.unreadLeaveFriend[i].groupDO.id,
-                groupNum:this.unreadLeaveFriend[i].groupDO.groupNum,
-                nickName: this.unreadLeaveFriend[i].groupDO.groupName,
-                avatar: this.unreadLeaveFriend[i].groupDO.avatar,
-                count: this.unreadLeaveFriend[i].count,
-                // status: this.unreadLeaveFriend[i].status
-              };
-              // this.unreadGroup.push(t);
-              this.unreadFriendGroup.push(t)
-            }
-          }
-          //单聊
-          else{
+          } else {
             if (this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] > 0) {
-              // console.log(i,"走路1");
-              let t = {
-                id: this.unreadLeaveFriend[i].fromUser.id,
-                groupNum: null,
-                nickName: this.unreadLeaveFriend[i].fromUser.nickName,
-                avatar: this.unreadLeaveFriend[i].fromUser.avatar,
-                count: this.unreadLeaveFriend[i].count + this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id],
-                status: this.unreadLeaveFriend[i].status
-              };
-              this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] = undefined;
-              // this.unreadFriend.push(t);
-              this.unreadFriendGroup.push(t)
-            }else{
-              // console.log(i,"走路2");
-              let t = {
-                id: this.unreadLeaveFriend[i].fromUser.id,
-                groupNum: null,
-                nickName: this.unreadLeaveFriend[i].fromUser.nickName,
-                avatar: this.unreadLeaveFriend[i].fromUser.avatar,
-                count: this.unreadLeaveFriend[i].count,
-                status: this.unreadLeaveFriend[i].status
-              };
-              // this.unreadFriend.push(t);
-              this.unreadFriendGroup.push(t)
+              this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] = this.unreadLeaveFriend[i].count + this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id]
+            } else {
+              this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] = this.unreadLeaveFriend[i].count
             }
           }
         }
+        this.$store.state.leaveMessage = null;
       }
+      this.parpareOnlineData();
     },
+    // parpareData(){
+    //   if (this.unreadLeaveFriend.length <= 0){
+    //     this.parpareOnlineData();
+    //     console.log("能正常初始化页面吗")
+    //     return
+    //   } else {
+    //     console.log("parpareData未读信息数量", this.unreadLeaveFriend);
+    //     this.parpareOnlineData();
+    //     console.log("能正常初始化页面吗")
+    //     for (let i = 0; i < this.unreadLeaveFriend.length; i++) {
+    //       //用户离线时的未读消息展示逻辑,群聊
+    //       if (this.unreadLeaveFriend[i].fromUser == undefined) {
+    //         if (this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] > 0) {
+    //           let t = {
+    //             id: this.unreadLeaveFriend[i].groupDO.id,
+    //             groupNum:this.unreadLeaveFriend[i].groupDO.groupNum,
+    //             nickName: this.unreadLeaveFriend[i].groupDO.groupName,
+    //             avatar: this.unreadLeaveFriend[i].groupDO.avatar,
+    //             count: this.unreadLeaveFriend[i].count + this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id],
+    //             // status: this.unreadLeaveFriend[i].status
+    //           };
+    //           this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] = undefined;
+    //           // this.unreadGroup.push(t);
+    //           this.unreadFriendGroup.push(t)
+    //         }
+    //         else {
+    //           // console.log("parpareData未读消息进来了吗2");
+    //           // console.log(i, "走路3");
+    //           let t = {
+    //             id: this.unreadLeaveFriend[i].groupDO.id,
+    //             groupNum:this.unreadLeaveFriend[i].groupDO.groupNum,
+    //             nickName: this.unreadLeaveFriend[i].groupDO.groupName,
+    //             avatar: this.unreadLeaveFriend[i].groupDO.avatar,
+    //             count: this.unreadLeaveFriend[i].count,
+    //             // status: this.unreadLeaveFriend[i].status
+    //           };
+    //           // this.unreadGroup.push(t);
+    //           this.unreadFriendGroup.push(t)
+    //         }
+    //       }
+    //       //单聊
+    //       else{
+    //         if (this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] > 0) {
+    //           // console.log(i,"走路1");
+    //           let t = {
+    //             id: this.unreadLeaveFriend[i].fromUser.id,
+    //             groupNum: null,
+    //             nickName: this.unreadLeaveFriend[i].fromUser.nickName,
+    //             avatar: this.unreadLeaveFriend[i].fromUser.avatar,
+    //             count: this.unreadLeaveFriend[i].count + this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id],
+    //             status: this.unreadLeaveFriend[i].status
+    //           };
+    //           this.privateUnreadNumber[this.unreadLeaveFriend[i].fromUser.id] = undefined;
+    //           // this.unreadFriend.push(t);
+    //           this.unreadFriendGroup.push(t)
+    //         }else{
+    //           // console.log(i,"走路2");
+    //           let t = {
+    //             id: this.unreadLeaveFriend[i].fromUser.id,
+    //             groupNum: null,
+    //             nickName: this.unreadLeaveFriend[i].fromUser.nickName,
+    //             avatar: this.unreadLeaveFriend[i].fromUser.avatar,
+    //             count: this.unreadLeaveFriend[i].count,
+    //             status: this.unreadLeaveFriend[i].status
+    //           };
+    //           // this.unreadFriend.push(t);
+    //           this.unreadFriendGroup.push(t)
+    //         }
+    //       }
+    //     }
+    //   }
+    // },
     parpareOnlineData(){
       //用户在线时的未读消息展示逻辑
       console.log("d单聊未读信息数量",this.privateUnreadNumber.length, this.privateUnreadNumber);
