@@ -9,7 +9,7 @@
     />
     <div v-for="(item, ind) in groupData" :key="ind">
       <!-- <div> -->
-        <van-card style="background-color:rgb(255,255,255);margin-top:0.1rem">
+        <van-card style="background-color:rgb(255,255,255);margin-top:0.1rem; top:1rem">
           <template #thumb>
             <p style="font-size:0.5rem;width:200%">分组名：{{item.typeName}}</p>
           </template>
@@ -35,7 +35,7 @@
           </van-form>
         </van-popup>
       </div> -->
-      
+
     </div>
   </div>
 </template>
@@ -53,7 +53,7 @@ export default {
     }
   },
   computed:{
-    
+
     groupData:function () {
       const all = this.$store.getters.myFriendList;
       return all;

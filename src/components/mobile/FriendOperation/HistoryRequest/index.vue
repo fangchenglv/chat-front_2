@@ -18,7 +18,7 @@
         :title="tables.friendUserName"
         :value="tables.applyTime"
         :label="tables.status"
-        style="background-color:rgb(250,250,250);text-align:left;border:solid 0.02rem #ddd; top:1rem;border-left:none; border-right:none"/>
+        style="background-color:rgb(250,250,250);text-align:left;border:solid 0.02rem #ddd; top:2.3rem;border-left:none; border-right:none"/>
     </div>
 
   </div>

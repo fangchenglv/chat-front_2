@@ -11,8 +11,8 @@
       <van-grid :border="false" :column-num="5">
         <van-grid-item v-for="(item, ind) in groupFriend" :key="ind"  border>
 <!--          <van-image :src="item.avatar" round/>-->
-          <div style="float:left;width:1.3rem; height:1.3rem;background-color:rgba(100,100,100,0.45);margin-top: 0rem;border-radius:50%;">
-            <p style="color: #0c0c0c ;margin-top:0.39rem">{{item.userName}}</p>
+          <div style="float:left;width:2rem; height:2rem;background-color:rgba(100,100,100,0.45);margin-top: 0rem;border-radius:50%;">
+            <p style="color: #0c0c0c ;margin-top:0.6rem;font-size: 20px">{{item.userName}}</p>
           </div>
 <!--            <p>{{item.userName}}</p>-->
         </van-grid-item>
