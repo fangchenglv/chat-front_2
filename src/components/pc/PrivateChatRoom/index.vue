@@ -7,7 +7,7 @@
 
     <el-main style="margin:0 0.1rem 1.2rem 0.1rem;width:98%;padding-top:0.1rem">
       <div v-for="(item, ind) in this.messageList" :key="ind">
-          <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></FriendItem>
+          <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName":filea="item.File"></FriendItem>
           <MyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
       </div>
     </el-main>
@@ -39,6 +39,7 @@
         plain 
         @click="sendMsg" 
       >发送</el-button>
+
     </el-footer>
 
   </el-container>
@@ -61,6 +62,8 @@ export default {
     return { 
       message: "",
       imageFile: "",
+      File:"",
+      Filename:"",
       websock: null,
       historyMessageList:[],    //历史消息列表
       unreadList:[],    //未读消息列表
@@ -145,7 +148,18 @@ export default {
                 "id": msgId
               };
             } else {
-              //留下口子
+              let dat = data.data;
+              msgId = 2;
+              param = {
+                 "fromUser":{"id":this.$route.params.friendId,
+                              "nickName": this.$route.params.name,
+                              },
+                 "toUser":{"id":this.$store.getters.userId,
+                           "nickName":this.$store.getters.userNickname,
+                           },
+                 "message":dat.Filename,
+                 "id": msgId
+                };
             }
             //添加到信息列表，以便展示信息
             if (! this.messageList){
@@ -211,6 +225,7 @@ export default {
               "message":data.content,
               "id": msgId
             };
+
           }
           else {
             param = {
@@ -225,6 +240,7 @@ export default {
               "message":data.content,
               "id": msgId
             };
+
           }
         }
         else if (data.type === "SINGLE_SENDING_IMG"){
@@ -240,7 +256,7 @@ export default {
                         "nickName":this.$store.getters.userNickname, 
                         r
                         }, 
-              "message":data.content,
+              "message":data.name,
               "id": msgId
             };
           }
@@ -254,18 +270,52 @@ export default {
                         "nickName": this.$route.params.name,
 
                         }, 
-              "message":data.content,
+              "message":data.name,
               "id": msgId
             };
           }
+        }else{
+                  msgId = 2;
+
+                  if (data.fromUserId === this.friendId) {
+                    param = {
+                      "fromUser":{"id":this.$route.params.friendId,
+                                  "nickName": this.$route.params.name,
+
+                                  },
+                      "toUser":{"id":this.$store.getters.userId,
+                                "nickName":this.$store.getters.userNickname,
+                                r
+                                },
+                      "message":data.name,
+                      "id": msgId
+                    };
+                  }
+                  else {
+                    param = {
+                      "fromUser":{"id":this.$store.getters.userId,
+                                  "nickName":this.$store.getters.userNickname,
+
+                                  },
+                      "toUser":{"id":this.$route.params.friendId,
+                                "nickName": this.$route.params.name,
+
+                                },
+                      "message":data.name,
+                      "id": msgId
+                    };
+                  }
+
+
         }
+
         this.messageList.push(param);
       })
     },
     handleFile(event){
       let data = event.target.files[0];
       // console.log("有大小吗", data);
-      if (data.size > 65530) {
+      if ((/.jpg|.jpeg|.png|.img/ig.test(data.name))&&data.size > 65530) {
         this.$message("图片太大，请转换为文件上传")
         return
       }
@@ -293,13 +343,29 @@ export default {
         //没数据，退出
         return;
       } else{
-        //处理文件
+        let me = this;
+        let reader = new FileReader();
+        me.Filename =data.name;
+        reader.onload = function(e){
+
+        me.File= e.target.result;
+        console.log("读取到的文件",me.File)
+        //let Filedata = e.target.result;
+        //console.log("Filedata",Filedata)
+        //me.File = URL.createObjectURL(Filedata);
+        me.sendMsg();
+        }
+
+        console.log("文件名字",me.Filename)
+        reader.readAsDataURL(data);
       }
     },
+
+
     sendMsg(){
       let data = null;
       let param = null;
-      if (this.message.trim() === "" && this.imageFile.trim() === ""){
+      if (this.message.trim() === "" && this.imageFile.trim() === ""&& this.File.trim() === ""){
         this.$message.error("输入信息不能为空");
         return
       }
@@ -337,6 +403,24 @@ export default {
           "message":this.message,
           "id": 0
         };
+      }else{
+              data = {
+                "fromUserId" : ""+this.userId,
+                "toUserId" : ""+this.friendId,
+                "content" : ""+this.File,
+                "name":""+this.Filename,
+                "type" : "SINGLE_SENDING_FILE"
+              };
+              param = {
+                "fromUser":{"id":this.$store.getters.userId,
+                            "nickName":this.$store.getters.userNickname,
+                            },
+                "toUser":{"id":this.$route.params.friendId,
+                          "nickName":this.$route.params.name,
+                          },
+                "message":this.Filename,
+                "id": 2
+              };
       }
       this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId]);
       this.currendStartChatList.push(data);
@@ -347,6 +431,7 @@ export default {
       this.imageFile = "";
       this.websockOnMessage();
     },
+
     getTime(){
       let myTime = new Date('December 17, 1995 03:24:00');
       let y = myTime.getFullYear();
