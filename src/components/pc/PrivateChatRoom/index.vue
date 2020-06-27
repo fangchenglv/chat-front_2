@@ -1,6 +1,5 @@
 <template>
   <el-container>
-
     <el-header style="height:auto">
       <p style="font-size:0.7rem;margin:0 0 auto;">{{this.$route.params.name}}</p>
     </el-header>
@@ -88,37 +87,29 @@ export default {
     },
   },
   mounted() {
-    // console.log(this);
     this.init();
   },
   beforeDestroy(){
     this.$websocket.state.privateMessage[this.friendId] = this.currendStartChatList;
     this.$websocket.dispatch("StopChatId");
-    // console.log("实际退出了吗")
   },
-  // destroyed(){
-  //   console.log("退出了")
-  // },
   methods: {
     init(){
       //要把未读数清零
       this.$websocket.state.privateUnreadNumber[this.friendId] = null;
       this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
-      // this.ParparePrivateChatMessage();
       this.websockOnMessage();
     },
     websockOnMessage(){
       let param = null;
       this.$websocket.state.websock.onmessage = e =>{
         const data = JSON.parse(e.data);
-        console.log("单聊页面得到的数据啊", data);
         if (data.status === -1) {
           return
         }
         if(data.data.type !== "REGISTER" && data.status === 200){
           if (!data.data.toGroupId && data.data.fromUserId == this.friendId ){
-            // console.log("难道走了这儿")
             let msgId = -1;
             if(data.data.type === "SINGLE_SENDING"){
               let dat = data.data;
@@ -170,20 +161,16 @@ export default {
             }
             this.currendStartChatList.push(data.data)
           } else{
-            // console.log("看看type信息", data.data)
             let re = /SINGLE/;
             if (re.test(data.data.type) === true) {
               this.$message("新的好友信息，请注意查看");
-              // console.log("走这儿吗",this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ))
               if(this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ) != null || this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ) != undefined){
                 this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
                 this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = (+this.$websocket.state.privateUnreadNumber[data.data.fromUserId]) + 1;
               } else{
                 this.$websocket.state.privateMessage[data.data.fromUserId] = [data.data];
                 this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = +1;
-              }
-              console.log(this.$websocket.state.privateUnreadNumber, this.$websocket.state.privateUnreadNumber.length)
-              console.log(this.$websocket.state.privateMessage)              
+              }            
             } else {
               this.$message("新的群消息，请注意查收")
               if(this.$websocket.state.groupMessage.find((val, ind) => ind == data.data.toGroupId ) != null || this.$websocket.state.groupMessage.find((val, ind) => ind == data.data.toGroupId ) != undefined){
@@ -193,8 +180,6 @@ export default {
                 this.$websocket.state.groupMessage[data.data.toGroupId] = [data.data];
                 this.$websocket.state.groupUnreadNumber[data.data.toGroupId] = +1;
               }
-              console.log(this.$websocket.state.groupUnreadNumber)
-              console.log(this.$websocket.state.groupMessage) 
             }
           }
         }
@@ -203,15 +188,12 @@ export default {
     ParparePrivateChatMessage(){
       //初始化数据吧
       if (!this.currendStartChatList) {
-        // this.currendStartChatList = [];
         return ;
       }
       let param = null, msgId = -1;
-      // console.log("currendStartChatList", this.currendStartChatList)
       this.currendStartChatList.forEach(data => {
         if(data.type === "SINGLE_SENDING"){
           msgId = 0;
-          // console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
           if (data.fromUserId === this.friendId) {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
@@ -226,8 +208,7 @@ export default {
               "id": msgId
             };
 
-          }
-          else {
+          } else {
             param = {
               "fromUser":{"id":this.$store.getters.userId, 
                           "nickName":this.$store.getters.userNickname, 
@@ -242,10 +223,8 @@ export default {
             };
 
           }
-        }
-        else if (data.type === "SINGLE_SENDING_IMG"){
+        } else if (data.type === "SINGLE_SENDING_IMG"){
           msgId = 1;
-          // console.log("!!!!!!", typeof data.fromUserId, typeof this.friendId)
           if (data.fromUserId === this.friendId) {
             param = {
               "fromUser":{"id":this.$route.params.friendId,
@@ -274,9 +253,8 @@ export default {
               "id": msgId
             };
           }
-        }else{
+        } else {
                   msgId = 2;
-
                   if (data.fromUserId === this.friendId) {
                     param = {
                       "fromUser":{"id":this.$route.params.friendId,
@@ -314,7 +292,6 @@ export default {
     },
     handleFile(event){
       let data = event.target.files[0];
-      // console.log("有大小吗", data);
       if ((/.jpg|.jpeg|.png|.img/ig.test(data.name))&&data.size > 65530) {
         this.$message("图片太大，请转换为文件上传")
         return
@@ -332,7 +309,6 @@ export default {
         //方式二：filereader
         let reader = new FileReader();
         reader.onload = function(e){
-          console.log("读取到的图片",e)
           me.imageFile = e.target.result;
           me.sendMsg();
         } 
@@ -355,7 +331,6 @@ export default {
         //me.File = URL.createObjectURL(Filedata);
         me.sendMsg();
         }
-
         console.log("文件名字",me.Filename)
         reader.readAsDataURL(data);
       }
@@ -403,57 +378,40 @@ export default {
           "message":this.message,
           "id": 0
         };
-      }else{
-              data = {
-                "fromUserId" : ""+this.userId,
-                "toUserId" : ""+this.friendId,
-                "content" : ""+this.File,
-                "name":""+this.Filename,
-                "type" : "SINGLE_SENDING_FILE"
-              };
-              param = {
-                "fromUser":{"id":this.$store.getters.userId,
-                            "nickName":this.$store.getters.userNickname,
-                            },
-                "toUser":{"id":this.$route.params.friendId,
-                          "nickName":this.$route.params.name,
-                          },
-                "message":this.Filename,
-                "id": 2
-              };
+      } else {
+        data = {
+          "fromUserId" : ""+this.userId,
+          "toUserId" : ""+this.friendId,
+          "content" : ""+this.File,
+          "name":""+this.Filename,
+          "type" : "SINGLE_SENDING_FILE"
+        };
+        param = {
+          "fromUser":{"id":this.$store.getters.userId,
+                      "nickName":this.$store.getters.userNickname,
+                      },
+          "toUser":{"id":this.$route.params.friendId,
+                    "nickName":this.$route.params.name,
+                    },
+          "message":this.Filename,
+          "id": 2
+        };
       }
       this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId]);
       this.currendStartChatList.push(data);
-      // console.log(this.currendStartChatList)
-      console.log("怎么会没有fromUser", param)
       this.messageList.push(param);
       this.message = "";
       this.imageFile = "";
       this.websockOnMessage();
     },
-
-    getTime(){
-      let myTime = new Date('December 17, 1995 03:24:00');
-      let y = myTime.getFullYear();
-      let m = myTime.getMonth() + 1;
-      let d = myTime.getData();
-      let h = myTime.getHours();
-      let min = myTime.getMinutes();
-      let s = myTime.getSeconds();
-      let t = y + '-' + m + '-' + d + ' ' + h + ':' + min + ':' + s;
-      return t;
-    },
     getUnreadList(fromId, toId){
       getUnreadMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
-        console.log("getUnreadList接受到的具体未读信息", this.unreadList, fromId, toId, this.friendId);
-        // console.log(fromId, response);
         if (this.unreadLeaveFriend.length > 0) {
           for (let i = 0; i < this.unreadLeaveFriend.length; i++) {
             if (this.unreadLeaveFriend[i].fromUser !== null && this.unreadLeaveFriend[i].fromUser.id == this.friendId) {
               this.unreadLeaveFriend.splice(i, 1);
               this.$store.state.leaveMessage = this.unreadLeaveFriend;
-              console.log("未读消息能消去吗", this.unreadLeaveFriend, this.$store.state.leaveMessage)
               break
             }
           }
@@ -463,14 +421,12 @@ export default {
             let t = {};
             if (data.type == "0") {
               t.fromUser = data.fromUser;
-              // t.toUser = data.fromUser;
               t.message = data.message;
               t.id = 0;
             }
             //要是未读信息是图片咋整
             else if (data.type == "1") {
               t.fromUser = data.fromUser;
-              // t.toUser = data.fromUser;
               t.message = data.message;
               t.id = 1;
             }

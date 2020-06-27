@@ -1,17 +1,5 @@
 <template>
-<div>
-    <!-- <el-row>
-      <el-col :span="20">
-        <el-dropdown size="medium" split-button type="primary">
-          <span>选择好友类型</span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="handleCommand(1)">已经同意添加的好友</el-dropdown-item>
-            <el-dropdown-item @click.native="handleCommand(2)">已经拒绝添加的好友</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col>
-    </el-row>
-    <hr/> -->
+  <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="已经同意添加的好友" name="1">已经同意添加的好友</el-tab-pane>
       <el-tab-pane label="已经拒绝添加的好友" name="2">已经拒绝添加的好友</el-tab-pane>
@@ -59,7 +47,7 @@
       </el-col>
     </el-row>
     <!-- 分页部分结束 -->
-</div>
+  </div>
 </template>
 
 <script>
@@ -85,9 +73,7 @@ export default {
     }
   },
   methods:{
-
     handleClick(code) {
-
       this.tableData = [];
       searchFriendRequest(this.id, this.activeName, this.pageNum, this.pageSize)
       .then(response => {
@@ -118,8 +104,6 @@ export default {
     //pageNum改变时
     handleCurrentChange(val) {
         this.pageNum = val;
-         // this.handleCommand();
-        console.log(this.pageNum);
         this.handleClick(this.activeName);
     },
   },

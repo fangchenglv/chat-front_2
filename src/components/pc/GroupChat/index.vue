@@ -145,49 +145,47 @@ export default {
       }
     },
     appendGroupMember(){
-            if(this.multipleSelection.length === 0){
-              return;
-            }
-            let userIds = "";
-            for(let i = 0; i < this.multipleSelection.length; i++){
-              userIds = this.multipleSelection[i].friendId + ""
-            }
-            // userIds = userIds.slice(0, userIds.length-1);
-            addNewGroupMember(this.form.groupId, userIds)
-              .then(res => {
-                this.$message({
-                  message: "添加群成员成功",
-                  type:"success"
-                })
-              })
-              .catch(e => {
-                this.$message({
-                  message: "添加群成员失败",
-                  type:"error"
-                })
-              })
+      if(this.multipleSelection.length === 0){
+        return;
+      }
+      let userIds = "";
+      for(let i = 0; i < this.multipleSelection.length; i++){
+        userIds = this.multipleSelection[i].friendId + ""
+      }
+      addNewGroupMember(this.form.groupId, userIds)
+        .then(res => {
+          this.$message({
+            message: "添加群成员成功",
+            type:"success"
+          })
+        })
+        .catch(e => {
+          this.$message({
+            message: "添加群成员失败",
+            type:"error"
+          })
+        })
     },
     handleSelectionChange(val){
       this.multipleSelection = val;
-      // console.log(this.multipleSelection);
     },
     getGroupMember(){
       getMyGroupChatPerson(this.form.groupId)
-        .then(res =>{
-          console.log("群成员信息", res);
-          var obj = document.getElementById("secondPart");
-          obj.setAttribute("class", "secondPartChange");
-          var obj = document.getElementById("firstPart");
-          obj.setAttribute("class", "firstPartChange");
-          let tmpGroupFriend = res.data.data;
-          let len = tmpGroupFriend.length;
-          for (let i = 0; i < len; i++) {
-            this.groupFriend.push({
-              userName: tmpGroupFriend[i].user.nickName,
+      .then(res =>{
+        console.log("群成员信息", res);
+        var obj = document.getElementById("secondPart");
+        obj.setAttribute("class", "secondPartChange");
+        var obj = document.getElementById("firstPart");
+        obj.setAttribute("class", "firstPartChange");
+        let tmpGroupFriend = res.data.data;
+        let len = tmpGroupFriend.length;
+        for (let i = 0; i < len; i++) {
+          this.groupFriend.push({
+            userName: tmpGroupFriend[i].user.nickName,
 
-            })
-          }
-        })
+          })
+        }
+      })
     },
     handleClose(){
       var obj = document.getElementById("secondPart");
@@ -261,10 +259,6 @@ export default {
   float: right;
   overflow: auto;
   margin-top: 2%;
-  /* margin-left: 0.3rem; */
-  /* transform: translateY(-5%); */
-  /* -webkit-transform: translateY(-5%); */
-  /* margin: 0 auto; */
   background-color: floralwhite;
   border-radius: 0.1rem;
 }

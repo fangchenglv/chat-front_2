@@ -39,14 +39,12 @@ export default {
       this.$router.push({path:"/friendOperation"});
     },
     submitRequest(){
-      // console.log("点击了右面的图标");
       if(this.message === ''){
         this.$toast("输入的好友名不能为空");
         return
       }
       this.$store.dispatch("SearchFriend", this.message)
       .then(response => {
-        // let findFriendList = response.data.data;
         if(response.data.data.length==0){
           this.$toast("该用户不存在");
         }

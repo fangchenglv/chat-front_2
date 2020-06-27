@@ -155,17 +155,6 @@ router.beforeEach((to, from, next) => {
     window.location.href = '/m_index.html#/'
     return
   }
-  // if (to.path === '/login' || to.path === "/register") {
-  //   next();
-  // } else {
-  //   // console.log("@@@@@@@@@@", store.getters.tok)
-  //   let token = store.getters.tok;
-  //   if (token === 'null' || token === '' || token === undefined) {
-  //     next('/login');
-  //   } else {
-  //     next();
-  //   }
-  // }
   next()
 })
 

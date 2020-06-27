@@ -43,15 +43,11 @@ export default {
       this.$router.push({name:"FriendPage", params:{id:this.$route.params.toId}});
     },
     getHistoryList(){
-      console.log(this.$route.params.toId);
-      console.log(this.$store.getters.userId);
-      // getHistoryReadList(this.$store.getters.userId, this.$route.params.toId).then(response =>{
       getSingleHistoryReadList(this.$store.getters.userId, this.$route.params.toId).then(response =>{
         let hist = response.data.data;
         for (let i = 0; i < hist.length; i++) {
           let t = {fromUser:{
               id: hist[i].fromUserId,
-              // avatar: hist[i].fromAvatar,
               nickName: hist[i].fromName
             },
             message: hist[i].content,
@@ -59,7 +55,6 @@ export default {
           }
           this.historyMessageList.push(t)
         }
-          console.log("历史信息", this.historyMessageList);
         }).catch((error) => {
           console.log("1111",error);
         });

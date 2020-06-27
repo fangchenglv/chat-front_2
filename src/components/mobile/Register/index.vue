@@ -30,12 +30,6 @@
       placeholder="请输入昵称"
       style="margin: 0rem 0rem 0.5rem 0rem; text-align:left"
     />
-    <!-- <van-field
-      v-model="gender"
-      label="性别"
-      placeholder="请输入性别，只能填入‘男’或者‘女’"
-      style="margin: 0rem 0rem 0.5rem 0rem;"
-    /> -->
     <van-radio-group v-model="gender" style="margin: 0rem 0rem 0.5rem 0rem;">
       <van-cell >性别</van-cell>
       <van-cell-group style="text-align:center;">

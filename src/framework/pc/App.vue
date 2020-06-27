@@ -45,19 +45,12 @@ html,body,#app{
     height:100%;
     background-color:whitesmoke;
 }
-body{
-  /* margin: 0rem 2rem 0rem 2rem; */
-}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   overflow: scroll;
-  
-  /* background-image: url("../../assets/img/backGroud.jpg");
-  background-repeat: no-repeat;
-  background-size: 99% 100%; */
 }
  .el-header {
   color: #333;
@@ -80,10 +73,4 @@ body{
 .el-container{
   height: 100%;
 }
-/* .el-aside{
-  color: #333;
-  height: 100%;
-  float: left;
-  display: inline-block;
-} */
 </style>

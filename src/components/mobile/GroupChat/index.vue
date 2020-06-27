@@ -90,7 +90,6 @@ export default {
         })
     },
     quitAndDismissGroup(){
-      console.log(this.form.groupId)
       deleteMyGroupChat(this.form.groupId, this.myId)
         .then(res => {
           this.$toast("群聊已经删除");
@@ -107,7 +106,6 @@ export default {
       this.$router.push({name:"newGroupChatMember", params:{groupNum: this.groupNum, groupId:this.form.groupId}});
     },
     toGroupChatroom(){
-      console.log("!!!!", this.form)
       this.$router.push({name: "groupChatPage", params:{groupId: this.form.groupId, myId: this.myId, name:this.form.name}})
     },
     toGroupHistoryPage(){
@@ -154,12 +152,10 @@ export default {
     },
     handleSelectionChange(val){
       this.multipleSelection = val;
-      // console.log(this.multipleSelection);
     },
     getGroupMember(){
       getMyGroupChatPerson(this.form.groupId)
         .then(res =>{
-          console.log(res);
           var obj = document.getElementById("secondPart");
           obj.setAttribute("class", "secondPartChange");
           var obj = document.getElementById("firstPart");
@@ -173,38 +169,6 @@ export default {
       var obj = document.getElementById("firstPart");
       obj.setAttribute("class", "firstPart");
     },
-    // quitGroupChat(){
-    //   quitOneGroupChat(this.form.groupId, this.myId)
-    //     .then(res => {
-    //       this.$message({
-    //         message:"您已退出群聊",
-    //         type:"success"
-    //       })
-    //       this.$router.replace({path:"/home"});
-    //     })
-    //     .catch(e => {
-    //       this.$message({
-    //         message:"您群聊失败",
-    //         type:"warning"
-    //       })
-    //     })
-    // },
-    // quitAndDismissGroup(){
-    //   deleteMyGroupChat(this.form.groupId, this.myId)
-    //     .then(res => {
-    //       this.$message({
-    //         message:"群聊已经删除",
-    //         type:"success"
-    //       })
-    //       this.$router.replace({path: "/home"});
-    //     })
-    //     .catch(e => {
-    //       this.$message({
-    //         message:"删除群聊失败",
-    //         type:"warning"
-    //       })
-    //     })
-    // },
   }
 }
 </script>

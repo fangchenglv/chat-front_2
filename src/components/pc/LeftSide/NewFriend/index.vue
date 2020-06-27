@@ -43,7 +43,6 @@ export default {
       }
     };
     return {
-      // findFriendList: [],
       ruleForm3: {
         searchStr: ""
       },
@@ -65,16 +64,15 @@ export default {
             .dispatch("SearchFriend", this.ruleForm3.searchStr)
             .then(response => {
               if(response.data.data.length==0){
-                                      this.$toast("该用户不存在");
-                                    }else{
-              this.$router.push({ path: "/requestFriend/result" })
+                this.$toast("该用户不存在");
+              }else{
+                this.$router.push({ path: "/requestFriend/result" })
               };
             })
             .catch(err => {
               console.log("!!!!!!!!!!!!!!!", err);
             });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -86,24 +84,4 @@ export default {
 };
 </script>
 <style scoped>
-/* .text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
-}
-
-.box-card {
-  width: 480px;
-} */
 </style>

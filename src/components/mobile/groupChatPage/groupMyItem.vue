@@ -1,6 +1,5 @@
 <template>
 <div style="float:right; width:100%; margin-bottom:0.1rem">
-<!--  <img :src="img" alt="头像" style="float:right;width: 1rem;height: 1rem;">-->
   <div style="float:right;width:1.25rem; height:1.25rem;background-color:rgba(159,234,107,0.82);margin-top: 0rem;border-radius:50%;">
     <p style="color: #0c0c0c ;margin-top:0.39rem">{{name}}</p>
   </div>

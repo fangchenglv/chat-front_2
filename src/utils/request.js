@@ -1,15 +1,11 @@
-// import Vue from 'vue'
 import axios from "axios"
 import store from "@/stores"
-// import pRouter from "../router/pc/index"
-// import mRouter from "../router/mobile/index"
 import {
   Message,
   MessageBox
 } from "element-ui"
 import { Toast } from 'vant'
 import 'vant/lib/index.css'
-// import vuex from "vuex";
 
 //创建的axios实例，虽然是在这里创建实例，
 //但是前后台交互的部分却在api里面重新定义了交互函数，而实现又去了store里面具体实现

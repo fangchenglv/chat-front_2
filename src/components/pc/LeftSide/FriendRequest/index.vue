@@ -6,10 +6,9 @@
         <el-col :span="10" v-for="data in findList" :key="data.id" :offset="2">
           <el-card shadow="hover">
               <div class="image" >
-
-                            <div>
-                              <el-avatar shape="circle":size="80"> {{data.fromUser.userName}} </el-avatar>
-                            </div>
+                <div>
+                  <el-avatar shape="circle" :size="80"> {{data.fromUser.userName}} </el-avatar>
+                </div>
               </div>
               <div style="font-size:0.4rem;">
                 <p>用户名: {{data.fromUser.userName}}</p>
@@ -72,7 +71,6 @@
       </el-col>
     </el-row>
     <!-- 分页部分结束 -->
-    <!-- <router-view></router-view> -->
   </div>
 </template>
 
@@ -102,10 +100,6 @@ export default {
       dialogVisible:false,
     };
   },
-  //监听属性 类似于data概念
-  computed: {
-  },
-  //方法集合
   methods: {
     handleCommand() {
       searchFriendRequest(this.id, this.code, this.pageNum, this.pageSize)
@@ -114,8 +108,6 @@ export default {
           if (data.total !== 0) {
             this.total = data.total;
               this.findList = data.list;
-              // console.log("找到的还没添加好友的请求", this.findList);
-            // this.$router.push({ path: "/solveRequest/requestResult" });
           }
         })
         .catch(error => {
@@ -129,7 +121,6 @@ export default {
       } else if (status === 2) {
         status = "2";
       }
-      // console.log(this.choicedGroupId)
       if (this.choicedGroupId == -1 && status === "1"){
         this.$message({
           message:"请选择分组",
@@ -137,13 +128,10 @@ export default {
         })
         return 0
       }
-      // console.log(friendTypeId)
       solveRequest(id, status, this.choicedGroupId, friendTypeId) //同意添加好友，
         .then(response => {
-          // console.log(this.choicedGroupId)
           let data = response.data.data;
           this.choicedGroupId = -1;
-          // console.log("返回的申请添加好友的提示代号", data);
           if (data === "1") {
             this.$message({
               message: "操作已经成功",
@@ -169,7 +157,6 @@ export default {
   },
   mounted() {
     this.handleCommand();
-    // console.log(this.friendGroupList);
   }
 };
 </script>

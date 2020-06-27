@@ -49,10 +49,6 @@ export default {
   text-align: left;
   background-color: rgb(250,250,250);
 }
-/* .operation{
-  font-size: 0.5rem;
-  text-align: left;
-} */
 .item{
   line-height: 1rem;
   background-color: #fff;

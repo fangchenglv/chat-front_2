@@ -33,10 +33,7 @@ export default {
 
     methods:{
       getHistoryList(){
-        console.log(this.$route.params.toId);
-        console.log(this.$store.getters.userId);
         getSingleHistoryReadList(this.$route.params.toId, this.userId).then(response =>{
-
             let hist = response.data.data;
             for (let i = 0; i < hist.length; i++) {
                let t = {fromUser:{
@@ -49,8 +46,6 @@ export default {
                }
                this.historyMessageList.push(t)
             }
-
-            console.log("历史信息", this.historyMessageList);
         }).catch();
       },
     }

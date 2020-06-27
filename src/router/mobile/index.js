@@ -22,14 +22,6 @@ let router = new Router({
         keepAlive:false,
       }
     },
-    // //登录主页
-    // {
-    //   path:'/home',
-    //   component:() => import('../../components/mobile/Home/index.vue'),
-    //   meta:{
-    //     keepAlive:true,
-    //   }
-    // },
     //聊天保存页
     {
       path:'/chatList',

@@ -1,5 +1,5 @@
 <template>
-    <div >
+  <div >
     <van-nav-bar
       title="新建群聊"
       left-text="返回"
@@ -59,7 +59,6 @@ export default {
       this.$router.push({path:"/friendOperation"});
     },
     handleGroup(){
-      // console.log(this.userId);
       if(this.name.trim().length === 0){
           this.$toast("请输入新建的群名");
           return;
@@ -71,7 +70,6 @@ export default {
           } else {
             this.$message("新建群聊失败");
           }
-          // this.$router.replace({path:"/home"});
         })
         .catch(e => {
             console.log(e);

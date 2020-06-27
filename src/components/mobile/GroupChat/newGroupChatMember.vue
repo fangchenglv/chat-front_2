@@ -32,9 +32,6 @@ export default {
       groupId:this.$route.params.groupId,
     }
   },
-  mounted(){
-    // console.log(this.groupFriend);
-  },
   methods:{
     onClickLeft(){
       this.$router.replace({name: "groupChat", params:{groupNum: this.$route.params.groupNum}});

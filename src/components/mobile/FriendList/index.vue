@@ -9,7 +9,6 @@
         style="text-align:left;background-color:rgb(250,250,250)"/>
       <div v-show="show === item.id" v-for="(data, ind) in item.friends" :key="ind">
         <van-cell
-
           :title="data.friendInfo.nickName"
           @click="toFriend(data.friendId)"
           is-link
@@ -56,7 +55,6 @@ export default {
     init(){
       this.$store.dispatch("GetMyFriendList", this.$store.getters.userId).then(res =>{
         this.groupList = this.$store.getters.myFriendList;
-        // console.log(this.groupList);
       })
     },
     toPathGroup(id){
@@ -67,7 +65,6 @@ export default {
         .then(res => {
           this.myGroupList = res.data.data;
           this.$store.dispatch("GetMyGroupChat", res.data.data);
-          // console.log(this.myGroupList);
         })
         .catch((error) => {
           console.log(error);
