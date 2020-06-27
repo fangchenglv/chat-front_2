@@ -5,9 +5,9 @@
       <el-col :span="10" v-for="item in findList" :key="item.id" :offset="1">
         <el-card >
            <div class="image"   >
-                        <div>
-                          <el-avatar shape="circle":size="80"> {{item.userName}} </el-avatar>
-                        </div>
+            <div>
+              <el-avatar shape="circle" :size="80"> {{item.userName}} </el-avatar>
+            </div>
            </div>
           <p style="font-size:0.5rem">好友名: {{item.userName}}</p>
           <div class="friendG">
@@ -45,6 +45,7 @@
     <div v-else>没有相关用户信息</div>
   </div>
 </template>
+
 <script>
 import { mapGetters } from "vuex";
 import service from "@/utils/request";
@@ -78,9 +79,6 @@ export default {
         this.choiced_groupId = v;
       }
     },
-    // dialogVisible:function(){
-    //   return false;
-    // }
     dialogVisible:{
       get:function(){
         return this.dialog_visible;
@@ -89,9 +87,6 @@ export default {
         this.dialog_visible = v;
       }
     }
-  },
-  mounted(){
-    // console.log("find list is:", this.findList);
   },
   //发送请求申请添加好友
   methods: {
@@ -108,7 +103,6 @@ export default {
         .then(response => {
           this.choicedGroupId = -1;
           let data = response.data.data;
-          // console.log("返回的申请添加好友的提示代号", data);
           if (data === "1") {
             this.$message({
               message: "好友申请已经发出",

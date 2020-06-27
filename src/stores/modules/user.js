@@ -8,19 +8,16 @@ import {
   getUnreadMsgList,
   getMyGroupChatPerson,
   getMyGroupList,
-  // getUnreadMsgList
 } from "../../api/friendOperation.js";
 
 const user = {
   state: {
-    // userName: "",
     userId: -1,
     userRole: -1,
     userSign: "",
     userNickname: "",
     userName: "",
     beSearchFriend: [],
-    // toSearchMe: [],
     myFriendList: [],
     allFriend:[],
     socket : process.env.BASE_API,
@@ -49,9 +46,6 @@ const user = {
     SET_SEARCHFRIEND(state, name) {
       state.beSearchFriend = name;
     },
-    // SET_TOSEARCHME(state, name) {
-    //   state.toSearchMe = name;
-    // },
     SET_MYFRIENDLIST(state, name) {
       state.myFriendList = name;
     },
@@ -221,35 +215,6 @@ const user = {
           });
       });
     },
-    //查看申请添加自己为好友的用户信息的请求
-    // SearchFriendRequest({
-    //   commit
-    // }, id, code, pageNum, pageSize) {
-    //   return new Promise((resolve, reject) => {
-    //     searchFriendRequest(id, code, pageNum, pageSize)
-    //       .then(response => {
-    //         const data = response.data.data.list;
-    //         // const data = response;
-    //         commit("SET_TOSEARCHME", data);
-    //         resolve(response);
-    //       })
-    //       .catch(error => {
-    //         reject(error);
-    //       });
-    //   });
-    // },
-    // //删除自己的某位好友并且更新自己保存的好友列表
-    // DeleteMyFriend({
-    //   commit
-    // }, myId, friendId) {
-    //   return new Promise((resolve, reject) => {
-    //     deleteMyFriend(myId, friendId).then(response => {
-    //       resolve(response);
-    //     }).catch(error => {
-    //       reject(error);
-    //     })
-    //   })
-    // },
   }
 };
 export default user;

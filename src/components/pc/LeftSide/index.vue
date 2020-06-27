@@ -100,16 +100,6 @@ export default {
       myGroupList:[],
     }
   },
-  props: {},
-  computed: {
-    // ...mapGetters(["myFriendList"])
-  },
-  // mounted() {
-  //   window.addEventListener('beforeunload', this.beforeunloadHandler())
-  // },
-  // destroyed(){
-  //   window.removeEventListener('beforeunload', this.beforeunloadHandler())
-  // },
   methods: {
     //实现点击浏览器叉号就退出的功能。
     beforeunloadHandler(){
@@ -127,7 +117,6 @@ export default {
         .then(res => {
           this.myGroupList = res.data.data;
           this.$store.dispatch("GetMyGroupChat", res.data.data);
-          // console.log(this.myGroupList);
         })
         .catch((error) => {
           console.log(error);
@@ -143,7 +132,6 @@ export default {
       // this.$router.push({path:"/login"})
       logout_(this.$store.getters.userId).then(() => {
         this.$store.commit("DELETE_TOKEN");
-        // console.log("@@@", this.$store.getters.tok)
       })
     },
     handleOpen(key, keyPath) {
@@ -182,7 +170,6 @@ export default {
 <style scoped>
 .el-col{
   height: 100%;
-  /* overflow: scroll; */
 }
 .el-row{
   text-align: left;

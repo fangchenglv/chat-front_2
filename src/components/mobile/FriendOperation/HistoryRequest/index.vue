@@ -18,7 +18,7 @@
         :title="tables.friendUserName"
         :value="tables.applyTime"
         :label="tables.status"
-        style="background-color:rgb(250,250,250);text-align:left;border:solid 0.02rem #ddd; top:1rem;border-left:none; border-right:none"/>
+        style="background-color:rgb(250,250,250);text-align:left;border:solid 0.02rem #ddd; top:2.3rem;border-left:none; border-right:none"/>
     </div>
 
   </div>
@@ -51,11 +51,9 @@ export default {
     },
     handleClick(index) {
       this.tableData = [];
-      // console.log("第几个选项",index);
       searchFriendRequest(this.id, index, this.pageNum, this.pageSize)
         .then(response => {
           let data = response.data.data;
-          // console.log("在哪一页：",this.pageNum)
           this.index=index;
           if (data.total !== 0) {
             this.total = data.total;
@@ -76,7 +74,6 @@ export default {
     },
     handleCurrentChange(val) {
       this.pageNum = val;
-      // this.handleCommand();
       console.log(this.pageNum);
       this.handleClick(this.index);
     },
@@ -95,14 +92,6 @@ export default {
     line-height: 1rem;
     margin-bottom: 0.1rem;
   }
-  /*.med{*/
-  /*  position: relative;*/
-  /*  top: 2.3rem;*/
-  /*  left: 0rem;*/
-  /*  line-height: 1rem;*/
-  /*  margin-bottom: 0rem;*/
-  /*  width: 100%;*/
-  /*}*/
   .page{
     width: 100%;
     font-size: 0.4rem;

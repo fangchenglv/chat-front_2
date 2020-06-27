@@ -39,7 +39,6 @@ export default {
           setFriendGroup(this.ruleForm.name, this.$store.getters.userId)
             .then(responce=>{
               const data = responce.data.status;
-              // console.log('tag', data);
               if(data === "success"){
                 this.$message({
                     message:"分组创建成功",
@@ -50,14 +49,13 @@ export default {
               console.log('!!!!!!!!!!!!!!!!', error);
             })
         } else {
-            console.log('error submit!!');
-            return false;
+          return false;
         }
       });
     },
-  resetForm(formName) {
-    this.$refs[formName].resetFields();
-  }
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    }
   },
 }
 </script>

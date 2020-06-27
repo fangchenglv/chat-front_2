@@ -56,11 +56,9 @@ export default {
       }
       setFriendGroup(this.message, this.$store.getters.userId).then(responce=>{
           const data = responce.data.status;
-          // console.log('tag', data);
           if(data === "success"){
               this.$toast("分组创建成功");
               this.message = "";
-              // this.$router.push({path:"/home"});
           }
       }).catch(error=>{
           console.log('!!!!!!!!!!!!!!!!', error);

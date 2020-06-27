@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <Header title="登陆页面" /> -->
     <div>
       <el-form ref="ruleForm1" :model="ruleForm1" :rules="rules1">
         <el-form-item prop="userName">
@@ -35,11 +34,7 @@
           >注册</el-button>
         </el-form-item>
       </el-form>
-      <!-- <p @click="gotoRegister" style="margin-left:43.5%">没有帐号，注册一个</p> -->
     </div>
-    <!-- <keep-alive>
-      <router-view />
-    </keep-alive>-->
   </div>
 </template>
 
@@ -47,7 +42,6 @@
 import { isvalidUserName } from "../../../utils/validate";
 import { callbackify } from "util";
 import {mapGetters} from "vuex"
-// import messageHandle from "../../../api/handleWebsocket"
 
 export default {
   name: "loginPage",
@@ -96,14 +90,11 @@ export default {
             .dispatch("Login", this.ruleForm1) //调用的是store里面的Login函数，传入参数是自己的表单
             .then(() => {
               // // 开发环境地址
-              // const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
-
               //产品环境地址
               const wsUrl = "wss://123.56.232.247:8081/ws"
 
               let uid = this.userId;
               uid = "" + uid;
-              // url, msgCallback, name, regisMsg
               let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
               this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg])
               .then((res) =>{

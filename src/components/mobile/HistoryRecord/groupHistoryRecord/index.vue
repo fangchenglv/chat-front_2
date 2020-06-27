@@ -11,7 +11,6 @@
     <div id="body" style="margin-top: 1.1rem">
       <div v-for="(item, ind) in this.historyMessageList" :key="ind">
         <GroupFriendItem v-if="item.toUser"  :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
-<!--        <div style="float:right;width:1rem; height:1rem;background-color:#fcc">{{name}}</div>-->
       </div>
     </div>
 
@@ -26,7 +25,6 @@ export default {
     name: "getGroupHistoryReadList",
     components:{
         GroupFriendItem,
-        // GroupMyItem
     },
     data(){
         return{
@@ -45,18 +43,16 @@ export default {
       },
       getHistoryList(){
         getGroupHistoryReadList(this.groupId).then(response =>{
-            console.log("返回的历史列表", response)
             let hist = response.data.data;
             for (let i = 0; i < hist.length; i++) {
-                let t = {toUser:{
-                    id: hist[i].userId,
-                    // avatar: hist[i].fromAvatar,
-                    nickName: hist[i].fromName
-                    },
-                    message: hist[i].content,
-                    id:hist[i].type
-                }
-                this.historyMessageList.push(t)
+              let t = { toUser:{
+                        id: hist[i].userId,
+                        nickName: hist[i].fromName
+                        },
+                        message: hist[i].content,
+                        id:hist[i].type
+                      }
+              this.historyMessageList.push(t)
             }
         }).catch();
       },

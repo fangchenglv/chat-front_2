@@ -27,15 +27,10 @@ export default {
   data(){
     return{
       tableData:this.$store.getters.myFriendList,
-      // table:[],
       radio:-1,
       currentRow: null,
       friendId: this.$route.params.friendId,
     }
-  },
-  created(){
-    // console.log(this.tableData);
-    // this.init();
   },
   methods:{
     resetFriendGroup(){
@@ -52,17 +47,13 @@ export default {
       })
     },
     handleCurrentChange(id) {
-      // console.log("绑定值发生变化", this.tableData);
       for (let i = 0; i < this.tableData.length; i++) {
         if (this.tableData[i].id === id) {
           this.currentRow = this.tableData[i];
         }
       }
-      // console.log(this.currentRow);
-      // console.log(val)
     },
     onClickLeft(){
-      // this.$router.back()
       this.$router.push({path:"/friendList"});
     }
   }

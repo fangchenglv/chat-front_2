@@ -70,7 +70,6 @@
           style="margin-left:0.5rem;"
         >登录</el-button>
       </el-form-item>
-      <!-- <p @click="gotoLogin" class="returnback">已有帐号？立即登录</p> -->
     </el-form>
   </div>
 </template>
@@ -178,11 +177,11 @@ export default {
           return false;
         }
         if (this.ruleForm2.gender === "1") {
-                                            this.ruleForm2.gender = "男";
-                                          } else {
-                                            this.ruleForm2.gender = "女";
-                                          }
-                                          });
+          this.ruleForm2.gender = "男";
+        } else {
+          this.ruleForm2.gender = "女";
+        }
+        });
     },
     gotoLogin(){
       this.$router.push({path: '/login'});

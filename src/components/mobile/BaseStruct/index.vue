@@ -3,13 +3,6 @@
     <van-nav-bar
       :title= tit
     />
-    <!-- <div class="head">
-      <span>{{tit}}</span>
-    </div> -->
-    <!-- <van-nav-bar
-      :title="tit"
-    /> -->
-    <!-- <van-divider style="margin-bottom:1rem"></van-divider> -->
 
     <div class="medium" >
       <router-view></router-view>
@@ -34,17 +27,7 @@ export default {
       active:-1,
     }
   },
-  // mounted(){
-  //   window.removeEventListener('beforeunload', this.beforeunloadHandler())
-  // },
-  // destroyed(){
-  //   window.removeEventListener('beforeunload', this.beforeunloadHandler())
-  // },
   methods:{
-    //实现点击浏览器叉号就退出的功能。
-    // beforeunloadHandler(){
-    //   logout_(this.$store.getters.userId);
-    // },
     chatList(){
       this.tit = '聊天';
       this.$router.push({path:'/chatList'});
@@ -76,10 +59,6 @@ export default {
   line-height: 1rem;
   margin-bottom: 0.1rem;
 }
-/* .medium{
-  height: 100%;
-  margin-top: 1.1rem; 
-} */
 .foot{
   width: 100%;
 }

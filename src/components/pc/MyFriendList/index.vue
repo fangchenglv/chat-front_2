@@ -3,24 +3,18 @@
     <el-row>
       <el-col :span="11" v-for="(item,ind) in this.friendList" :key="ind" :offset="1">
         <el-card >
-
           <template>
             <div class="demo-type">
-
               <div>
-                <el-avatar shape="circle":size="70"> {{item.friendInfo.nickName}} </el-avatar>
+                <el-avatar shape="circle" :size="70"> {{item.friendInfo.nickName}} </el-avatar>
               </div>
             </div>
           </template>
             <p style="font-size:0.5rem; ">昵称:{{item.friendInfo.nickName}}</p>
-
-
-
             <div class="loc">
               <span v-if="item.status == 1"><i class="el-icon-view"/>用户上线</span>
               <span v-else><i class="el-icon-view"/>用户离线</span>
             </div>
-
             <div class="button">
               <el-button
                 plain
@@ -98,9 +92,6 @@ export default {
       return this.messagelist;
     }
   },
-  mounted(){
-    // console.log("好友列表", this.friendList, this.tableData)
-  },
   methods: {
     changeFriendGroup(id){
       if (!id || this.currentRow === null) {
@@ -108,15 +99,12 @@ export default {
       }
       changeFriendGroup(this.$store.getters.userId, id, this.currentRow.id).then(res => {
         this.$store.dispatch("GetMyFriendList", this.$store.getters.userId).then(res => {
-          // this.friendList = this.
           this.dialogTableVisible = false;
         })
       })
-      // console.log(id)
     },
     handleCurrentChange(val) {
       this.currentRow = val;
-      // console.log(val)
     },
     resetFriendGroup(){
       this.currentRow = null;
@@ -156,7 +144,6 @@ export default {
           }
           getMyFriendList(this.$store.getters.userId).then(res =>{
             const data = res.data.data;
-            // this.myFriendList = data
             this.$store.dispatch("GetAllFriend", data).then(res =>{}).catch(err =>{console.log(err)});
           })
         })

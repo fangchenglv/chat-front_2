@@ -2,14 +2,7 @@
   <div style="text-align:left">
     <br>
     <div v-for="item in findList" :key="item.id">
-      <van-card
-
-        style="background-color:#fff"
-      >
-        <!--        :thumb=item.avatar-->
-        <!-- <div slot="thumb">
-          <img :src=item.avatar />
-        </div> -->
+      <van-card style="background-color:#fff">
         <div slot="title">
           <p style="font-size:0.7rem; margin-left:0.3rem">{{item.userName}}</p>
         </div>
@@ -24,8 +17,7 @@
     <van-dialog
       v-model="show"
       title="选择好友分组"
-      show-cancel-button
-    >
+      show-cancel-button >
       <van-radio-group v-model="group" v-for="item in friendGroupList" :key="item.id">
         <van-radio :name=item.id style="margin-left:0.5rem;margin-bottom:0.3rem;">{{item.typeName}}</van-radio>
       </van-radio-group>
@@ -57,15 +49,11 @@ export default {
       return this.myFriendList;
     },
   },
-  mounted(){
-    // console.log(this.friendGroupList);
-  },
   methods:{
     changeShow(){
       this.show = true;
     },
     sendRequest(friendId, userId){
-
       if(this.group === -1){
         this.$toast("请选择好友分组再发送请求");
         this.group = -1;

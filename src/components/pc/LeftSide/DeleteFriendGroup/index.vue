@@ -60,9 +60,6 @@ export default {
       return all;
     }
   },
-  mounted(){
-    // console.log(this.$store.getters.myFriendList)
-  },
   methods:{
     handleChange(row){
       this.dialogFormVisible = true;
@@ -91,10 +88,8 @@ export default {
       deleteFriendGroup(row.id).then(res => {
         this.$store.dispatch("GetMyFriendList", this.$store.getters.userId)
           .then(res => {
-            // console.log("想知道输出啥", res)
           });
       })
-      // console.log(row);
     }
   }
 }

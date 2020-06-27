@@ -8,14 +8,9 @@
       id="nav"
       style="margin-top:0rem;"
     />
-
     <div v-for="data in findList" :key="data.id">
       <br/>
-      <van-card
-
-        style="background-color:#fff;"
-      >
-        <!--        :thumb="data.fromUser.avatar"-->
+      <van-card style="background-color:#fff;" >
         <div slot="title" style="font-size:0.5rem;">
           <p>好友:{{data.fromUser.userName}}</p>
           <p>申请时间:{{data.applyTime}}</p>
@@ -89,11 +84,6 @@ export default {
       } else if (status === 2) {
         status = "2";
       }
-      // if (this.choicedGroupId == -1){
-      //   this.$toast("请选择分组")
-      //   return 0
-      // }
-      // console.log(friendTypeId)
       solveRequest(id, status, this.choicedGroupId, friendTypeId) //同意添加好友，
         .then(response => {
           let data = response.data.data;
@@ -101,7 +91,6 @@ export default {
           if (data === "1") {
             this.$toast( "操作已经成功");
           };
-          // this.$router.push({path:"/home"});
         })
         .catch(err => {
           console.log("!!!!!!!!!!!!!!!!!!!!!!!!", err);
@@ -120,8 +109,6 @@ export default {
             this.show = true;
           }
           this.findList = data.list;
-            // console.log("找到的还没添加好友的请求", this.findList);
-          // this.$router.push({ path: "/solveRequest/requestResult" });
         }
       })
       .catch(error => {

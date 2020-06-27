@@ -8,7 +8,6 @@
       id="head"
     />
     <div class="body">
-<!--      <img :src=this.avatar />-->
       <van-divider />
       <p>用户:{{nname}}</p>
       <van-divider/>
@@ -26,32 +25,13 @@
       <van-tabbar-item icon="more-o" @click="toHistoryPage">查看历史记录</van-tabbar-item>
       <van-tabbar-item icon="ellipsis" @click="deleteFriend">删除好友</van-tabbar-item>
     </van-tabbar>
-    <!-- <van-dialog
-      v-model="dialogTableVisible"
-      title="分组"
-      show-cancel-button
-      :confirm="changeFriendGroup()"
-      :cancel="resetFriendGroup">
-      <van-dropdown-menu>
-        <van-dropdown-item v-model="radio" :options="tableData" />
-      </van-dropdown-menu>
-      <van-radio-group v-model="radio" style="padding-left:0.5rem;padding-bottom:0.2rem" >
-        <div v-for="(item, ind) in tableData" :key="ind" style="padding-bottom:0.2rem">
-          <van-radio name=item.id icon-size="24px" :click="handleCurrentChange()">{{item.typeName}}</van-radio>
-        </div>
-      </van-radio-group>
-    </van-dialog> -->
   </div>
 </template>
 
 <script>
 import {deleteMyFriend, changeFriendGroup} from '../../../../api/friendOperation'
-// import Avatar from 'vue-avatar'
 export default {
   name:"friendPage",
-  // components:{
-  //   Avatar
-  // },
   data(){
     return{
       active:-1,
@@ -59,7 +39,6 @@ export default {
       nname:'',
       status: 0,
       friendId: this.$route.params.id,
-      // dialogTableVisible: false,
     }
   },
   methods:{
@@ -78,7 +57,6 @@ export default {
       const allFriend = this.$store.getters.allFriend;
       for(let i = 0; i < allFriend.length; i ++){
         if(allFriend[i].friendId === this.friendId){
-          // this.avatar = allFriend[i].friendInfo.avatar;
           this.nname = allFriend[i].friendInfo.nickName;
           this.status = allFriend[i].status;
           break;

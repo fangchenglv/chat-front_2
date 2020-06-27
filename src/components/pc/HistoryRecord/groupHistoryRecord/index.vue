@@ -3,7 +3,6 @@
         <el-main style="background-color:rgb(255,255,255)">
             <div v-for="(item, ind) in historyMessageList" :key="ind">
               <GroupFriendItem v-if="item.toUser" :messageid="item.id" :img="item.toUser.avatar" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
-              <!-- <GroupMyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName" me="true"></GroupMyItem> -->
             </div>
         </el-main>
     </el-container>
@@ -17,7 +16,6 @@ export default {
     name: "getGroupHistoryReadList",
     components:{
         GroupFriendItem,
-        // GroupMyItem
     },
     data(){
         return{
@@ -33,7 +31,6 @@ export default {
     methods:{
       getHistoryList(){
         getGroupHistoryReadList(this.groupId).then(response =>{
-            console.log("返回的历史列表", response)
             let hist = response.data.data;
             for (let i = 0; i < hist.length; i++) {
                 let t = {toUser:{
@@ -53,8 +50,4 @@ export default {
 </script>
 
 <style scoped>
-/* @import "./chat.scss";
-.el-main{
-    padding: 10px;
-} */
 </style>

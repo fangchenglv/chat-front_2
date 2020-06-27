@@ -22,7 +22,6 @@ export default {
   },
   methods:{
     handleGroup(){
-      // console.log(this.userId);
       if(this.name.trim().length === 0){
         this.$message({
           message:"请输入新建的群名",

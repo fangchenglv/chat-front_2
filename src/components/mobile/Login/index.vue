@@ -55,7 +55,6 @@ export default {
     },
     handleLogin(){
       if(this.username === '' || this.password == ''){
-        // Toast.fail('输入的用户名或者密码不能为空');
         this.$toast.fail("输入的用户名或者密码不能为空")
         return;
       }
@@ -65,17 +64,13 @@ export default {
         .then(response => {
           // 连接成功https后连接websocket
           // // 开发环境地址
-          // const wsUrl = 'wss' + this.socket.slice(5,23) + '8081/ws';
-
           //产品环境地址
           const wsUrl = "wss://123.56.232.247:8081/ws"
 
           let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
           this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg]).then((res) =>{
-            // console.log("可能登录了吧", res);
             this.loading = false;
             this.$router.replace({path:'/chatList'});
-            // this.$router.push({path: '/home'});
             this.$store
               .dispatch("GetMyFriendList", this.$store.getters.userId)
               .then(response => {})
