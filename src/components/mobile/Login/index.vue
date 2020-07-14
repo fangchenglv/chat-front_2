@@ -17,23 +17,23 @@
       style="margin: 0.5rem 0rem 0.5rem 0rem;text-align:left"
     />
     <div id="btn">
-      <van-button 
-        plain 
-        type="primary" 
+      <van-button
+        plain
+        type="primary"
         style="margin-right:1.5rem"
         :loading='loading'
         loading-text="登录中..."
         @click="handleLogin">登录</van-button>
-      <van-button 
-        plain 
-        type="info" 
+      <van-button
+        plain
+        type="info"
         @click="gotoRegister">注册</van-button>
     </div>
   </div>
 </template>
 
 <script>
-import WebSocketClass from '../../../api/webSocket'
+// import WebSocketClass from '../../../api/webSocket'
 import {mapGetters} from 'vuex'
 import {getMyFriendList} from '../../../api/friendOperation'
 

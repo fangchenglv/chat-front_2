@@ -226,6 +226,7 @@ export default {
         else if (data.type === "SINGLE_SENDING_IMG"){
           msgId = 1;
           if (data.fromUserId === this.friendId) {
+            console.log("第三步")
             param = {
               "fromUser":{"id":this.$route.params.friendId,
                           "nickName": this.$route.params.name,
@@ -278,6 +279,7 @@ export default {
           }
         }
         this.messageList.push(param);
+        console.log("第四步")
       })
     },
     sendMsg(){
@@ -300,6 +302,8 @@ export default {
           // "fileSize": "" + this.file[2],
           "type": "SINGLE_SENDING_FILE"
         };
+        console.log("aaaaaaa")
+        console.log(this.file)
         param = {
           "fromUser": {
             "id": this.$store.getters.userId,
@@ -319,6 +323,7 @@ export default {
           "content": this.imageFile,
           "type" : "SINGLE_SENDING_IMG"
         };
+        console.log("第五步")
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
@@ -357,6 +362,7 @@ export default {
       this.websockOnMessage();
     },
     beforeReadImg(file, detail){
+      console.log("第一步")
       return true;
     },
     afterReadImg(file, detail){

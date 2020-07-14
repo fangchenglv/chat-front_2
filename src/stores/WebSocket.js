@@ -115,6 +115,15 @@ export default new Vuex.Store({
         }
       }
     },
+    SEND_NAME(state, name){
+      state.websock.send('fileName:' + name)
+    },
+    SEND_FILE(state, file){
+      state.websock.send(file)
+    },
+    GET_BUFFEREDAMOUNT(state){
+      return state.websock.bufferedAmount
+    },
     WEBSOCKET_SEND(state, data) {
       let id = data[1];
       // console.log("!!!!", state.currendGroupId, this.state.currentFriendId)
@@ -173,6 +182,20 @@ export default new Vuex.Store({
     }, data) {
       // console.log(data);
       commit('WEBSOCKET_SEND', data)
+    },
+    SendWebsocketFileName({
+      commit
+    }, name){
+      commit("SEND_NAME", name)
+    },
+    SendWebsocketFileMessage({
+      commit
+    }, data){
+      commit("SEND_FILE", data)
+    },
+    GetBufferedAmount({commit}){
+      let data = commit("GET_BUFFEREDAMOUNT")
+      return data
     },
     StartChatId({commit},data){
       // console.log(data);

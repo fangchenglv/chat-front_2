@@ -5,13 +5,19 @@
     </el-header>
 
     <el-main style="margin:0 0.1rem 1.2rem 0.1rem;width:98%;padding-top:0.1rem">
+      <div v-if="File !== null" style="position:sticky; top:0">
+        <strong style="padding-right:0.2rem">{{File.name}}</strong>
+        <button @click="stop">暂停</button>
+        <button @click="continueFile">继续</button>
+      </div>
       <div v-for="(item, ind) in this.messageList" :key="ind">
-          <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName":filea="item.File"></FriendItem>
+          <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File"></FriendItem>
           <MyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
       </div>
+      
     </el-main>
-
-    <el-footer> 
+    
+    <el-footer>
       <el-dropdown trigger="click" style="margin-right:0.3rem">
         <el-button type="primary" plain>
           上传<i class="el-icon-arrow-up el-icon--right"></i>
@@ -61,8 +67,17 @@ export default {
     return { 
       message: "",
       imageFile: "",
-      File:"",
-      Filename:"",
+      File: null,
+      fileUrl: "",
+      total:0,
+      reader:null,
+      fileUpload:{
+        cuLoaded: 0,
+        step: 65536,
+        enableRead: true
+      },
+      startTime: 0,
+      readerObj: null,
       websock: null,
       historyMessageList:[],    //历史消息列表
       unreadList:[],    //未读消息列表
@@ -101,88 +116,168 @@ export default {
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
       this.websockOnMessage();
     },
+    //显示结果进度
+    showProcess(){
+        var percent = (this.fileUpload.cuLoaded / this.total) * 100;
+        console.log("####文件传输百分比", percent)
+        // document.getElementById('Status').innerText = percent;
+    },
+    //绑定reader，onmessage里面用
+    bindReader() {
+      this.startTime = new Date();
+      this.fileUpload.enableRead = true;
+      this.reader = new FileReader();
+      //读取一段成功
+      let me = this
+      this.reader.onload = function (e) {
+        console.info('读取总数：' + e.loaded);
+        if (me.fileUpload.enableRead == false)
+          return false;
+        //根据当前缓冲区来控制客户端读取速度
+        if (me.$websocket.dispatch("GetBufferedAmount") > me.fileUpload.step * 10) {
+          setTimeout(function () {
+            //继续读取
+            console.log('--------------》进入等待');
+            me.loadSuccess(e.loaded);
+          }, 3);
+        } else {
+          //继续读取
+          me.loadSuccess(e.loaded);
+        }
+      }
+      //开始读取
+      this.readBlob();
+    },
+    //读取文件成功处理
+    loadSuccess(loaded) {
+        //将分段数据上传到服务器
+        var blob = this.reader.result;
+        //使用WebSocket 服务器发送数据
+        this.$websocket.dispatch("SendWebsocketFileMessage", blob);
+        //如果没有读完，继续
+        this.fileUpload.cuLoaded += loaded;
+    },
+    //指定开始位置，分块读取文件
+    readBlob() {
+        //指定开始位置和结束位置读取文件
+        console.log("readBlob的file为啥为空", this.File)
+        var blob = this.File.slice(this.fileUpload.cuLoaded, this.fileUpload.cuLoaded + this.fileUpload.step);
+        this.reader.readAsArrayBuffer(blob);
+    },
     websockOnMessage(){
       let param = null;
       this.$websocket.state.websock.onmessage = e =>{
-        const data = JSON.parse(e.data);
+        console.log("###########又得开始看返回，生气", e)
+        // const data = JSON.parse(e.data);
+        let data = e.data;
+        const re = /^[0-9]+.?[0-9]*/;
+        const page = /^.*\..*$/;
         if (data.status === -1) {
           return
         }
-        if(data.data.type !== "REGISTER" && data.status === 200){
-          if (!data.data.toGroupId && data.data.fromUserId == this.friendId ){
-            let msgId = -1;
-            if(data.data.type === "SINGLE_SENDING"){
-              let dat = data.data;
-              msgId = 0;
-              param = {
-                "fromUser":{"id":this.$route.params.friendId,
-                            "nickName": this.$route.params.name,
-                            },
-                "toUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
-                          },
-                "message":dat.content,
-                "id": msgId
-              };
-            }
-            else if (data.data.type === "SINGLE_SENDING_IMG"){
-              let dat = data.data;
-              msgId = 1;
-              param = {
-                "fromUser":{"id":this.$route.params.friendId,
-                            "nickName": this.$route.params.name,
-                            },
-                "toUser":{"id":this.$store.getters.userId, 
-                          "nickName":this.$store.getters.userNickname, 
-                          },
-                "message":dat.content,
-                "id": msgId
-              };
-            } else {
-              let dat = data.data;
-              msgId = 2;
-              param = {
-                 "fromUser":{"id":this.$route.params.friendId,
+        // 数字的话就是文件部分了
+        if (re.test(data)) {
+          this.fileUpload.cuLoaded = parseInt(data);
+          console.log('当前已上传：' + this.fileUpload.cuLoaded);
+          this.showProcess();
+          console.log('开始上传数据........');
+          this.bindReader();
+        } else if(page.test(data)){
+          // this.fileUrl = data;
+          this.sendFile(data)
+        }
+        else if(data=='canceled'){
+          console.log('取消上传数据........');
+          this.fileUpload.cuLoaded = 0;
+          this.showProcess();
+          this.fileUpload.enableRead = false;
+          this.reader.abort();
+        } else if(data=='ok'){
+          if (this.fileUpload.cuLoaded < this.total) {
+            this.readBlob();
+          } else {
+            this.$websocket.dispatch("SendWebsocketFileMessage" ,'act:complete');
+            console.log('总共上传：' + this.fileUpload.cuLoaded + ',总共用时：' + (new Date().getTime() - this.startTime.getTime()) / 1000);
+          }
+          this.showProcess();
+        } else if(data.data){
+          if(data.data.type !== "REGISTER" && data.status === 200){
+            if (!data.data.toGroupId && data.data.fromUserId == this.friendId ){
+              let msgId = -1;
+              if(data.data.type === "SINGLE_SENDING"){
+                let dat = data.data;
+                msgId = 0;
+                param = {
+                  "fromUser":{"id":this.$route.params.friendId,
                               "nickName": this.$route.params.name,
                               },
-                 "toUser":{"id":this.$store.getters.userId,
-                           "nickName":this.$store.getters.userNickname,
-                           },
-                 "message":dat.Filename,
-                 "id": msgId
+                  "toUser":{"id":this.$store.getters.userId, 
+                            "nickName":this.$store.getters.userNickname, 
+                            },
+                  "message":dat.content,
+                  "id": msgId
                 };
-            }
-            //添加到信息列表，以便展示信息
-            if (! this.messageList){
-              this.messageList = [param];
-            }
-            else{
-              this.messageList.push( param );
-            }
-            this.currendStartChatList.push(data.data)
-          } else{
-            let re = /SINGLE/;
-            if (re.test(data.data.type) === true) {
-              this.$message("新的好友信息，请注意查看");
-              if(this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ) != null || this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ) != undefined){
-                this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
-                this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = (+this.$websocket.state.privateUnreadNumber[data.data.fromUserId]) + 1;
-              } else{
-                this.$websocket.state.privateMessage[data.data.fromUserId] = [data.data];
-                this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = +1;
-              }            
-            } else {
-              this.$message("新的群消息，请注意查收")
-              if(this.$websocket.state.groupMessage.find((val, ind) => ind == data.data.toGroupId ) != null || this.$websocket.state.groupMessage.find((val, ind) => ind == data.data.toGroupId ) != undefined){
-                this.$websocket.state.groupMessage[data.data.toGroupId].push(data.data);
-                this.$websocket.state.groupUnreadNumber[data.data.toGroupId] = this.$websocket.state.groupUnreadNumber[data.data.toGroupId] + 1;
-              } else{
-                this.$websocket.state.groupMessage[data.data.toGroupId] = [data.data];
-                this.$websocket.state.groupUnreadNumber[data.data.toGroupId] = +1;
+              }
+              else if (data.data.type === "SINGLE_SENDING_IMG"){
+                let dat = data.data;
+                msgId = 1;
+                param = {
+                  "fromUser":{"id":this.$route.params.friendId,
+                              "nickName": this.$route.params.name,
+                              },
+                  "toUser":{"id":this.$store.getters.userId, 
+                            "nickName":this.$store.getters.userNickname, 
+                            },
+                  "message":dat.content,
+                  "id": msgId
+                };
+              } else {
+                let dat = data.data;
+                msgId = 2;
+                param = {
+                  "fromUser":{"id":this.$route.params.friendId,
+                                "nickName": this.$route.params.name,
+                                },
+                  "toUser":{"id":this.$store.getters.userId,
+                            "nickName":this.$store.getters.userNickname,
+                            },
+                  "message":dat.Filename,
+                  "id": msgId
+                  };
+              }
+              //添加到信息列表，以便展示信息
+              if (! this.messageList){
+                this.messageList = [param];
+              }
+              else{
+                this.messageList.push( param );
+              }
+              this.currendStartChatList.push(data.data)
+            } else{
+              let re = /SINGLE/;
+              if (re.test(data.data.type) === true) {
+                this.$message("新的好友信息，请注意查看");
+                if(this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ) != null || this.$websocket.state.privateMessage.find( (val, ind) => ind == data.data.fromUserId ) != undefined){
+                  this.$websocket.state.privateMessage[data.data.fromUserId].push(data.data);
+                  this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = (+this.$websocket.state.privateUnreadNumber[data.data.fromUserId]) + 1;
+                } else{
+                  this.$websocket.state.privateMessage[data.data.fromUserId] = [data.data];
+                  this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = +1;
+                }            
+              } else {
+                this.$message("新的群消息，请注意查收")
+                if(this.$websocket.state.groupMessage.find((val, ind) => ind == data.data.toGroupId ) != null || this.$websocket.state.groupMessage.find((val, ind) => ind == data.data.toGroupId ) != undefined){
+                  this.$websocket.state.groupMessage[data.data.toGroupId].push(data.data);
+                  this.$websocket.state.groupUnreadNumber[data.data.toGroupId] = this.$websocket.state.groupUnreadNumber[data.data.toGroupId] + 1;
+                } else{
+                  this.$websocket.state.groupMessage[data.data.toGroupId] = [data.data];
+                  this.$websocket.state.groupUnreadNumber[data.data.toGroupId] = +1;
+                }
               }
             }
           }
         }
+
       }
     },
     ParparePrivateChatMessage(){
@@ -300,12 +395,6 @@ export default {
       if(/.jpg|.jpeg|.png|.img/ig.test(data.name)){
         //处理图片
         let me = this;
-
-        // //方式一：内存url   eg:blob:http://localhost:8080/b077141c-9d62-487b-9e3a-c8b93058aa10
-        // me.imageFile = URL.createObjectURL(data);
-        // console.log(me.imageFile);
-        // me.sendMsg();
-        
         //方式二：filereader
         let reader = new FileReader();
         reader.onload = function(e){
@@ -319,26 +408,16 @@ export default {
         //没数据，退出
         return;
       } else{
-        let me = this;
-        let reader = new FileReader();
-        me.Filename =data.name;
-        reader.onload = function(e){
-
-        me.File= e.target.result;
-        console.log("读取到的文件",me.File)
-        //let Filedata = e.target.result;
-        //console.log("Filedata",Filedata)
-        //me.File = URL.createObjectURL(Filedata);
-        me.sendMsg();
-        }
-        console.log("文件名字",me.Filename)
-        reader.readAsDataURL(data);
+        // console.log("data", data)
+        this.File = data
+        this.total = data.size;
+        this.sendMsg();
       }
     },
     sendMsg(){
       let data = null;
       let param = null;
-      if (this.message.trim() === "" && this.imageFile.trim() === ""&& this.File.trim() === ""){
+      if (this.message.trim() === "" && this.imageFile.trim() === ""&& this.File === null){
         this.$message.error("输入信息不能为空");
         return
       }
@@ -359,6 +438,11 @@ export default {
           "message":this.imageFile,
           "id": 1
         };
+        this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId])
+        .then(res => {
+          this.currendStartChatList.push(data);
+          this.messageList.push(param);
+        });
       } else if (this.message !== ""){
         data = {                    
           "fromUserId" : ""+this.userId,
@@ -376,31 +460,65 @@ export default {
           "message":this.message,
           "id": 0
         };
+        this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId])
+        .then(res => {
+          this.currendStartChatList.push(data);
+          this.messageList.push(param);
+        });
       } else {
-        data = {
-          "fromUserId" : ""+this.userId,
-          "toUserId" : ""+this.friendId,
-          "content" : ""+this.File,
-          "name":""+this.Filename,
-          "type" : "SINGLE_SENDING_FILE"
-        };
-        param = {
-          "fromUser":{"id":this.$store.getters.userId,
-                      "nickName":this.$store.getters.userNickname,
-                      },
-          "toUser":{"id":this.$route.params.friendId,
-                    "nickName":this.$route.params.name,
-                    },
-          "message":this.Filename,
-          "id": 2
-        };
+        this.$websocket.dispatch("SendWebsocketFileName", this.File.name)
       }
+
+      this.message = "";
+      this.imageFile = "";
+      // this.File = null;
+      this.websockOnMessage();
+    },
+    sendFile(fileUrl){
+      //文件部分
+      let data = {
+        "fromUserId" : ""+this.userId,
+        "toUserId" : ""+this.friendId,
+        "content" : JSON.stringify({
+                      "fileName": this.File.name,
+                      "fileSize": this.File.size,
+                      "fileUrl": fileUrl
+                    }),
+        "type" : "FILE_MSG_SINGLE_SENDING"
+      };
+      let param = {
+        "fromUser":{"id":this.$store.getters.userId,
+                    "nickName":this.$store.getters.userNickname,
+                    },
+        "toUser":{"id":this.$route.params.friendId,
+                  "nickName":this.$route.params.name,
+                  },
+        "message":{
+                    "fileName": this.File.name,
+                    "fileSize": this.File.size,
+                    "fileUrl": fileUrl
+                  },
+        "id": 2
+      };
       this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId]);
       this.currendStartChatList.push(data);
       this.messageList.push(param);
-      this.message = "";
-      this.imageFile = "";
-      this.websockOnMessage();
+      this.File = null;
+      this.fileUpload.cuLoaded = 0;
+      this.fileUpload.enableRead = true;
+    },
+    //中止
+    stop() {
+      //中止读取操作
+      console.info('中止，cuLoaded：' + this.fileUpload.cuLoaded);
+      this.fileUpload.enableRead = false;
+      this.reader.abort();
+    },
+    //继续
+    continueFile() {
+      console.info('继续，cuLoaded：' + this.fileUpload.cuLoaded);
+      this.fileUpload.enableRead = true;
+      this.readBlob();
     },
     getUnreadList(fromId, toId){
       getUnreadMessageList(fromId, toId).then(response =>{
