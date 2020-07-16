@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div lang="scss" id="app">
     <router-view v-if="!$route.meta.keepAlive"/>
     
     <el-container v-if="$route.meta.keepAlive">
@@ -38,7 +38,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 
 html,body,#app{
     width:100%;

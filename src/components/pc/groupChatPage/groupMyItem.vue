@@ -1,5 +1,5 @@
 <template>
-   <div style="float:right; width:100%; margin-bottom:0.1rem">
+   <div lang="scss" style="float:right; width:100%; margin-bottom:0.1rem">
     <div class="demo-type" style="float:right;width: 1rem;height: 1rem;">
       <div>
         <el-avatar > {{name}} </el-avatar>

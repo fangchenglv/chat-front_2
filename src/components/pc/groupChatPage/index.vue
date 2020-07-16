@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container lang="scss">
 
     <el-header style="height:auto">
       <p style="font-size:0.7rem;margin:0 0 auto;">{{$route.params.name}}</p>

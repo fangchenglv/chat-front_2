@@ -1,5 +1,5 @@
 <template >
-  <div class="GroupChat">
+  <div lang="scss" class="GroupChat">
     <div class="firstPart" id="firstPart">
       <el-card style="margin-top:0.5rem; height:90%;position:relative;">
         <div style="height:55%;width:30%;margin:0 auto">

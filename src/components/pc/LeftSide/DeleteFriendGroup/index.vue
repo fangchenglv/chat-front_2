@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div lang="scss">
     <el-table
       :data="groupData"
       style="width: 100%">

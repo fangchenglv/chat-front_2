@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div lang="scss">
     <el-row>
       <el-col :span="11" v-for="(item,ind) in this.friendList" :key="ind" :offset="1">
         <el-card >
@@ -154,7 +154,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .button {
   margin: 0 0 0.3rem 0;
   float: right;

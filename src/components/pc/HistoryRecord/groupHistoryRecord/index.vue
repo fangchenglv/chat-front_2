@@ -1,5 +1,5 @@
 <template>
-    <el-container>
+    <el-container lang="scss">
         <el-main style="background-color:rgb(255,255,255)">
             <div v-for="(item, ind) in historyMessageList" :key="ind">
               <GroupFriendItem v-if="item.toUser" :messageid="item.id" :img="item.toUser.avatar" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>

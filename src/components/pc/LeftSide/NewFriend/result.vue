@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div lang="scss">
     <div v-if="findList !== []">
     <el-row>
       <el-col :span="10" v-for="item in findList" :key="item.id" :offset="1">
@@ -137,7 +137,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
   .time {
     font-size: 13px;
     color: #999;

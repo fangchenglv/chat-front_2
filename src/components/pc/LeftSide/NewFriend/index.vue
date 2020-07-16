@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div lang="scss">
     <el-form
       :model="ruleForm3"
       :rules="rules3"

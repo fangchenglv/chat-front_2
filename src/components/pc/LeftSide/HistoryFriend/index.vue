@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div lang="scss">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="已经同意添加的好友" name="1">已经同意添加的好友</el-tab-pane>
       <el-tab-pane label="已经拒绝添加的好友" name="2">已经拒绝添加的好友</el-tab-pane>

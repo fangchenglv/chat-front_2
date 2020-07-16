@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container lang="scss">
     <el-header style="height:auto">
       <p style="font-size:0.7rem;margin:0 0 auto;">{{this.$route.params.name}}</p>
     </el-header>
@@ -9,6 +9,8 @@
         <strong style="padding-right:0.2rem">{{File.name}}</strong>
         <button @click="stop">暂停</button>
         <button @click="continueFile">继续</button>
+        <a v-if="this.fileUpload.enableRead == false">已暂停</a>
+        <a v-if="this.fileUpload.enableRead == true">传输中</a>
       </div>
       <div v-for="(item, ind) in this.messageList" :key="ind">
           <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File"></FriendItem>
@@ -200,7 +202,8 @@ export default {
             console.log('总共上传：' + this.fileUpload.cuLoaded + ',总共用时：' + (new Date().getTime() - this.startTime.getTime()) / 1000);
           }
           this.showProcess();
-        } else if(data.data){
+        } else {
+        const data = JSON.parse(e.data);
           if(data.data.type !== "REGISTER" && data.status === 200){
             if (!data.data.toGroupId && data.data.fromUserId == this.friendId ){
               let msgId = -1;
@@ -566,7 +569,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .el-container{
   position: relative;
   background-color: #fff;

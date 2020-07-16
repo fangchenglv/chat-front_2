@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div lang="scss">
     <el-input v-model="name" placeholder="请输入群名" style="margin: 0.5rem 0rem 0.5rem 0;"></el-input>
     <el-input v-model="descriptor" placeholder="请输入群描述" style="margin-bottom:1rem"></el-input>
     <div>

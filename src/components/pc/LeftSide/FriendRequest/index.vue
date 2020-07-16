@@ -1,5 +1,5 @@
 <template>
-  <div class="solveRequest">
+  <div lang="scss" class="solveRequest">
     <!-- card部分 -->
     <div v-if="findList !== []">
       <el-row>

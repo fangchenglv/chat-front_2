@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div lang="scss">
     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2">
       <el-form-item>
         <el-input
@@ -190,7 +190,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .el-form{
   margin: 0 3rem 0 3rem;
 }

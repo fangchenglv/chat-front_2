@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div lang="scss">
     <el-row>
       <el-col>
         <el-menu

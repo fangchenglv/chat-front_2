@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div lang="scss">
     <el-row>
       <el-col :span="11" v-for="(item,ind) in this.unreadFriendGroup" :key="ind" :offset="1">
         <el-card>

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div lang="scss">
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
     <el-form-item label="新建分组" prop="name">
       <el-input 
