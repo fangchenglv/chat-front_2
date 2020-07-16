@@ -7,11 +7,11 @@
       @click-left="onClickLeft"
       id="head"
     />
-    <div style="margin-top:1.3rem">
+    <div  class="total" >
       <van-grid :border="false" :column-num="5">
         <van-grid-item v-for="(item, ind) in groupFriend" :key="ind"  border>
-          <div style="float:left;width:2rem; height:2rem;background-color:rgba(100,100,100,0.45);margin-top: 0rem;border-radius:50%;">
-            <p style="color: #0c0c0c ;margin-top:0.6rem;font-size: 20px">{{item.userName}}</p>
+          <div  class="list" >
+            <p >{{item.userName}}</p>
           </div>
         </van-grid-item>
       </van-grid>
@@ -55,6 +55,21 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+p{
+  color: #0c0c0c ;
+  margin-top:0.6rem;
+  font-size: 20px;
+}
+  .list{
+    float:left;
+    width:2rem;
+    height:2rem;
+    background-color:rgba(100,100,100,0.45);
+    margin-top: 0rem;
+    border-radius:50%;
+  }
+  .total{
+    margin-top:1.3rem
+  }
 </style>

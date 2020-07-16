@@ -48,11 +48,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style  lang="scss" scoped>
+$w:100%;
 .head{
   background-color: #fff;
   font-size: 0.4rem;
-  width: 100%;
+  width: $w;
   position: absolute;
   left: 0rem;
   top: 0rem;
@@ -60,6 +61,7 @@ export default {
   margin-bottom: 0.1rem;
 }
 .foot{
-  width: 100%;
+  width: $w;
 }
+
 </style>

@@ -6,14 +6,13 @@
         :value=item.friends.length
         icon="arrow-down"
         @click="onClickLeft(item.id)"
-        style="text-align:left;background-color:rgb(250,250,250)"/>
+        class="list-name"/>
       <div v-show="show === item.id" v-for="(data, ind) in item.friends" :key="ind">
         <van-cell
           :title="data.friendInfo.nickName"
           @click="toFriend(data.friendId)"
           is-link
-          style="text-align:left;border:solid 0.02rem #ddd; border-top:none; border-left:none; border-right:none">
-       </van-cell>
+          class="list-content"/>
       </div>
     </div>
     <div>
@@ -22,13 +21,13 @@
         :value="myGroupList.length"
         icon="arrow-down"
         @click="onClickLeft(myGroupList.groupNum)"
-        style="text-align:left;background-color:rgb(250,250,250)"/>
+        class="list-name"/>
         <div v-show="show === myGroupList.groupNum" v-for="(data, id) in myGroupList" :key="id">
           <van-cell
             :title="data.groupName"
             @click="toPathGroup(data.groupNum)"
             is-link
-            style="text-align:left;border:solid 0.02rem #ddd; border-top:none; border-left:none; border-right:none"/>
+            class="list-content"/>
         </div>
     </div>
 
@@ -85,9 +84,15 @@ export default {
 }
 </script>
 
-<style scoped>
+<style  lang="scss" scoped>
 .head{
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 1.2rem ;
+  margin-bottom: 1rem ;
 }
+.list-content{
+  text-align:left;border:solid 0.02rem #ddd; border-top:none; border-left:none; border-right:none
+}
+.list-name{
+    text-align:left;background-color:rgb(250,250,250)
+  }
 </style>

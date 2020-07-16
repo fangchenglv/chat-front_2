@@ -6,7 +6,7 @@
         :value="item.count"
         @click="toPath(item.id, item.groupNum)"
         is-link
-        style="background-color:rgb(250,250,250); text-align:left; border:solid 0.02rem #ddd; border-top:none; border-left:none; border-right:none"/>
+        class="chat-list"/>
     </div>
   </div>
 </template>
@@ -127,9 +127,17 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .head{
-  margin-top: 1rem;
+  margin-top: 1.2rem;
   margin-bottom: 1.34rem;
+}
+.chat-list{
+  background-color:rgb(250,250,250);
+  text-align:left;
+  border:solid 0.02rem #ddd;
+  border-top:none;
+  border-left:none;
+  border-right:none;
 }
 </style>

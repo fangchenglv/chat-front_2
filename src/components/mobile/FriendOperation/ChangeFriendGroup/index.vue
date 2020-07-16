@@ -8,9 +8,9 @@
       id="head"
     />
     <div v-for="(item, ind) in groupData" :key="ind">
-      <van-card style="background-color:rgb(255,255,255);margin-top:0.1rem; top:1rem">
+      <van-card >
         <template #thumb>
-          <p style="font-size:0.5rem;width:200%">分组名：{{item.typeName}}</p>
+          <p>分组名：{{item.typeName}}</p>
         </template>
         <template #footer>
           <van-button type="info" @click="handleClick(item)">删除分组</van-button>
@@ -58,6 +58,16 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+  .head{
+    margin-top: 1rem;
+  }
+  .van-card{
+    background-color:rgb(255,255,255);
+    margin-top:0.1rem;
+    top:1rem;
+  }
+p{
+  font-size:0.5rem;width:200%
+}
 </style>

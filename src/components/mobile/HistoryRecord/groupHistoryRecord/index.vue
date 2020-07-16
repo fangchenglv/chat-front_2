@@ -8,7 +8,8 @@
       id="head"
     />
     <!-- 聊天内容主体 :img="item.toUser.avatar"-->
-    <div id="body" style="margin-top: 1.1rem">
+    <div id="body" >
+<!--      style="margin-top: 1.1rem">-->
       <div v-for="(item, ind) in this.historyMessageList" :key="ind">
         <GroupFriendItem v-if="item.toUser"  :messageid="item.id" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
       </div>
@@ -60,9 +61,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #body{
   margin-top: 1.1rem;
   padding: 0.2rem;
 }
+
 </style>

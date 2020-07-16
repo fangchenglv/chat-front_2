@@ -5,10 +5,9 @@
       left-text="返回"
       left-arrow
       @click-left="onClickLeft"
-      id="nav"
-      style="margin-top:0rem;"
-    />
-    <van-cell-group style="text-align:left;">
+      id="nav"/>
+
+    <van-cell-group >
       <van-field
         v-model="message"
         rows="1"
@@ -60,6 +59,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.van-nav-bar{
+  margin-top:0rem;
+}
+  .van-cell-group{
+    text-align:left;
+  }
 </style>
