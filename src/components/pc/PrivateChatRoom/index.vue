@@ -13,8 +13,10 @@
         <a v-if="this.fileUpload.enableRead == true">传输中</a>
       </div>
       <div v-for="(item, ind) in this.messageList" :key="ind">
-          <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File"></FriendItem>
-          <MyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
+          <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" ></FriendItem>
+          <MyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName" >
+
+          </MyItem>
       </div>
       
     </el-main>
@@ -70,6 +72,7 @@ export default {
       message: "",
       imageFile: "",
       File: null,
+      pp:null,
       fileUrl: "",
       total:0,
       reader:null,
@@ -283,6 +286,10 @@ export default {
 
       }
     },
+    pai(){
+    pp=1;
+     console.log("a2")
+    },
     ParparePrivateChatMessage(){
       //初始化数据吧
       if (!this.currendStartChatList) {
@@ -361,7 +368,7 @@ export default {
                                   },
                       "toUser":{"id":this.$store.getters.userId,
                                 "nickName":this.$store.getters.userNickname,
-                                r
+
                                 },
                       "message":data.name,
                       "id": msgId
@@ -448,6 +455,7 @@ export default {
           this.currendStartChatList.push(data);
           this.messageList.push(param);
         });
+        console.log("喵1");
       } else if (this.message !== ""){
         data = {                    
           "fromUserId" : ""+this.userId,
@@ -470,8 +478,10 @@ export default {
           this.currendStartChatList.push(data);
           this.messageList.push(param);
         });
+        console.log("喵2");
       } else {
         this.$websocket.dispatch("SendWebsocketFileName", this.File.name)
+        console.log("喵3",this.File.name);
       }
 
       this.message = "";

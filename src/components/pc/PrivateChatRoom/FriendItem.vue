@@ -11,13 +11,19 @@
     <!-- <el-button type="text" v-if="messageid === 2" style="display:inline-block;font-size:0.5rem;margin-right:0.2rem;max-width:50%;word-wrap:break-word;word-break:break-all;float:inherit;text-align:left;line-height:0.5rem" @click="downFile()">{{msg}}
     </el-button> -->
   </div>
+
 </template>
 
 <script>
 
+import { type } from 'os';
+import Data from 'vue';
+import { mapState, mapGetters } from 'vuex'
+
   export default {
     name: 'my-item',
     props: ["messageid", 'me', 'name', 'img', 'msg','filea'],
+
     data(){
       return {
 
@@ -26,6 +32,7 @@
     mounted(){
       console.log(this.msg, this.msg.fileUrl)
     }
+
     // downFile(){
     //   console.log("能下载吗",filea);
     //   const arr = filea.split(',');
