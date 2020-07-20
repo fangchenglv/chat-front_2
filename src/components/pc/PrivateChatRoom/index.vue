@@ -14,9 +14,7 @@
       </div>
       <div v-for="(item, ind) in this.messageList" :key="ind">
           <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" ></FriendItem>
-          <MyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName" >
-
-          </MyItem>
+          <MyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" ></MyItem>
       </div>
       
     </el-main>
@@ -72,8 +70,8 @@ export default {
       message: "",
       imageFile: "",
       File: null,
-      pp:null,
       fileUrl: "",
+      ff:0,
       total:0,
       reader:null,
       fileUpload:{
@@ -172,32 +170,43 @@ export default {
     websockOnMessage(){
       let param = null;
       this.$websocket.state.websock.onmessage = e =>{
+
         console.log("###########又得开始看返回，生气", e)
-        // const data = JSON.parse(e.data);
+
+        let dd=e.data;
         let data = e.data;
         const re = /^[0-9]+.?[0-9]*/;
         const page = /^.*\..*$/;
         if (data.status === -1) {
+
           return
         }
         // 数字的话就是文件部分了
+
+
+       console.log("喵dd1.5");
         if (re.test(data)) {
+        console.log("喵dd2.0");
           this.fileUpload.cuLoaded = parseInt(data);
           console.log('当前已上传：' + this.fileUpload.cuLoaded);
           this.showProcess();
-          console.log('开始上传数据........');
+          console.log('开始上传数据........',);
           this.bindReader();
-        } else if(page.test(data)){
+        } else if(page.test(data) && (this.ff==1)){
+        console.log("喵dd3.0");
           // this.fileUrl = data;
           this.sendFile(data)
+          this.ff=0;
         }
         else if(data=='canceled'){
+        console.log("喵dd4.0");
           console.log('取消上传数据........');
           this.fileUpload.cuLoaded = 0;
           this.showProcess();
           this.fileUpload.enableRead = false;
           this.reader.abort();
         } else if(data=='ok'){
+        console.log("喵dd5.0");
           if (this.fileUpload.cuLoaded < this.total) {
             this.readBlob();
           } else {
@@ -205,8 +214,10 @@ export default {
             console.log('总共上传：' + this.fileUpload.cuLoaded + ',总共用时：' + (new Date().getTime() - this.startTime.getTime()) / 1000);
           }
           this.showProcess();
-        } else {
-        const data = JSON.parse(e.data);
+        }
+
+        console.log("喵dd2",e);
+        data = JSON.parse(e.data);
           if(data.data.type !== "REGISTER" && data.status === 200){
             if (!data.data.toGroupId && data.data.fromUserId == this.friendId ){
               let msgId = -1;
@@ -238,6 +249,7 @@ export default {
                   "id": msgId
                 };
               } else {
+              console.log("汪1");
                 let dat = data.data;
                 msgId = 2;
                 param = {
@@ -247,7 +259,7 @@ export default {
                   "toUser":{"id":this.$store.getters.userId,
                             "nickName":this.$store.getters.userNickname,
                             },
-                  "message":dat.Filename,
+                  "message":dat.content,
                   "id": msgId
                   };
               }
@@ -282,14 +294,11 @@ export default {
               }
             }
           }
-        }
+
 
       }
     },
-    pai(){
-    pp=1;
-     console.log("a2")
-    },
+
     ParparePrivateChatMessage(){
       //初始化数据吧
       if (!this.currendStartChatList) {
@@ -338,7 +347,7 @@ export default {
                           }, 
               "toUser":{"id":this.$store.getters.userId, 
                         "nickName":this.$store.getters.userNickname, 
-                        r
+
                         }, 
               "message":data.name,
               "id": msgId
@@ -359,6 +368,7 @@ export default {
             };
           }
         } else {
+        console.log("汪2");
                   msgId = 2;
                   if (data.fromUserId === this.friendId) {
                     param = {
@@ -396,6 +406,7 @@ export default {
       })
     },
     handleFile(event){
+      this.ff=1;
       let data = event.target.files[0];
       if ((/.jpg|.jpeg|.png|.img/ig.test(data.name))&&data.size > 65530) {
         this.$message("图片太大，请转换为文件上传")
