@@ -1,10 +1,10 @@
 <template>
-  <div style="text-align:left">
+  <div class="head" >
     <br>
     <div v-for="item in findList" :key="item.id">
-      <van-card style="background-color:#fff">
+      <van-card >
         <div slot="title">
-          <p style="font-size:0.7rem; margin-left:0.3rem">{{item.userName}}</p>
+          <p>{{item.userName}}</p>
         </div>
         <div slot="footer">
           <van-button @click="changeShow">选择好友分组</van-button>
@@ -19,7 +19,7 @@
       title="选择好友分组"
       show-cancel-button >
       <van-radio-group v-model="group" v-for="item in friendGroupList" :key="item.id">
-        <van-radio :name=item.id style="margin-left:0.5rem;margin-bottom:0.3rem;">{{item.typeName}}</van-radio>
+        <van-radio :name=item.id >{{item.typeName}}</van-radio>
       </van-radio-group>
     </van-dialog>
   </div>
@@ -81,6 +81,18 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.head{
+  text-align:left
+}
+  p{
+    font-size:0.7rem; margin-left:0.3rem
+  }
+  .van-card{
+    margin-top: 0rem;
+    background-color:#fff
+  }
+  .van-radio{
+    margin-left:0.5rem;margin-bottom:0.3rem;
+  }
 </style>

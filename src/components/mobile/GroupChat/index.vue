@@ -8,17 +8,16 @@
         id="head"
       />
       <div class="body">
-        <img :src=form.avatar />
         <van-divider />
         <p >群名:{{form.name}}</p>
         <van-divider/>
         <p>群介绍:{{form.descriptor}}</p>
         <van-divider/>
-        <div style="margin-top:0.1rem">
-          <van-button type="default" style="width:100%" @click="newGroupMessage">修改群组信息</van-button>
-          <van-button type="default" style="width:100%" @click="newGroupMember">添加新成员</van-button>
-          <van-button type="default" style="width:100%" @click="quitGroupChat">退出群聊</van-button>
-          <van-button type="default" style="width:100%" @click="quitAndDismissGroup">解散群聊</van-button>
+        <div  class="menu" >
+          <van-button type="default" class="buttons" @click="newGroupMessage">修改群组信息</van-button>
+          <van-button type="default" class="buttons"  @click="newGroupMember">添加新成员</van-button>
+          <van-button type="default" class="buttons"  @click="quitGroupChat">退出群聊</van-button>
+          <van-button type="default" class="buttons"  @click="quitAndDismissGroup">解散群聊</van-button>
         </div>
       </div>
 
@@ -173,7 +172,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" >
 #head{
   position: absolute;
   left: 0rem;
@@ -186,4 +185,11 @@ export default {
   background-color: rgb(250, 250, 250);
   font-size:0.5rem
 }
+  .menu{
+    margin-top:0.2rem
+  }
+  .buttons{
+    width:100%
+  }
+
 </style>

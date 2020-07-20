@@ -5,13 +5,15 @@
       left-text="返回"
       left-arrow
       @click-left="onClickLeft"
-      id="nav"
-      style="margin-top:0rem;"
-    />
+      id="nav"/>
+<!--      style="margin-top:0rem;"-->
+
     <div v-for="data in findList" :key="data.id">
       <br/>
-      <van-card style="background-color:#fff;" >
-        <div slot="title" style="font-size:0.5rem;">
+      <van-card >
+<!--        style="background-color:#fff;" >-->
+        <div slot="title" class="tit">
+<!--          style="font-size:0.5rem;">-->
           <p>好友:{{data.fromUser.userName}}</p>
           <p>申请时间:{{data.applyTime}}</p>
         </div>
@@ -34,7 +36,8 @@
         title="选择好友分组"
         show-cancel-button >
         <van-radio-group v-model="choicedGroupId" v-for="i in friendGroupList" :key="i.id">
-          <van-radio :name=i.id style="margin-left:0.5rem;margin-bottom:0.3rem;">{{i.typeName}}</van-radio>
+          <van-radio :name=i.id >{{i.typeName}}</van-radio>
+<!--            style="margin-left:0.5rem;margin-bottom:0.3rem;">-->
         </van-radio-group>
       </van-dialog>
     </div>
@@ -125,11 +128,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #page{
   position: absolute;
   left: 0rem;
   bottom: 0rem;
   width: 100%;
 }
+  .van-nav-bar{
+    margin-top:0rem;
+  }
+  .van-card{
+    background-color:#fff;
+  }
+  .tit{
+    font-size:0.5rem;
+  }
+  .van-radio{
+    margin-left:0.5rem;margin-bottom:0.3rem
+  }
 </style>

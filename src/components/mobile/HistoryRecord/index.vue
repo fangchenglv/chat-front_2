@@ -8,7 +8,7 @@
       id="head"
     />
     <!-- 聊天内容主体 -->
-    <div id="body" style="margin-top: 1.1rem">
+    <div id="body">
       <div v-for="(item,ind) in this.historyMessageList" :key="ind">
         <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName" me="true" ></FriendItem>
         <MyItem v-else :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName"></MyItem>
@@ -64,8 +64,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #body{
   padding: 0.2rem;
+  margin-top: 1.1rem;
 }
 </style>

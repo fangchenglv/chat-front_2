@@ -7,7 +7,7 @@
       @click-left="onClickLeft"
       id="head"
     />
-    <van-radio-group v-model="radio" style="margin-top:0.2rem">
+    <van-radio-group v-model="radio" >
       <van-cell-group v-for="(item, ind) in tableData" :key="ind">
         <van-cell :title=item.typeName clickable @click="handleCurrentChange(item.id)">
           <template #right-icon>
@@ -16,8 +16,8 @@
         </van-cell>
       </van-cell-group>
     </van-radio-group>
-    <van-button @click="changeFriendGroup" type="primary" style="width:100%;margin-top:0.2rem">确认</van-button>
-    <van-button @click="resetFriendGroup" type="info" style="width:100%">重置</van-button>
+    <van-button @click="changeFriendGroup" type="primary" class="commit" >确认</van-button>
+    <van-button @click="resetFriendGroup" type="info" class="recover" >重置</van-button>
   </div>
 </template>
 
@@ -60,6 +60,15 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.van-radio-group{
+  margin-top:0.2rem
+}
+.commit{
+  width:100%;
+  margin-top:0.2rem;
+}
+.recover{
+   width: 100%;
+ }
 </style>

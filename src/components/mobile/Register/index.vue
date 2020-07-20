@@ -1,11 +1,11 @@
 <template>
-  <div style=" margin-left:0.5rem; margin-right:0.5rem">
+  <div class="register-total">
     <van-field
       v-model="username"
       required
       label="用户名"
       placeholder="请输入用户名"
-      style="margin: 1rem 0rem 0.5rem 0rem; text-align:left"
+      class="user-name"
     />
     <van-field
       v-model="password"
@@ -14,7 +14,7 @@
       label="密码"
       placeholder="请输入密码"
       :error-message="errorPass"
-      style="margin: 0rem 0rem 0.5rem 0rem; text-align:left"
+      class="user"
     />
     <van-field
       v-model="checkPass"
@@ -22,25 +22,25 @@
       type="password"
       label="确认密码"
       placeholder="请确认您的密码"
-      style="margin: 0rem 0rem 0.5rem 0rem; text-align:left"
+      class="user"
     />
     <van-field
       v-model="nickname"
       label="昵称"
       placeholder="请输入昵称"
-      style="margin: 0rem 0rem 0.5rem 0rem; text-align:left"
+      class="user"
     />
-    <van-radio-group v-model="gender" style="margin: 0rem 0rem 0.5rem 0rem;">
+    <van-radio-group v-model="gender" >
       <van-cell >性别</van-cell>
-      <van-cell-group style="text-align:center;">
-        <div style="display:inline-block; margin-right:1rem">
+      <van-cell-group >
+        <div class="man" >
           <van-cell title="男性" clickable @click="gender = '1'" >
-            <van-radio slot="right-icon" name="1" style="padding-left:0.3rem" />
+            <van-radio slot="right-icon" name="1"/>
           </van-cell>
         </div>
-        <div style="display:inline-block">
+        <div class="woman">
           <van-cell title="女性" clickable @click="gender = '2'">
-            <van-radio slot="right-icon" name="2" style="padding-left:0.3rem"/>
+            <van-radio slot="right-icon" name="2" />
           </van-cell>
         </div>
       </van-cell-group>
@@ -49,27 +49,27 @@
       v-model="email"
       label="邮箱"
       placeholder="请输入邮箱地址"
-      style="margin: 0rem 0rem 0.5rem 0rem; text-align:left"
+      class="user"
       :error-message="errorEmail"
     />
     <van-field
       v-model="phone"
       label="电话"
       placeholder="请输入电话号码"
-      style="margin: 0rem 0rem 0.5rem 0rem; text-align:left"
+      class="user"
       :error-message="errorPhone"
     />
     <div >
       <van-button
         plain
         type="primary"
-        style="margin-right:1rem"
+        class="reg"
         :loading='loading'
         @click="handleResgister">注册</van-button>
       <van-button
         plain
         type="info"
-        style="margin-left:1rem;"
+        class="login"
         @click="gotoLogin">登录</van-button>
     </div>
   </div>
@@ -150,6 +150,33 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.register-total{
+  margin-left:0.5rem; margin-right:0.5rem
+}
+  .user-name{
+    margin: 1rem 0rem 0.5rem 0rem; text-align:left
+  }
+  .user{
+    margin: 0rem 0rem 0.5rem 0rem; text-align:left
+  }
+  .van-radio-group{
+    margin: 0rem 0rem 0.5rem 0rem;
+    /*text-align:left*/
+  }
+  .van-cell-group{
+    text-align:center;
+  }
+  .man{
+    display:inline-block;
+    margin-right:1rem
+  }
+  .woman{
+    display:inline-block;
+  }
+  .van-radio{
+    padding-left:0.3rem
+  }
+.reg{margin-right:1rem}
+.login{margin-left:1rem}
 </style>

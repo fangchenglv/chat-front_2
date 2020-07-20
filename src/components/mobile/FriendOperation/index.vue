@@ -42,16 +42,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .head{
   margin-top: 1rem;
   margin-bottom: 1rem;
   text-align: left;
   background-color: rgb(250,250,250);
 }
-.item{
-  line-height: 1rem;
-  background-color: #fff;
-  border-bottom: 0.001rem solid #ccc;
-}
+/*.item{*/
+/*  line-height: 1rem;*/
+/*  background-color: #fff;*/
+/*  border-bottom: 0.001rem solid #ccc;*/
+/*}*/
 </style>

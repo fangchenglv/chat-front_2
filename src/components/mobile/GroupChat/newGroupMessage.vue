@@ -7,7 +7,7 @@
         @click-left="onClickLeft"
         id="head"
       />
-      <van-form @submit="handleChange" style="background-color:#fff;margin-top:1.3rem;padding-top:0.5rem;padding-bottom:0.3rem">
+      <van-form @submit="handleChange" class="group-form">
         <van-field
           v-model="form.name"
           name="新的群名"
@@ -20,8 +20,8 @@
           label="群描述"
           placeholder="新的群描述"
         />
-        <div style="margin-top:0.5rem;">
-          <van-button round plain type="info" native-type="submit" style="margin-right:0.3rem">
+        <div  class="btn-div" >
+          <van-button round plain type="info" native-type="submit" class="submit" >
             提交
           </van-button>
           <van-button round plain type="info" native-type="button" @click="handleCancel">
@@ -96,11 +96,20 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 #head{
   position: absolute;
   left: 0rem;
   top: 0rem;
   width: 100%;
 }
+.group-form{
+    background-color:#fff;margin-top:1.3rem;padding-top:0.5rem;padding-bottom:0.3rem
+  }
+  .btn-div{
+    margin-top:0.5rem;
+  }
+  .submit{
+    margin-right:0.3rem;
+  }
 </style>

@@ -1,12 +1,12 @@
 <template>
-  <div style="margin:0rem 0.5rem 0rem 0.5rem;">
+  <div class="total">
     <van-field
       v-model="username"
       left-icon="contact"
       clearable
       label="用户名"
       placeholder="请输入用户名"
-      style="margin: 2rem 0rem 0.5rem 0rem;text-align:left;"
+      class="user-name"
     />
     <van-field
       v-model="password"
@@ -14,13 +14,13 @@
       label="密码"
       placeholder="请输入密码"
       left-icon="closed-eye"
-      style="margin: 0.5rem 0rem 0.5rem 0rem;text-align:left"
+      class="password"
     />
     <div id="btn">
       <van-button
         plain
         type="primary"
-        style="margin-right:1.5rem"
+        class="login"
         :loading='loading'
         loading-text="登录中..."
         @click="handleLogin">登录</van-button>
@@ -87,12 +87,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #log{
   margin: 4rem 0 0 0;
 }
 #btn{
   margin-top: 1rem;
 }
-
+.total{
+    margin:0rem 0.5rem 0rem 0.5rem;
+}
+  .user-name{
+    margin: 2rem 0rem 0.5rem 0rem;text-align:left;
+  }
+.password{
+  margin: 0.5rem 0rem 0.5rem 0rem;text-align:left;
+}
+.login{
+    margin-right:1.5rem
+}
 </style>

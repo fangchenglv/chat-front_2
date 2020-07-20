@@ -1,5 +1,5 @@
 <template>
-  <div class="chatPage" style="height: 100%">
+  <div class="chatPage">
     <!-- 聊天顶部 -->
     <van-nav-bar
       :title= title
@@ -19,16 +19,16 @@
     <!-- 聊天底部 -->
     <van-tabbar>
       <van-tabbar-item >
-        <input placeholder="输入信息" v-model="message" style="background-color: rgb(250, 250, 250); line-height:180%; font-size:0.5rem"/>
+        <input placeholder="输入信息" v-model="message"class="input" />
         <van-button @click="sendMsg" plain type="info" >发送</van-button>
-        <div style="width:0.5rem; float:right">
+        <div class="bottom" >
           <van-dropdown-menu direction="up">
             <van-dropdown-item ref="item">
               <van-uploader :before-read="beforeReadImg" :after-read="afterReadImg">
-                <van-button type="primary" plain style="padding-left:4.5rem;padding-right:4.5rem" >图片</van-button>
+                <van-button type="primary" plain class="file-sending" >图片</van-button>
               </van-uploader >
               <van-uploader accept=".xls,.doc,.txt,.pdf" result-type="file" :before-read="beforeReadFile" :after-read="afterReadFile">
-                <van-button type="primary" plain style="padding-left:4.5rem;padding-right:4.5rem" >文件</van-button>
+                <van-button type="primary" plain class="file-sending">文件</van-button>
               </van-uploader >
               <van-button block type="info" @click="onConfirm" plain>返回</van-button>
             </van-dropdown-item>
@@ -259,7 +259,7 @@ export default {
               } else {
                 this.$websocket.state.privateMessage[data.data.fromUserId] = [data.data];
                 this.$websocket.state.privateUnreadNumber[data.data.fromUserId] = +1;
-              }           
+              }
             } else {
               this.$toast({
                 message:"新的群信息，请注意查看",
@@ -371,7 +371,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped >
 #body{
   margin:0.1rem 0.1rem 0rem 0.1rem;
   width:98%;
@@ -380,4 +380,16 @@ export default {
   margin-bottom: 1.5rem;
   overflow:auto;
 }
+.chatPage{
+  height: 100%
+}
+ .file-sending{
+   padding-left:4.5rem;padding-right:4.5rem
+ }
+  .input{
+    background-color: rgb(250, 250, 250); line-height:180%; font-size:0.5rem
+  }
+  .bottom{
+    width:0.5rem; float:right
+  }
 </style>

@@ -6,7 +6,7 @@
       left-arrow
       @click-left="onClickLeft"
     />
-    <van-cell-group style="margin-top:0.1rem; text-align:left">
+    <van-cell-group>
       <van-field
         v-model="name"
         rows="1"
@@ -28,14 +28,14 @@
       <van-button
         plain
         type='info'
-        style="margin-right:0.5rem"
+        class="left"
         @click="handleGroup">
         确定
       </van-button>
       <van-button
         plain
         type='info'
-        style="margin-left:0.5rem"
+        class="right"
         @click="reset">
         重置
       </van-button>
@@ -85,8 +85,17 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #btn{
   margin-top: 1rem;
+}
+.van-cell-group{
+  margin-top:0.1rem; text-align:left
+}
+.left{
+  margin-right:0.5rem
+}
+.right{
+  margin-left:0.5rem
 }
 </style>

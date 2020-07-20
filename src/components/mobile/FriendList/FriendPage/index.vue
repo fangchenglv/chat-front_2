@@ -17,7 +17,7 @@
         <span v-else><van-icon name="closed-eye"/>用户离线</span>
       </div>
       <van-divider/>
-      <van-button @click="topath()" style="margin-top:0.1rem;width:100%">移动分组</van-button>
+      <van-button @click="topath()" class="change" >移动分组</van-button>
     </div>
 
     <van-tabbar v-model="active" id='foot'>
@@ -96,7 +96,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style  lang="scss" scoped>
 #head{
   position: absolute;
   left: 0rem;
@@ -109,4 +109,7 @@ export default {
   background-color: rgb(250, 250, 250);
   font-size:0.5rem
 }
+.change{
+  margin-top:0.1rem;width:100%
+  }
 </style>
