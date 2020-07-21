@@ -72,6 +72,7 @@ export default {
       File: null,
       fileUrl: "",
       total:0,
+      ff:0,
       reader:null,
       fileUpload:{
       cuLoaded: 0,
@@ -166,6 +167,7 @@ export default {
 websockOnMessage(){
       let param = null;
       this.$websocket.state.websock.onmessage = e =>{
+        console.log("喵dd1.0");
         let data = e.data;
         const re = /^[0-9]+.?[0-9]*/;
         const page = /^.*\..*$/;
@@ -178,9 +180,10 @@ websockOnMessage(){
                   this.showProcess();
                   console.log('开始上传数据........');
                   this.bindReader();
-                } else if(page.test(data)){
+                } else if(page.test(data)&& (this.ff==1)){
                   // this.fileUrl = data;
-                  this.sendFile(data)
+                  this.sendFile(data);
+                  this.ff=0;
                 }
                 else if(data=='canceled'){
                   console.log('取消上传数据........');
@@ -196,12 +199,15 @@ websockOnMessage(){
                     console.log('总共上传：' + this.fileUpload.cuLoaded + ',总共用时：' + (new Date().getTime() - this.startTime.getTime()) / 1000);
                   }
                   this.showProcess();
-                }else if( data.status === 200){
-                const data = JSON.parse(e.data);
-
+                }
+           data = JSON.parse(e.data);
+          if( data.status === 200){
+           console.log("喵dd1.5");
           if (data.data.toGroupId == this.groupId){
+          console.log("喵dd2.0",data.data);
             let msgId = -1;
             if(data.data.type === "GROUP_SENDING"){
+            console.log("喵dd3.0");
               let dat = data.data;
               msgId = 0;
               param = {
@@ -229,9 +235,12 @@ websockOnMessage(){
                   "toUser":{"id":+dat.fromUserId,
                              "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
                             },
-                  "message":dat.Filename,
+                  "message":dat.content,
                   "id": msgId
                   };
+                  console.log("这里能下载吗", "https://123.56.232.247/group1/"+JSON.parse(dat.content).fileUrl);
+                  let routeData ="https://123.56.232.247/group1/"+JSON.parse(dat.content).fileUrl;
+                  window.open(routeData, '_blank');
             }
             //添加到信息列表，以便展示信息
             if (! this.messageList){
@@ -315,6 +324,7 @@ websockOnMessage(){
       })
     },
     handleFile(event){
+      this.ff=1;
       let data = event.target.files[0];
       if ((/.jpg|.jpeg|.png|.img/ig.test(data.name))&&data.size > 65530) {
         this.$message("图片太大，请转换为文件上传")

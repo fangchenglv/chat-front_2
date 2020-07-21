@@ -15,7 +15,9 @@
       <div v-for="(item, ind) in this.messageList" :key="ind">
           <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" ></FriendItem>
           <MyItem v-else :img="item.fromUser.avatar" :messageid="item.id" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" ></MyItem>
+
       </div>
+
       
     </el-main>
     
@@ -214,6 +216,7 @@ export default {
             console.log('总共上传：' + this.fileUpload.cuLoaded + ',总共用时：' + (new Date().getTime() - this.startTime.getTime()) / 1000);
           }
           this.showProcess();
+
         }
 
         console.log("喵dd2",e);
@@ -222,6 +225,7 @@ export default {
             if (!data.data.toGroupId && data.data.fromUserId == this.friendId ){
               let msgId = -1;
               if(data.data.type === "SINGLE_SENDING"){
+
                 let dat = data.data;
                 msgId = 0;
                 param = {
@@ -236,6 +240,7 @@ export default {
                 };
               }
               else if (data.data.type === "SINGLE_SENDING_IMG"){
+
                 let dat = data.data;
                 msgId = 1;
                 param = {
@@ -249,6 +254,7 @@ export default {
                   "id": msgId
                 };
               } else {
+
               console.log("汪1");
                 let dat = data.data;
                 msgId = 2;
@@ -262,7 +268,11 @@ export default {
                   "message":dat.content,
                   "id": msgId
                   };
+                  console.log("这里能下载吗", "https://123.56.232.247/group1/"+JSON.parse(dat.content).fileUrl);
+                  let routeData ="https://123.56.232.247/group1/"+JSON.parse(dat.content).fileUrl;
+                  window.open(routeData, '_blank');
               }
+              this.File=null;
               //添加到信息列表，以便展示信息
               if (! this.messageList){
                 this.messageList = [param];
@@ -383,6 +393,7 @@ export default {
                       "message":data.name,
                       "id": msgId
                     };
+
                   }
                   else {
                     param = {
@@ -533,6 +544,7 @@ export default {
       this.fileUpload.cuLoaded = 0;
       this.fileUpload.enableRead = true;
     },
+
     //中止
     stop() {
       //中止读取操作
