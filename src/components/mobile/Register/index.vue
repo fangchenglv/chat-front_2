@@ -25,6 +25,7 @@
       class="user"
     />
     <van-field
+      required
       v-model="nickname"
       label="昵称"
       placeholder="请输入昵称"
@@ -46,6 +47,7 @@
       </van-cell-group>
     </van-radio-group>
     <van-field
+      required
       v-model="email"
       label="邮箱"
       placeholder="请输入邮箱地址"
@@ -53,6 +55,7 @@
       :error-message="errorEmail"
     />
     <van-field
+      required
       v-model="phone"
       label="电话"
       placeholder="请输入电话号码"

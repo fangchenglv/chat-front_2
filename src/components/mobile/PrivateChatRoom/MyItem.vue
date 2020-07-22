@@ -7,8 +7,9 @@
     <div v-if="messageid === 0" class="message" >{{msg}}</div>
     <img v-if="messageid === 1" :src="msg" alt="图片加载失败" class="pic"/>
     <div v-if="messageid== 2" class="file" >
-      <a   href=# >
-        <pre > 文件：{{msg.name}} </pre>
+<!--      ：href='https://123.56.232.247/group1'+msg.fileUrl-->
+      <a    >
+        <pre > 文件：{{data = JSON.parse(messages).fileName}} </pre>
       </a>
     </div>
   </div>
@@ -18,10 +19,21 @@
 <script>
   export default {
     name: 'friend-item',
-    props: ['messageid', 'me', 'name', 'img', 'msg'],
+    props: ['messageid', 'me', 'name', 'img', 'msg','filea'],
     data(){
       return{
         messages:this.msg,
+      }
+    },
+    mounted(){
+      if (this.messageid == 2) {
+        console.log("！！！！！！！要发送的文件部分",this.messages)
+        this.init()
+      }
+    },
+    methods: {
+      init(){
+
       }
     }
   }

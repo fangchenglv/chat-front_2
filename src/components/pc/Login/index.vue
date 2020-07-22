@@ -1,5 +1,5 @@
 <template>
-  <div lang="scss">
+  <div >
     <div>
       <el-form ref="ruleForm1" :model="ruleForm1" :rules="rules1">
         <el-form-item prop="userName">
@@ -91,15 +91,15 @@ export default {
             .then(() => {
               // // 开发环境地址
               //产品环境地址
-              const wsUrl = "wss://123.56.232.247:8081/ws"
-
+              const wsUrl = "wss://65.49.204.236:8081/ws"
+              // const wsUrl = "wss://123.56.232.247:8081/ws"
               let uid = this.userId;
               uid = "" + uid;
               let regisMsg = JSON.stringify({"userId" : ""+this.userId,"type" : "REGISTER"});
               this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg])
               .then((res) =>{
                 this.loading = false;
-                this.$router.replace({ path: "/home" }); 
+                this.$router.replace({ path: "/home" });
               })
             })
             .catch(() => {

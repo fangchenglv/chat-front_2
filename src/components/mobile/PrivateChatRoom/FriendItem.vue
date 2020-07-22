@@ -6,8 +6,11 @@
   <div v-if="messageid === 0"  class="message">{{msg}}</div>
   <img v-if="messageid === 1" :src="msg" alt="图片加载失败"  class="pic"/>
   <div v-if="messageid== 2"  class="file" >
-    <a :href="msg.content" target="_blank" :title="msg.file.name" >
-      <pre> 文件:{{msg.file.name}} </pre>
+<!--    <a :href="msg.content" target="_blank" :title="msg.file.name" >-->
+<!--      <pre> 文件:{{msg.file.name}} </pre>-->
+<!--   href='https://123.56.232.247/group1/M00/00/01/ezjo918QFJyEdf1XAAAAABMiQiU283.txt\'+msg.fileUrl  </a>-->
+    <a    >
+      <pre > 文件：{{msg.fileName}} </pre>
     </a>
   </div>
 
@@ -23,6 +26,17 @@
         messages:this.msg,
       }
     },
+    mounted(){
+      if (this.messageid == 2) {
+        console.log("！！！！！！！要发送的文件部分",this.messages)
+        this.init()
+      }
+    },
+    methods: {
+      init(){
+
+      }
+    }
   }
 </script>
 <style lang="scss" scoped>
@@ -60,7 +74,7 @@
   }
   .file{
    border-radius:4%;
-    background-color:#2e579b;
+    background-color: #17ff77;
     display:inline-block;
     font-size:0.4rem;
     margin-right:0.3rem;
