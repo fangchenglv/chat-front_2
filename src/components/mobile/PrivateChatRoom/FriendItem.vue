@@ -6,10 +6,7 @@
   <div v-if="messageid === 0"  class="message">{{msg}}</div>
   <img v-if="messageid === 1" :src="msg" alt="图片加载失败"  class="pic"/>
   <div v-if="messageid== 2"  class="file" >
-<!--    <a :href="msg.content" target="_blank" :title="msg.file.name" >-->
-<!--      <pre> 文件:{{msg.file.name}} </pre>-->
-<!--   href='https://123.56.232.247/group1/M00/00/01/ezjo918QFJyEdf1XAAAAABMiQiU283.txt\'+msg.fileUrl  </a>-->
-    <a    >
+    <a    target="_blank" v-bind:href="['https://oixrkrhw5prsi53uh4j2itw2h3upq7q3kii6ywcl5yboyaw4pab66oqd.onion:80/group1/'+msg.fileUrl]">
       <pre > 文件：{{msg.fileName}} </pre>
     </a>
   </div>
@@ -74,7 +71,7 @@
   }
   .file{
    border-radius:4%;
-    background-color: #17ff77;
+    background-color: #2e579b;
     display:inline-block;
     font-size:0.4rem;
     margin-right:0.3rem;

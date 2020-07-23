@@ -7,8 +7,7 @@
     <div v-if="messageid === 0" class="message" >{{msg}}</div>
     <img v-if="messageid === 1" :src="msg" alt="图片加载失败" class="pic"/>
     <div v-if="messageid== 2" class="file" >
-<!--      ：href='https://123.56.232.247/group1'+msg.fileUrl-->
-      <a    >
+      <a   target="_blank" v-bind:href="['https://oixrkrhw5prsi53uh4j2itw2h3upq7q3kii6ywcl5yboyaw4pab66oqd.onion:80/group1/'+msg.fileUrl]"  >
         <pre > 文件：{{data = JSON.parse(messages).fileName}} </pre>
       </a>
     </div>
