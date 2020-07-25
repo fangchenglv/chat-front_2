@@ -9,8 +9,8 @@
         <strong style="padding-right:0.2rem">{{File.name}}</strong>
         <button @click="stop">暂停</button>
         <button @click="continueFile">继续</button>
-        <a v-if="this.fileUpload.enableRead == false">已暂停</a>
-        <a v-if="this.fileUpload.enableRead == true">传输中</a>
+        <p v-if="this.fileUpload.enableRead == false">已暂停</p>
+        <p v-if="this.fileUpload.enableRead == true">传输中</p>
       </div>
       <div v-for="(item, ind) in this.messageList" :key="ind">
           <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" ></FriendItem>
@@ -29,7 +29,7 @@
         <el-dropdown-menu slot="dropdown" >
 
           <el-dropdown-item style="display:relative">
-            <input type="file" name="file" id="file" accept=".xls,.doc,.txt,.pdf" class="inputfile" @change="handleFile($event)" />
+            <input type="file" name="file" id="file" accept=".xls,.doc,.txt,.pdf,.gif,.jpeg,.jpg,.png" class="inputfile" @change="handleFile($event)" />
             <label for="file">上传文件</label>
           </el-dropdown-item>
 
@@ -268,8 +268,8 @@ export default {
                   "message":dat.content,
                   "id": msgId
                   };
-                  console.log("这里能下载吗", "https://123.56.232.247/group1/"+JSON.parse(dat.content).fileUrl);
-                  let routeData ="https://123.56.232.247/group1/"+JSON.parse(dat.content).fileUrl;
+                  console.log("这里能下载吗", "https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl);
+                  let routeData ="https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl;
                   window.open(routeData, '_blank');
               }
               this.File=null;

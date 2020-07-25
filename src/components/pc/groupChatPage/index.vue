@@ -238,8 +238,8 @@ websockOnMessage(){
                   "message":dat.content,
                   "id": msgId
                   };
-                  console.log("这里能下载吗", "https://123.56.232.247/group1/"+JSON.parse(dat.content).fileUrl);
-                  let routeData ="https://123.56.232.247/group1/"+JSON.parse(dat.content).fileUrl;
+                  console.log("这里能下载吗", "https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl);
+                  let routeData ="https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl;
                   window.open(routeData, '_blank');
             }
             //添加到信息列表，以便展示信息
