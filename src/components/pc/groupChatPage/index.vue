@@ -27,7 +27,7 @@
         <el-dropdown-menu slot="dropdown" >
 
           <el-dropdown-item style="display:relative">
-            <input type="file" accept=".xls,.doc,.txt,.pdf" name="file" id="file" class="inputfile" @change="handleFile($event)" />
+            <input type="file" accept=".xls,.doc,.txt,.pdf,.gif,.jpeg,.jpg,.png" name="file" id="file" class="inputfile" @change="handleFile($event)" />
             <label for="file">上传文件</label>
           </el-dropdown-item>
 
@@ -201,7 +201,7 @@ websockOnMessage(){
                   this.showProcess();
                 }
            data = JSON.parse(e.data);
-          if( data.status === 200){
+          if( data.data.type !== "REGISTER" &&data.status === 200){
            console.log("喵dd1.5");
           if (data.data.toGroupId == this.groupId){
           console.log("喵dd2.0",data.data);
@@ -239,10 +239,11 @@ websockOnMessage(){
                   "id": msgId
                   };
                   console.log("这里能下载吗", "https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl);
-                  let routeData ="https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl;
-                  window.open(routeData, '_blank');
+                  // let routeData ="https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl;
+                  // window.open(routeData, '_blank');
             }
             //添加到信息列表，以便展示信息
+
             if (! this.messageList){
               this.messageList = [param];
             } else {
@@ -326,12 +327,9 @@ websockOnMessage(){
     handleFile(event){
       this.ff=1;
       let data = event.target.files[0];
-      if ((/.jpg|.jpeg|.png|.img/ig.test(data.name))&&data.size > 65530) {
-        this.$message("图片太大，请转换为文件上传")
-        return
-      }
+
       let toId = this.$route.params.groupId;  //???
-      if(/.jpg|.jpeg|.png|.img/ig.test(data.name)){
+      if((/.jpg|.jpeg|.png|.img/ig.test(data.name))&&data.size < 65530){
         let me = this;
         // //方式一：内存url   eg:blob:http://localhost:8080/b077141c-9d62-487b-9e3a-c8b93058aa10
         // me.imageFile = URL.createObjectURL(data);

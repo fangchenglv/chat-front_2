@@ -29,9 +29,6 @@ import { mapState, mapGetters } from 'vuex'
 
       }
     },
-    mounted(){
-      console.log(this.msg, this.msg.fileUrl)
-    }
 
     // downFile(){
     //   console.log("能下载吗",filea);

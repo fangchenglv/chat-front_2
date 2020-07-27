@@ -269,8 +269,8 @@ export default {
                   "id": msgId
                   };
                   console.log("这里能下载吗", "https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl);
-                  let routeData ="https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl;
-                  window.open(routeData, '_blank');
+                  // let routeData ="https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl;
+                  // window.open(routeData, '_blank');
               }
               this.File=null;
               //添加到信息列表，以便展示信息
@@ -419,12 +419,9 @@ export default {
     handleFile(event){
       this.ff=1;
       let data = event.target.files[0];
-      if ((/.jpg|.jpeg|.png|.img/ig.test(data.name))&&data.size > 65530) {
-        this.$message("图片太大，请转换为文件上传")
-        return
-      }
+
       let toId = this.$route.params.friendId;
-      if(/.jpg|.jpeg|.png|.img/ig.test(data.name)){
+      if((/.jpg|.jpeg|.png|.img/ig.test(data.name))&&data.size < 65530){
         //处理图片
         let me = this;
         //方式二：filereader

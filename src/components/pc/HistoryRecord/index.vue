@@ -2,7 +2,7 @@
     <el-container lang="scss">
         <el-main style="background-color:rgb(255,255,255)">
             <div v-for="(item, ind) in historyMessageList" :key="ind">
-                 <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName"></FriendItem>
+                 <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" ></FriendItem>
                  <MyItem v-else :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
             </div>
         </el-main>
@@ -36,15 +36,32 @@ export default {
         getSingleHistoryReadList(this.$route.params.toId, this.userId).then(response =>{
             let hist = response.data.data;
             for (let i = 0; i < hist.length; i++) {
-               let t = {fromUser:{
+            console.log("有时间吗",hist[i]);
+
+
+            if(hist[i].fromUserId==this.userId && hist[i].type==2){
+                console.log("自己的文件",JSON.parse(hist[i].content));
+                let t = {fromUser:{
+                  id: hist[i].fromUserId,
+                  avatar: hist[i].fromAvatar,
+                  nickName: hist[i].fromName
+                  },
+                  message: JSON.parse(hist[i].content),
+                  id:hist[i].type
+               }
+               this.historyMessageList.push(t)
+            }else{
+                let t = {fromUser:{
                   id: hist[i].fromUserId,
                   avatar: hist[i].fromAvatar,
                   nickName: hist[i].fromName
                   },
                   message: hist[i].content,
                   id:hist[i].type
-               }
-               this.historyMessageList.push(t)
+                }
+                this.historyMessageList.push(t)
+            }
+
             }
         }).catch();
       },

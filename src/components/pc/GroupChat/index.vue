@@ -170,6 +170,7 @@ export default {
       this.multipleSelection = val;
     },
     getGroupMember(){
+      this.groupFriend = [];
       getMyGroupChatPerson(this.form.groupId)
       .then(res =>{
         console.log("群成员信息", res);
