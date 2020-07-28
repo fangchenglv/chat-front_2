@@ -5,6 +5,11 @@ import store from "../../stores"
 
 Vue.use(Router)
 
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}
+
 let router = new Router({
   routes: [
     //登录页

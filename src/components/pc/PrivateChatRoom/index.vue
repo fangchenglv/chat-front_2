@@ -265,7 +265,7 @@ export default {
                   "toUser":{"id":this.$store.getters.userId,
                             "nickName":this.$store.getters.userNickname,
                             },
-                  "message":dat.content,
+                  "message":JSON.parse(dat.content),
                   "id": msgId
                   };
                   console.log("这里能下载吗", "https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl);
@@ -359,7 +359,7 @@ export default {
                         "nickName":this.$store.getters.userNickname, 
 
                         }, 
-              "message":data.name,
+              "message":data.content,
               "id": msgId
             };
           }
@@ -373,12 +373,12 @@ export default {
                         "nickName": this.$route.params.name,
 
                         }, 
-              "message":data.name,
+              "message":data.content,
               "id": msgId
             };
           }
         } else {
-        console.log("汪2");
+
                   msgId = 2;
                   if (data.fromUserId === this.friendId) {
                     param = {
@@ -390,10 +390,10 @@ export default {
                                 "nickName":this.$store.getters.userNickname,
 
                                 },
-                      "message":data.name,
+                      "message":JSON.parse(data.content),
                       "id": msgId
                     };
-
+                  console.log("嘿1",JSON.parse(data.content));
                   }
                   else {
                     param = {
@@ -405,9 +405,10 @@ export default {
                                 "nickName": this.$route.params.name,
 
                                 },
-                      "message":data.name,
+                      "message":JSON.parse(data.content),
                       "id": msgId
                     };
+                    console.log("嘿2",JSON.parse(data.content));
                   }
 
 
@@ -574,16 +575,21 @@ export default {
               t.fromUser = data.fromUser;
               t.message = data.message;
               t.id = 0;
+              console.log("消息未读",t)
             }
             //要是未读信息是图片咋整
             else if (data.type == "1") {
               t.fromUser = data.fromUser;
               t.message = data.message;
               t.id = 1;
+              console.log("图片未读",t)
             }
             //要是未读消息的文件
             else if(data.type == "2") {
-              //只能先留口子
+              t.fromUser = data.fromUser;
+              t.message = data.message;
+              t.id = 2;
+              console.log("文件未读",t)
             }
 
             if(!this.messageList){
