@@ -5,6 +5,11 @@
       </div>
       <div v-if="messageid === 0"  class="message">{{msg}}</div>
       <img v-if="messageid === 1" :src="msg" alt="图片加载失败" class="pic">
+      <div v-if="messageid== 2"  class="file" >
+        <a   title="文件" target="_blank" v-bind:href="['https://65.49.204.236/group1/'+msg.fileUrl]">
+          <p  class="filename"> 文件：{{JSON.parse(messages).fileName}} </p>
+        </a>
+      </div>
   </div>
 </template>
 
@@ -17,6 +22,17 @@
         messages:this.msg,
       }
     },
+    mounted(){
+      if (this.messageid == 2) {
+        console.log("！！！！！！！要发送的文件部分",this.messages)
+        this.init()
+      }
+    },
+    methods: {
+      init(){
+
+      }
+    }
 
   }
 </script>
@@ -40,7 +56,8 @@
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;
-    text-align:left
+    text-align:left;
+    /*background-color: #07c160;*/
   }
   .pic{
     display:inline-block;
@@ -49,4 +66,20 @@
     max-width:50%;
     word-wrap:break-word;word-break:break-all;float:inherit;text-align:left
   }
+.file{
+  border-radius:4%;
+  background-color: #2e579b;
+  display:inline-block;
+  font-size:0.4rem;
+  margin-right:0.3rem;
+  margin-top:0rem;
+  max-width:50%;
+  word-wrap:break-word;
+  word-break:break-all;
+  float:inherit;
+  text-align:left
+}
+.filename{
+  color: #fdfff8 ;
+}
 </style>

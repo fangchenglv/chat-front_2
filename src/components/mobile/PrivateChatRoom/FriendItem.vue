@@ -6,8 +6,8 @@
   <div v-if="messageid === 0"  class="message">{{msg}}</div>
   <img v-if="messageid === 1" :src="msg" alt="图片加载失败"  class="pic"/>
   <div v-if="messageid== 2"  class="file" >
-    <a    target="_blank" v-bind:href="['https://oixrkrhw5prsi53uh4j2itw2h3upq7q3kii6ywcl5yboyaw4pab66oqd.onion:80/group1/'+msg.fileUrl]">
-      <pre > 文件：{{msg.fileName}} </pre>
+    <a  title="文件"  target="_blank" v-bind:href="['https://65.49.204.236/group1/'+msg.fileUrl]">
+      <p  class="filename"> 文件：{{msg.fileName}} </p>
     </a>
   </div>
 
@@ -49,7 +49,7 @@
     margin-right: 0.2rem
   }
   p{color: #0c0c0c ;margin-top:0.39rem}
-  pre{color: #fdfff8}
+  /*pre{color: #fdfff8}*/
   .message{
     display:inline-block;
     font-size:0.5rem;
@@ -81,5 +81,8 @@
     word-break:break-all;
     float:inherit;
     text-align:left
+  }
+  .filename{
+    color: #fdfff8
   }
 </style>
