@@ -39,7 +39,7 @@ export default {
             console.log("有时间吗",hist[i]);
 
 
-            if(hist[i].fromUserId==this.userId && hist[i].type==2){
+            if( hist[i].type==2){
                 console.log("自己的文件",JSON.parse(hist[i].content));
                 let t = {fromUser:{
                   id: hist[i].fromUserId,

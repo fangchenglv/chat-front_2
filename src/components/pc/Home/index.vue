@@ -51,6 +51,7 @@ export default {
     init(){
       this.privateUnreadNumber = this.$websocket.state.privateUnreadNumber;
       this.groupUnreadNumber = this.$websocket.state.groupUnreadNumber;
+      console.log("单聊未读数",this.privateUnreadNumber,"群聊未读数",this.groupUnreadNumber);
       this.$store.dispatch("GetMyFriendList", this.$store.getters.userId)
         .then(response => {
           let friend = this.$store.getters.allFriend;
@@ -70,8 +71,10 @@ export default {
         });
     },
     parpareLeaveData(){
+    console.log("未读朋友",this.unreadLeaveFriend.length);
       if(this.unreadLeaveFriend.length > 0){
         for (let i = 0; i < this.unreadLeaveFriend.length; i++) {
+        console.log("未读对象",this.unreadLeaveFriend[i].fromUser);
           if (this.unreadLeaveFriend[i].fromUser == undefined) {
             if (this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] > 0) {
               this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] = this.unreadLeaveFriend[i].count + this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id];

@@ -114,7 +114,7 @@ export default {
     init(){
       this.$websocket.state.groupUnreadNumber[this.groupId] = null;
       this.$websocket.dispatch("StartChatId", [this.groupId, "group"]);
-      this.getUnreadList(this.$store.getters.userId, this.groupId);
+      this.getUnreadList(""+this.$store.getters.userId, ""+this.$route.params.groupId);
       this.websockOnMessage();
     },
     showProcess(){
@@ -235,7 +235,7 @@ websockOnMessage(){
                   "toUser":{"id":+dat.fromUserId,
                              "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
                             },
-                  "message":dat.content,
+                  "message":JSON.parse(dat.content),
                   "id": msgId
                   };
                   console.log("这里能下载吗", "https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl);
@@ -456,6 +456,7 @@ websockOnMessage(){
 
     ParparePrivateChatMessage(){
       //初始化数据吧
+
       if (this.currendStartChatList.length <= 0) {
         return ;
       }
@@ -463,10 +464,11 @@ websockOnMessage(){
       this.currendStartChatList.forEach(data => {
         if(data.type === "GROUP_SENDING"){
           msgId = 0;
-          if (+data.fromUserId === +this.userId) {
+
+          if (data.fromUserId === this.userId) {
             param = {
-              "fromUser":{"id":this.$store.getters.userId,
-                          "nickName":this.$store.getters.userNickname,
+              "fromUser":{"id":""+this.$store.getters.userId,
+                          "nickName":""+this.$store.getters.userNickname,
                           },
               "message":data.content,
               "id": msgId
@@ -507,7 +509,7 @@ websockOnMessage(){
               "fromUser":{"id":this.$store.getters.userId,
                           "nickName":this.$store.getters.userNickname,
                           },
-              "message":data.name,
+              "message":JSON.parse(data.content),
               "id": msgId
             };
           } else {
@@ -515,17 +517,20 @@ websockOnMessage(){
               "toUser": {"id":+data.fromUserId,
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName,
                           },
-              "message":data.name,
+              "message":JSON.parse(data.content),
               "id": msgId
             };
            }
-          this.messageList.push(param);
+
         }
+        this.messageList.push(param);
       })
     },
     getUnreadList(fromId, toId){
+    console.log("????",fromId, toId)
       getUnreadGroupMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
+        console.log("有消息未读吗",response)
         if (this.unreadLeaveFriend.length > 0) {
           for (let i = 0; i < this.unreadLeaveFriend.length; i++) {
             if (this.unreadLeaveFriend[i].groupDO !== null && this.unreadLeaveFriend[i].groupDO.id == this.groupId) {
@@ -535,6 +540,7 @@ websockOnMessage(){
             }
           }
         }
+
         if(this.unreadList.length > 0){
           this.unreadList.forEach((data) =>{
             let t = {};
