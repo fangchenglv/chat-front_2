@@ -498,7 +498,7 @@ export default {
                 "id": this.$store.getters.userId,
                 "nickName": this.$store.getters.userNickname,
               },
-              "message": data.name,
+              "message": JSON.parse(data.content),
               "id": msgId
             };
           } else {
@@ -507,7 +507,7 @@ export default {
                 "id": +data.fromUserId,
                 "nickName": this.newGroupFriend[+data.fromUserId].friendName,
               },
-              "message": data.name,
+              "message": JSON.parse(data.content),
               "id": msgId
             };
           }

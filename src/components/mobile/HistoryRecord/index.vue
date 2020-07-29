@@ -47,18 +47,18 @@ export default {
         let hist = response.data.data;
         for (let i = 0; i < hist.length; i++) {
           console.log("有时间吗",hist[i]);
-          // if( hist[i].type==2){
-          //   console.log("自己的文件",JSON.parse(hist[i].content));
-          //   let t = {fromUser:{
-          //       id: hist[i].fromUserId,
-          //       // avatar: hist[i].fromAvatar,
-          //       nickName: hist[i].fromName
-          //     },
-          //     message: JSON.parse(hist[i].content),
-          //     id:hist[i].type
-          //   }
-          //   this.historyMessageList.push(t)
-          // }else{
+          if( hist[i].type==2){
+            console.log("自己的文件",JSON.parse(hist[i].content));
+            let t = {fromUser:{
+                id: hist[i].fromUserId,
+                // avatar: hist[i].fromAvatar,
+                nickName: hist[i].fromName
+              },
+              message: JSON.parse(hist[i].content),
+              id:hist[i].type
+            }
+            this.historyMessageList.push(t)
+          }else{
             let t = {fromUser:{
                 id: hist[i].fromUserId,
                 nickName: hist[i].fromName
@@ -68,7 +68,7 @@ export default {
             }
             this.historyMessageList.push(t)
           }
-          // }
+          }
 
         }).catch((error) => {
           console.log("1111",error);

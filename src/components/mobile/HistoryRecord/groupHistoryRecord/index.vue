@@ -46,6 +46,17 @@ export default {
         getGroupHistoryReadList(this.groupId).then(response =>{
             let hist = response.data.data;
             for (let i = 0; i < hist.length; i++) {
+              if( hist[i].type==2){
+                let t = {toUser:{
+                    id: hist[i].userId,
+                    avatar: hist[i].fromAvatar,
+                    nickName: hist[i].fromName
+                  },
+                  message: JSON.parse(hist[i].content),
+                  id:hist[i].type
+                }
+                this.historyMessageList.push(t)
+              }else{
               let t = { toUser:{
                         id: hist[i].userId,
                         nickName: hist[i].fromName
@@ -54,6 +65,7 @@ export default {
                         id:hist[i].type
                       }
               this.historyMessageList.push(t)
+            }
             }
         }).catch();
       },

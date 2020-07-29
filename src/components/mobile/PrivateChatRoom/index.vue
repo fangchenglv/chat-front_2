@@ -253,7 +253,8 @@ export default {
                     "toUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
                     },
-                    "message":dat.content,
+                    // "message":dat.content,
+                    "message":JSON.parse(dat.content),
                     "id": msgId
                   };
                 }
@@ -370,9 +371,11 @@ export default {
               "toUser":{"id":this.$store.getters.userId,
                 "nickName":this.$store.getters.userNickname,
               },
-              "message":data.content,
+              // "message":data.content,
+              "message":JSON.parse(data.content),
               "id": msgId
             };
+            console.log("嘿1",JSON.parse(data.content));
           }
           else {
             param = {
@@ -382,9 +385,11 @@ export default {
               "toUser":{"id":this.$route.params.friendId,
                 "nickName": this.$route.params.name,
               },
-              "message":data.content,
+              // "message":data.content,
+              "message":JSON.parse(data.content),
               "id": msgId
             };
+            console.log("嘿2",JSON.parse(data.content));
           }
         }
         this.messageList.push(param);
@@ -565,9 +570,10 @@ export default {
             //要是未读消息的文件
             else if(data.type == "2") {
               //只能先留口子
-              // t.fromUser = data.fromUser;
-              // t.message = data.message;
-              // t.id = 2;
+              t.fromUser = data.fromUser;
+              t.message = data.message;
+              t.id = 2;
+              console.log("文件未读",t)
             }
             if(!this.messageList){
               this.messageList = [t];

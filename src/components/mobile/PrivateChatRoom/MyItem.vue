@@ -8,7 +8,8 @@
     <img v-if="messageid === 1" :src="msg" alt="图片加载失败" class="pic"/>
     <div v-if="messageid== 2" class="file" >
       <a  title="文件" target="_blank" v-bind:href="['https://65.49.204.236/group1/'+msg.fileUrl]"  >
-        <p class="filename"> 文件：{{data = JSON.parse(messages).fileName}} </p>
+<!--        <p class="filename"> 文件：{{data = JSON.parse(messages).fileName}} </p>-->
+        <p class="filename"> 文件：{{messages.fileName}} </p>
       </a>
     </div>
   </div>
