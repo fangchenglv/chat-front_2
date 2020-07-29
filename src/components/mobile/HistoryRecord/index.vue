@@ -46,15 +46,30 @@ export default {
       getSingleHistoryReadList(this.$store.getters.userId, this.$route.params.toId).then(response =>{
         let hist = response.data.data;
         for (let i = 0; i < hist.length; i++) {
-          let t = {fromUser:{
-              id: hist[i].fromUserId,
-              nickName: hist[i].fromName
-            },
-            message: hist[i].content,
-            id:hist[i].type
+          console.log("有时间吗",hist[i]);
+          // if( hist[i].type==2){
+          //   console.log("自己的文件",JSON.parse(hist[i].content));
+          //   let t = {fromUser:{
+          //       id: hist[i].fromUserId,
+          //       // avatar: hist[i].fromAvatar,
+          //       nickName: hist[i].fromName
+          //     },
+          //     message: JSON.parse(hist[i].content),
+          //     id:hist[i].type
+          //   }
+          //   this.historyMessageList.push(t)
+          // }else{
+            let t = {fromUser:{
+                id: hist[i].fromUserId,
+                nickName: hist[i].fromName
+              },
+              message: hist[i].content,
+              id:hist[i].type
+            }
+            this.historyMessageList.push(t)
           }
-          this.historyMessageList.push(t)
-        }
+          // }
+
         }).catch((error) => {
           console.log("1111",error);
         });

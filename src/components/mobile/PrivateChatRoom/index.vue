@@ -33,7 +33,7 @@
               <van-uploader accept="image/gif,image/jpeg,image/jpg,image/png" :before-read="beforeReadImg" :after-read="afterReadImg">
                 <van-button type="primary" plain class="file-sending">图片</van-button>
               </van-uploader >
-              <van-uploader accept=".xls,.doc,.txt,.pdf" result-type="dataUrl" :before-read="beforeReadFile" :after-read="afterReadFile">
+              <van-uploader accept=".xls,.doc,.txt,.pdf,.gif,.jpeg,.jpg,.png" result-type="dataUrl" :before-read="beforeReadFile" :after-read="afterReadFile">
                 <van-button type="primary" plain class="file-sending">文件</van-button>
               </van-uploader >
               <van-button block type="info" @click="onConfirm" plain>返回</van-button>
