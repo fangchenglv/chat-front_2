@@ -38,7 +38,7 @@
     <el-dialog title="添加新群成员" :visible.sync="dialogTableVisible" >
       <el-table
         border
-        :data="groupFriend"
+        :data="allgroupFriend"
         tooltip-effect="dark"
         @selection-change="handleSelectionChange">
         <el-table-column
@@ -93,7 +93,8 @@ export default {
         groupId:undefined,
       },
       myId:this.$store.getters.userId,
-      groupFriend:this.$store.getters.allFriend,
+      allgroupFriend:this.$store.getters.allFriend,
+      groupFriend :[],
       multipleSelection: [],
       
     }
@@ -145,6 +146,7 @@ export default {
       }
     },
     appendGroupMember(){
+    console.log("有几个小朋友",this.multipleSelection.length)
       if(this.multipleSelection.length === 0){
         return;
       }
