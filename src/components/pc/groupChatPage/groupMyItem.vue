@@ -1,5 +1,7 @@
 <template>
    <div lang="scss" style="float:right; width:100%; margin-bottom:0.1rem">
+      <div style="display:inline-block;font-size:0.3rem;margin-right:1.5rem;max-width:50%;word-wrap:break-word;word-break:break-all;float:inherit;text-align:left;line-height:1rem;color:#778899	">{{time}}</div>
+      <br><br><br><br>
     <div class="demo-type" style="float:right;width: 1rem;height: 1rem;">
       <div>
         <el-avatar > {{name}} </el-avatar>
@@ -15,7 +17,7 @@
 <script>
 export default {
   name: 'my-item',
-  props: ["messageid", 'me', 'name', 'img', 'msg'],
+  props: ["messageid", 'me', 'name', 'img', 'msg','time'],
   data(){
         return {
 

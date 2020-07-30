@@ -1,5 +1,9 @@
 <template>
   <div lang="scss" style="float:left; width:100%; margin-bottom:0.1rem">
+<br>
+  <div style="display:inline-block; font-size:0.3rem;margin-left:1.5rem;max-width:50%;word-wrap:break-word;word-break:break-all;float:inherit;text-align:left;line-height:2.5em;color:#778899">
+            {{time}}
+          </div><br><br><br>
     <div class="demo-type" style="float:left;width: 1rem;height:1rem;">
       <div>
         <el-avatar > {{name}} </el-avatar>
@@ -17,7 +21,7 @@
 <script>
 export default {
   name: 'friend-item',
-  props: ['messageid', 'me', 'name', 'img', 'msg'], 
+  props: ['messageid', 'me', 'name', 'img', 'msg','time'],
   data(){
     return{
       messages:this.msg,

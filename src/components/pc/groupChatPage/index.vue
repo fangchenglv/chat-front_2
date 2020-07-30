@@ -14,8 +14,8 @@
             <a v-if="this.fileUpload.enableRead == true">传输中</a>
           </div>
       <div v-for="(item, ind) in this.messageList" :key="ind">
-          <GroupFriendItem v-if="item.toUser" :messageid="item.id" :img="item.toUser.avatar" :msg="item.message" :name="item.toUser.nickName"></GroupFriendItem>
-          <GroupMyItem v-else :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File"></GroupMyItem>
+          <GroupFriendItem v-if="item.toUser" :messageid="item.id" :img="item.toUser.avatar" :msg="item.message" :name="item.toUser.nickName":time="item.time"></GroupFriendItem>
+          <GroupMyItem v-else :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File":time="item.time"></GroupMyItem>
       </div>
     </el-main>
 
@@ -215,7 +215,8 @@ websockOnMessage(){
                           "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
                           },
                 "message":dat.content,
-                "id": msgId
+                "id": msgId,
+                "time":dat.time,
               };
             }
             else if (data.data.type === "GROUP_SENDING_IMG"){
@@ -226,7 +227,8 @@ websockOnMessage(){
                           "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
                           },
                 "message":dat.content,
-                "id": msgId
+                "id": msgId,
+                "time":dat.time,
               };
             } else {
                 let dat = data.data;
@@ -236,7 +238,8 @@ websockOnMessage(){
                              "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
                             },
                   "message":JSON.parse(dat.content),
-                  "id": msgId
+                  "id": msgId,
+                  "time":dat.time,
                   };
                   console.log("这里能下载吗", "https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl);
                   // let routeData ="https://65.49.204.236/group1/"+JSON.parse(dat.content).fileUrl;
@@ -362,18 +365,34 @@ websockOnMessage(){
         this.$message.error("输入信息不能为空");
         return
       }
+          var date=new Date();
+      	  //年
+          var year=date.getFullYear();
+          //月
+          var month=date.getMonth()+1;
+          //日
+          var day=date.getDate();
+          //时
+          var hh=date.getHours();
+          //分
+          var mm=date.getMinutes();
+          //秒
+          var ss=date.getSeconds();
+          var rq=year+"-"+month+"-"+day+" "+hh+":"+mm+":"+ss;
       if(this.imageFile !== ""){
         data = {                    
           "fromUserId" : ""+this.userId,
           "toGroupId" : ""+this.groupId,
           "content" : ""+this.imageFile,
-          "type" : "GROUP_SENDING_IMG"
+          "type" : "GROUP_SENDING_IMG",
+          "time":""+rq,
         };
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
                       },
           "message":this.imageFile,
+          "time":rq,
           "id": 1
         };
         this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.groupId])
@@ -387,13 +406,15 @@ websockOnMessage(){
           "fromUserId" : ""+this.userId,
           "toGroupId" : ""+this.groupId,
           "content" : ""+this.message,
-          "type" : "GROUP_SENDING"
+          "type" : "GROUP_SENDING",
+          "time":""+rq,
         };
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
                       },
           "message":this.message,
+          "time":rq,
           "id": 0
         };
          this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.groupId])
@@ -419,7 +440,8 @@ websockOnMessage(){
                       "fileSize": this.File.size,
                       "fileUrl": fileUrl
                     }),
-        "type" : "FILE_MSG_GROUP_SENDING"
+        "type" : "FILE_MSG_GROUP_SENDING",
+        "time":""+rq,
       };
       let param = {
         "fromUser":{"id":this.$store.getters.userId,
@@ -431,7 +453,9 @@ websockOnMessage(){
                     "fileSize": this.File.size,
                     "fileUrl": fileUrl
                   },
-        "id": 2
+
+        "id": 2,
+        "time":rq,
       };
       this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.groupId]);
       this.currendStartChatList.push(data);
@@ -464,14 +488,15 @@ websockOnMessage(){
       this.currendStartChatList.forEach(data => {
         if(data.type === "GROUP_SENDING"){
           msgId = 0;
-
-          if (data.fromUserId === this.userId) {
+      console.log("data.fromUserId",data.fromUserId,"this.userId",this.userId,data.content);
+          if (""+data.fromUserId === ""+this.userId) {
             param = {
               "fromUser":{"id":""+this.$store.getters.userId,
                           "nickName":""+this.$store.getters.userNickname,
                           },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           }
           else {
@@ -480,18 +505,20 @@ websockOnMessage(){
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
                           },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           }
         } else if (data.type === "GROUP_SENDING_IMG"){
           msgId = 1;
-          if (+data.fromUserId === +this.userId) {
+          if (""+data.fromUserId ==="" +this.userId) {
             param = {
               "fromUser":{"id":this.$store.getters.userId,
                           "nickName":this.$store.getters.userNickname,
                           },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           } else {
             param = {
@@ -499,18 +526,20 @@ websockOnMessage(){
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName, 
                           },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           }
         }else {
           msgId = 2;
-          if (+data.fromUserId === +this.userId) {
+          if (""+data.fromUserId ==="" +this.userId) {
           param = {
               "fromUser":{"id":this.$store.getters.userId,
                           "nickName":this.$store.getters.userNickname,
                           },
               "message":JSON.parse(data.content),
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           } else {
             param = {
@@ -518,7 +547,8 @@ websockOnMessage(){
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName,
                           },
               "message":JSON.parse(data.content),
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
            }
 
@@ -548,16 +578,22 @@ websockOnMessage(){
               t.toUser = data.fromUser;
               t.message = data.message;
               t.id = 0;
+              t.time=data.time;
             }
             //要是未读信息是图片咋整
             else if (data.type == "1") {
               t.toUser = data.fromUser;
               t.message = data.message;
               t.id = 1;
+              t.time=data.time;
             }
             //要是未读消息的文件
             else if(data.type == "2") {
-              //只能先留口子
+              t.fromUser = data.fromUser;
+              t.message = data.message;
+              t.id = 2;
+              t.time=data.time;
+              console.log("文件未读",t)
             }
             if(!this.messageList){
               this.messageList = [t]; 
