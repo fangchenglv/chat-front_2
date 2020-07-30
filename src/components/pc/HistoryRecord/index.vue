@@ -2,8 +2,8 @@
     <el-container lang="scss">
         <el-main style="background-color:rgb(255,255,255)">
             <div v-for="(item, ind) in historyMessageList" :key="ind">
-                 <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" ></FriendItem>
-                 <MyItem v-else :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName"></MyItem>
+                 <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id" :img="item.fromUser.avatar" me="true" :msg="item.message" :name="item.fromUser.nickName" :time="item.time":filea="item.File" ></FriendItem>
+                 <MyItem v-else :messageid="item.id" :img="item.fromUser.avatar" :msg="item.message" :name="item.fromUser.nickName" :time="item.time"></MyItem>
             </div>
         </el-main>
     </el-container>
@@ -46,6 +46,7 @@ export default {
                   avatar: hist[i].fromAvatar,
                   nickName: hist[i].fromName
                   },
+                  time:hist[i].sendTime,
                   message: JSON.parse(hist[i].content),
                   id:hist[i].type
                }
@@ -56,6 +57,7 @@ export default {
                   avatar: hist[i].fromAvatar,
                   nickName: hist[i].fromName
                   },
+                  time:hist[i].sendTime,
                   message: hist[i].content,
                   id:hist[i].type
                 }
