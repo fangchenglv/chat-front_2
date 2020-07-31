@@ -63,14 +63,14 @@ export default {
             this.allFriend[friend[i].friendId] = friend[i];
           }
           this.$store.dispatch("GetMyGroupList", this.$store.getters.userId)
-            .then(res => {
+        .then(res => {
               let group = this.$store.getters.myGroupChat;
               for (let i = 0; i < group.length; i++) {
                 this.allGroup[group[i].id] = group[i];
               }
               this.parpareLeaveData();
-            }).catch(err => {
-            })
+        }).catch(err => {
+          })
         }).catch(error => {
         });
 
@@ -80,7 +80,9 @@ export default {
       if(this.unreadLeaveFriend.length > 0){
         for (let i = 0; i < this.unreadLeaveFriend.length; i++) {
         console.log("未读对象",this.unreadLeaveFriend[i].fromUser);
+
           if (this.unreadLeaveFriend[i].fromUser == undefined) {
+           console.log("没有群对象吗");
             if (this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] > 0) {
               this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id] = this.unreadLeaveFriend[i].count + this.groupUnreadNumber[this.unreadLeaveFriend[i].groupDO.id];
             } else {

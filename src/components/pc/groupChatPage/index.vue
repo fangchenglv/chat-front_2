@@ -431,6 +431,20 @@ websockOnMessage(){
       this.websockOnMessage();
     },
     sendFile(fileUrl){
+          var date=new Date();
+      	  //年
+          var year=date.getFullYear();
+          //月
+          var month=date.getMonth()+1;
+          //日
+          var day=date.getDate();
+          //时
+          var hh=date.getHours();
+          //分
+          var mm=date.getMinutes();
+          //秒
+          var ss=date.getSeconds();
+          var rq=year+"-"+month+"-"+day+" "+hh+":"+mm+":"+ss;
       //文件部分
       let data = {
         "fromUserId" : ""+this.userId,
@@ -589,8 +603,8 @@ websockOnMessage(){
             }
             //要是未读消息的文件
             else if(data.type == "2") {
-              t.fromUser = data.fromUser;
-              t.message = data.message;
+              t.toUser = data.fromUser;
+              t.message = JSON.parse(data.message);
               t.id = 2;
               t.time=data.time;
               console.log("文件未读",t)

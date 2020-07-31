@@ -10,7 +10,8 @@
 
     <div v-if="messageid === 0" style="display:inline-block; font-size:0.4rem;margin-right:0.2rem;max-width:50%;word-wrap:break-word;word-break:break-all;float:inherit;text-align:left;line-height:2.5em">{{msg}}</div>
     <img v-if="messageid === 1" :src="msg" alt="图片加载失败" style="display:inline-block; margin-right:0.2rem;max-width:50%;word-wrap:break-word;word-break:break-all;float:inherit;text-align:left"/>
-     <a v-if="messageid === 2" :src="msg.fileUrl" style="display:inline-block; font-size:0.4rem;margin-right:0.2rem;max-width:50%;word-wrap:break-word;word-break:break-all;float:inherit;text-align:left;line-height:2em;color:#006CA7">{{msg.fileName}}</a>
+     <div v-if="messageid === 2" :src="msg.fileUrl" style="display:inline-block; font-size:0.4rem;margin-right:0.2rem;max-width:50%;word-wrap:break-word;word-break:break-all;float:inherit;text-align:left;line-height:2em;color:#006CA7">
+      <a    target="_blank" v-bind:href="['https://65.49.204.236/group1/'+msg.fileUrl]">{{"文件："+msg.fileName}}</a></div>
   </div>
 </template>
 
