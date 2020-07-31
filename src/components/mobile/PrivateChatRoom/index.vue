@@ -17,8 +17,8 @@
     <!-- 聊天内容主体 -->
     <div id="body">
       <div v-for="(item, ind) in this.messageList" :key="ind">
-        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName" me="true" :filea="item.File"></FriendItem>
-        <MyItem v-else :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" ></MyItem>
+        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName" me="true" :filea="item.File" :time="item.time"></FriendItem>
+        <MyItem v-else :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName" :filea="item.File" :time="item.time" ></MyItem>
       </div>
     </div>
 
@@ -227,7 +227,8 @@ export default {
                     "nickName": this.$store.getters.userNickname,
                   },
                   "message": dat.content,
-                  "id": msgId
+                  "id": msgId,
+                  "time":dat.time,
                 };
               }
               else if (data.data.type === "SINGLE_SENDING_IMG"){
@@ -241,7 +242,8 @@ export default {
                       "nickName":this.$store.getters.userNickname,
                     },
                     "message":dat.content,
-                    "id": msgId
+                    "id": msgId,
+                    "time":dat.time,
                   };
                 } else {
                   let dat = data.data;
@@ -255,7 +257,8 @@ export default {
                     },
                     // "message":dat.content,
                     "message":JSON.parse(dat.content),
-                    "id": msgId
+                    "id": msgId,
+                    "time":dat.time,
                   };
                 }
               //添加到信息列表，以便展示信息
@@ -316,7 +319,8 @@ export default {
                         "nickName":this.$store.getters.userNickname,
                         },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":dat.time,
             };
           }
           else {
@@ -328,7 +332,8 @@ export default {
                         "nickName": this.$route.params.name,
                         },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":dat.time,
             };
           }
         }
@@ -344,7 +349,8 @@ export default {
                         "nickName":this.$store.getters.userNickname,
                         },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":dat.time,
             };
           }
           else {
@@ -356,7 +362,8 @@ export default {
                         "nickName": this.$route.params.name,
                         },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":dat.time,
             };
           }
         }
@@ -373,7 +380,8 @@ export default {
               },
               // "message":data.content,
               "message":JSON.parse(data.content),
-              "id": msgId
+              "id": msgId,
+              "time":dat.time,
             };
             console.log("嘿1",JSON.parse(data.content));
           }
@@ -387,7 +395,8 @@ export default {
               },
               // "message":data.content,
               "message":JSON.parse(data.content),
-              "id": msgId
+              "id": msgId,
+              "time":dat.time,
             };
             console.log("嘿2",JSON.parse(data.content));
           }
@@ -406,12 +415,27 @@ export default {
         });
         return
       }
+      var date=new Date();
+      //年
+      var year=date.getFullYear();
+      //月
+      var month=date.getMonth()+1;
+      //日
+      var day=date.getDate();
+      //时
+      var hh=date.getHours();
+      //分
+      var mm=date.getMinutes();
+      //秒
+      var ss=date.getSeconds();
+      var rq=year+"-"+month+"-"+day+" "+hh+":"+mm+":"+ss;
         if(this.imageFile !== "") {
         data = {
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
           "content": this.imageFile,
-          "type" : "SINGLE_SENDING_IMG"
+          "type" : "SINGLE_SENDING_IMG",
+          "time":""+rq,
         };
         console.log("第五步")
         param = {
@@ -422,7 +446,8 @@ export default {
                     "nickName":this.$route.params.name,
           },
           "message":this.imageFile,
-          "id": 1
+          "id": 1,
+          "time":rq,
         };
           this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId])
             .then(res => {
@@ -434,7 +459,8 @@ export default {
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
           "content" : ""+this.message,
-          "type" : "SINGLE_SENDING"
+          "type" : "SINGLE_SENDING",
+          "time":""+rq,
         };
         param = {
           "fromUser":{"id":this.$store.getters.userId,
@@ -444,7 +470,8 @@ export default {
                     "nickName":this.$route.params.name,
           },
           "message":this.message,
-          "id": 0
+          "id": 0,
+          "time":rq,
         };
           this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId])
             .then(res => {
@@ -464,6 +491,20 @@ export default {
       this.websockOnMessage();
     },
     sendFile(fileUrl){
+      var date=new Date();
+      //年
+      var year=date.getFullYear();
+      //月
+      var month=date.getMonth()+1;
+      //日
+      var day=date.getDate();
+      //时
+      var hh=date.getHours();
+      //分
+      var mm=date.getMinutes();
+      //秒
+      var ss=date.getSeconds();
+      var rq=year+"-"+month+"-"+day+" "+hh+":"+mm+":"+ss;
       //文件部分
       let data = {
         "fromUserId" : ""+this.userId,
@@ -473,7 +514,8 @@ export default {
           "fileSize": this.File.size,
           "fileUrl": fileUrl
         }),
-        "type" : "FILE_MSG_SINGLE_SENDING"
+        "type" : "FILE_MSG_SINGLE_SENDING",
+        "time":""+rq,
       };
       let param = {
         "fromUser":{"id":this.$store.getters.userId,
@@ -560,12 +602,14 @@ export default {
               t.fromUser = data.fromUser;
               t.message = data.message;
               t.id = 0;
+              t.time=data.time;
             }
             //要是未读信息是图片咋整
             else if (data.type == "1") {
               t.fromUser = data.fromUser;
               t.message = data.message;
               t.id = 1;
+              t.time=data.time;
             }
             //要是未读消息的文件
             else if(data.type == "2") {
@@ -574,6 +618,7 @@ export default {
               t.message = data.message;
               t.id = 2;
               console.log("文件未读",t)
+              t.time=data.time;
             }
             if(!this.messageList){
               this.messageList = [t];

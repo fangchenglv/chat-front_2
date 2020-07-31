@@ -1,5 +1,10 @@
 <template>
-<div class="private-friend" >
+<div class="private-friend"  >
+  <div >
+    <div  class="time">{{time}}</div>
+  </div>
+
+  <div class="demo-type" >
   <div class="friend">
     <p >{{name}}</p>
   </div>
@@ -10,14 +15,15 @@
       <p  class="filename"> 文件：{{msg.fileName}} </p>
     </a>
   </div>
-
+  </div>
 </div>
+
 </template>
 
 <script>
   export default {
     name: 'my-item',
-    props: ["messageid", 'me', 'name', 'img', 'msg'],
+    props: ["messageid", 'me', 'name', 'img', 'msg','time'],
     data(){
       return{
         messages:this.msg,
@@ -37,6 +43,9 @@
   }
 </script>
 <style lang="scss" scoped>
+  .demo-type{
+    float:right
+  }
   .private-friend{
     float:right; width:100%; margin-bottom:0.1rem
   }
@@ -63,7 +72,8 @@
   }
   .pic{
     display:inline-block;
-    margin-right:0.2rem;max-width:50%;
+    margin-right:0.2rem;
+    max-width:50%;
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;
@@ -84,5 +94,19 @@
   }
   .filename{
     color: #fdfff8
+  }
+  .time{
+    display:inline-block;
+    font-size:0.3rem;
+    /*margin-right:1rem;*/
+    max-width:97%;
+    word-wrap:break-word;
+    word-break:break-all;
+    float:inherit;
+    text-align:right;
+    line-height:1rem;
+    /*margin-left: auto;*/
+    width: 100%;
+    color:#778899;
   }
 </style>

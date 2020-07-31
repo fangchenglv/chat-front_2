@@ -544,6 +544,11 @@ export default {
             //要是未读消息的文件
             else if(data.type == "2") {
               //只能先留口子
+              t.fromUser = data.fromUser;
+              t.message = data.message;
+              t.id = 2;
+              // t.time=data.time;
+              console.log("文件未读",t)
             }
             if(!this.messageList){
               this.messageList = [t];

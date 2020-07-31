@@ -10,8 +10,8 @@
     <!-- 聊天内容主体 -->
     <div id="body">
       <div v-for="(item,ind) in this.historyMessageList" :key="ind">
-        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName" me="true" ></FriendItem>
-        <MyItem v-else :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName"></MyItem>
+        <FriendItem v-if="item.fromUser.id == userId" :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName" me="true" :time="item.time"></FriendItem>
+        <MyItem v-else :messageid="item.id"  :msg="item.message" :name="item.fromUser.nickName":time="item.time"></MyItem>
       </div>
     </div>
 
@@ -55,7 +55,8 @@ export default {
                 nickName: hist[i].fromName
               },
               message: JSON.parse(hist[i].content),
-              id:hist[i].type
+              id:hist[i].type,
+              time:hist[i].sendTime,
             }
             this.historyMessageList.push(t)
           }else{
@@ -64,7 +65,8 @@ export default {
                 nickName: hist[i].fromName
               },
               message: hist[i].content,
-              id:hist[i].type
+              id:hist[i].type,
+              time:hist[i].sendTime,
             }
             this.historyMessageList.push(t)
           }
