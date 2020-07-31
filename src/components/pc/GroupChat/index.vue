@@ -184,7 +184,7 @@ export default {
     		this.$refs.Table.toggleRowSelection(val.pop())
     	} else {
     	}
-
+      this.multipleSelection = val;
     },
     getGroupMember(){
       this.groupFriend = [];

@@ -219,7 +219,7 @@ export default {
 
         }
 
-        console.log("喵dd2",e);
+
         data = JSON.parse(e.data);
           if(data.data.type !== "REGISTER" && data.status === 200){
             if (!data.data.toGroupId && data.data.fromUserId == this.friendId ){
@@ -634,10 +634,10 @@ export default {
             //要是未读消息的文件
             else if(data.type == "2") {
               t.fromUser = data.fromUser;
-              t.message = data.message;
+              t.message = JSON.parse(data.message);
               t.id = 2;
               t.time=data.time;
-              console.log("文件未读",t)
+              console.log("文件未读",data.message)
             }
 
             if(!this.messageList){
