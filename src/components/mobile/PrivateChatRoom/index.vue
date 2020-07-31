@@ -616,7 +616,7 @@ export default {
             else if(data.type == "2") {
               //只能先留口子
               t.fromUser = data.fromUser;
-              t.message = data.message;
+              t.message = JSON.parse(data.message);
               t.id = 2;
               console.log("文件未读",t)
               t.time=data.time;

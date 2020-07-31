@@ -591,7 +591,7 @@ export default {
             else if(data.type == "2") {
               //只能先留口子
               t.toUser = data.fromUser;
-              t.message = data.message;
+              t.message = JSON.parse(data.message);
               t.id = 2;
               t.time=data.time;
               // t.time=data.time;
