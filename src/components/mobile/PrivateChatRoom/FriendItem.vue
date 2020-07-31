@@ -3,7 +3,6 @@
   <div >
     <div  class="time">{{time}}</div>
   </div>
-
   <div class="demo-type" >
   <div class="friend">
     <p >{{name}}</p>
@@ -64,7 +63,7 @@
     font-size:0.5rem;
     margin-right:0.3rem;
     margin-top:0.2rem;
-    max-width:50%;
+    max-width:6rem;
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;
@@ -86,7 +85,7 @@
     font-size:0.4rem;
     margin-right:0.3rem;
     margin-top:0rem;
-    max-width:50%;
+    max-width:6rem;
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;

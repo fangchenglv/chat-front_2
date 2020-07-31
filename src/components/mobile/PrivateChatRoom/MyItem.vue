@@ -82,7 +82,7 @@
     font-size:0.5rem;
     margin-left:0.2rem;
     margin-top:0.3rem;
-    max-width:50%;
+    max-width:6rem;
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;
@@ -95,7 +95,7 @@
     font-size:0.4rem;
     margin-right:0.3rem;
     margin-top:0rem;
-    max-width:50%;
+    max-width:6rem;
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;

@@ -320,7 +320,7 @@ export default {
                         },
               "message":data.content,
               "id": msgId,
-              "time":dat.time,
+              "time":data.time,
             };
           }
           else {
@@ -333,7 +333,7 @@ export default {
                         },
               "message":data.content,
               "id": msgId,
-              "time":dat.time,
+              "time":data.time,
             };
           }
         }
@@ -350,7 +350,7 @@ export default {
                         },
               "message":data.content,
               "id": msgId,
-              "time":dat.time,
+              "time":data.time,
             };
           }
           else {
@@ -363,7 +363,7 @@ export default {
                         },
               "message":data.content,
               "id": msgId,
-              "time":dat.time,
+              "time":data.time,
             };
           }
         }
@@ -381,7 +381,7 @@ export default {
               // "message":data.content,
               "message":JSON.parse(data.content),
               "id": msgId,
-              "time":dat.time,
+              "time":data.time,
             };
             console.log("嘿1",JSON.parse(data.content));
           }
@@ -396,7 +396,7 @@ export default {
               // "message":data.content,
               "message":JSON.parse(data.content),
               "id": msgId,
-              "time":dat.time,
+              "time":data.time,
             };
             console.log("嘿2",JSON.parse(data.content));
           }
@@ -584,6 +584,7 @@ export default {
       this.readBlob();
     },
     getUnreadList(fromId, toId){
+    this.ParparePrivateChatMessage()
       getUnreadMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
         if (this.unreadLeaveFriend.length > 0) {
@@ -627,7 +628,7 @@ export default {
             }
           })
         }
-        this.ParparePrivateChatMessage()
+
       }).catch()
     },
     onClickLeft(){
