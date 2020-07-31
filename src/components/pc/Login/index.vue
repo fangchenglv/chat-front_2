@@ -99,7 +99,7 @@ export default {
               this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg])
               .then((res) =>{
                 this.loading = false;
-                this.$router.replace({ path: "/home" });
+                this.$router.replace({ path: "/solveRequest" });
               })
             })
             .catch(() => {

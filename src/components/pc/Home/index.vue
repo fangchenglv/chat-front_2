@@ -49,6 +49,10 @@ export default {
   },
   methods:{
     init(){
+
+      this.unreadLeaveFriend=this.$store.getters.leaveMessage;
+      this.unreadLeaveFriend=this.$store.getters.leaveMessage;
+          console.log("进来了嘛",this.unreadLeaveFriend.length);
       this.privateUnreadNumber = this.$websocket.state.privateUnreadNumber;
       this.groupUnreadNumber = this.$websocket.state.groupUnreadNumber;
       console.log("单聊未读数",this.privateUnreadNumber,"群聊未读数",this.groupUnreadNumber);
@@ -69,6 +73,7 @@ export default {
             })
         }).catch(error => {
         });
+
     },
     parpareLeaveData(){
     console.log("未读朋友",this.unreadLeaveFriend.length);

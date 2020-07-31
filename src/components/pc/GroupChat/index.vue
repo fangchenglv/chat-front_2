@@ -40,6 +40,7 @@
         border
         :data="allgroupFriend"
         tooltip-effect="dark"
+        ref="Table"
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
@@ -57,7 +58,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="修改群组信息" :visible.sync="dialogFormVisible" :before-close="handleChange">
+    <el-dialog title="修改群组信息" :visible.sync="dialogFormVisible" >
       <el-form :model="form" ref="changeChat">
         <el-form-item label="新的群名" >
           <el-input v-model="form.name" autocomplete="off"></el-input>
@@ -68,7 +69,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="info" plain @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" plain @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" plain @click="handleChange">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -131,11 +132,15 @@ export default {
     },
     handleChange(){
       if(this.form.name.trim() === ""){
+      console.log("没改吧");
         this.init();
         return
+
       } else if (this.form.name.trim() === this.groupDetail.groupName && this.form.descriptor === this.groupDetail.description){
+      console.log("改没改啊");
         return
       } else {
+      console.log("改了吧");
         changeGroupChatInfo(this.form.groupId, this.form.name, this.form.descriptor)
           .then(res => {
             getMyGroupList(this.myId)
@@ -143,6 +148,11 @@ export default {
                 this.$store.dispatch("GetMyGroupChat", res.data.data);
               })
           })
+            this.$message({
+            message: "修改成功",
+            type:"success"
+          })
+
       }
     },
     appendGroupMember(){
@@ -169,7 +179,12 @@ export default {
         })
     },
     handleSelectionChange(val){
-      this.multipleSelection = val;
+    if (val.length > 1) {
+    		this.$refs.Table.clearSelection()
+    		this.$refs.Table.toggleRowSelection(val.pop())
+    	} else {
+    	}
+
     },
     getGroupMember(){
       this.groupFriend = [];
@@ -264,5 +279,8 @@ export default {
   margin-top: 2%;
   background-color: floralwhite;
   border-radius: 0.1rem;
+}
+thead .el-table-column--selection .cell{
+    display: none;
 }
 </style>

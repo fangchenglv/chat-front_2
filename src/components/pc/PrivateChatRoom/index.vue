@@ -119,7 +119,7 @@ export default {
       this.$websocket.state.privateUnreadNumber[this.friendId] = null;
       this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
-      this.websockOnMessage();
+
     },
     //显示结果进度
     showProcess(){
@@ -539,6 +539,20 @@ export default {
       this.websockOnMessage();
     },
     sendFile(fileUrl){
+          var date=new Date();
+      	  //年
+          var year=date.getFullYear();
+          //月
+          var month=date.getMonth()+1;
+          //日
+          var day=date.getDate();
+          //时
+          var hh=date.getHours();
+          //分
+          var mm=date.getMinutes();
+          //秒
+          var ss=date.getSeconds();
+          var rq=year+"-"+month+"-"+day+" "+hh+":"+mm+":"+ss;
       //文件部分
       let data = {
         "fromUserId" : ""+this.userId,
@@ -627,7 +641,8 @@ export default {
             }
 
             if(!this.messageList){
-              this.messageList = [t]; 
+              this.messageList = [t];
+              console.log("咋不读")
             }else{
               this.messageList.push(t);
             }
