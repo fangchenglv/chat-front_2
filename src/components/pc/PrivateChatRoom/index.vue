@@ -602,6 +602,7 @@ export default {
       this.readBlob();
     },
     getUnreadList(fromId, toId){
+    this.ParparePrivateChatMessage()
       getUnreadMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
         if (this.unreadLeaveFriend.length > 0) {
@@ -648,7 +649,7 @@ export default {
             }
           })
         }
-        this.ParparePrivateChatMessage()
+
       }).catch()
     },
   },

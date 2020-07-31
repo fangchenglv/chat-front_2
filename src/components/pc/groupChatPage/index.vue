@@ -571,6 +571,7 @@ websockOnMessage(){
       })
     },
     getUnreadList(fromId, toId){
+    this.ParparePrivateChatMessage()
     console.log("????",fromId, toId)
       getUnreadGroupMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
@@ -616,7 +617,7 @@ websockOnMessage(){
             }
           })
         }
-        this.ParparePrivateChatMessage()
+
       }).catch(err =>{
       })
     },
