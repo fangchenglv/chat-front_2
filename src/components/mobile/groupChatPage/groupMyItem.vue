@@ -1,5 +1,9 @@
 <template>
 <div class="group-me" >
+  <div>
+    <div class="time">{{time}}</div>
+  </div>
+  <div class="demo-type" >
   <div class="me">
     <p >{{name}}</p>
   </div>
@@ -12,12 +16,13 @@
     </a>
   </div>
 </div>
+</div>
 </template>
 
 <script>
   export default {
     name: 'my-item',
-    props: ["messageid", 'me', 'name', 'msg'],
+    props: ["messageid", 'me', 'name', 'msg','time'],
     data(){
       return{
         messages:this.msg,
@@ -38,6 +43,9 @@
 </script>
 
 <style lang="scss" scoped>
+  .demo-type{
+    float:right;
+  }
 .group-me{
   float:right;
   width:100%;
@@ -60,7 +68,7 @@
     font-size:0.5rem;
     margin-right:0.2rem;
     margin-top:0.35rem;
-    max-width:50%;
+    max-width:6rem;
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;
@@ -84,7 +92,7 @@
   font-size:0.4rem;
   margin-right:0.3rem;
   margin-top:0rem;
-  max-width:50%;
+  max-width:6rem;
   word-wrap:break-word;
   word-break:break-all;
   float:inherit;
@@ -93,4 +101,18 @@
 .filename{
   color: #fdfff8 ;
 }
+  .time{
+    display:inline-block;
+    font-size:0.3rem;
+    /*margin-right:1rem;*/
+    max-width:97%;
+    word-wrap:break-word;
+    word-break:break-all;
+    float:inherit;
+    text-align:right;
+    line-height:1rem;
+    /*margin-left: auto;*/
+    width: 100%;
+    color:#778899;
+  }
 </style>

@@ -17,8 +17,8 @@
     <!-- 聊天内容主体 -->
     <div id="body" >
       <div v-for="(item, ind) in this.messageList" :key="ind" >
-        <GroupMyItem v-if="item.fromUser" :messageid="item.id"  me="true" :msg="item.message" :name="item.fromUser.nickName"></GroupMyItem>
-        <GroupFriendItem v-else  :messageid="item.id" :msg="item.message" :name="item.toUser.nickName" ></GroupFriendItem>
+        <GroupMyItem v-if="item.fromUser" :messageid="item.id"  me="true" :msg="item.message" :name="item.fromUser.nickName":time="item.time"></GroupMyItem>
+        <GroupFriendItem v-else  :messageid="item.id" :msg="item.message" :name="item.toUser.nickName" :time="item.time"></GroupFriendItem>
       </div>
     </div>
 
@@ -224,7 +224,8 @@ export default {
                           "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
                           },
                 "message":dat.content,
-                "id": msgId
+                "id": msgId,
+                "time":data.time,
               };
             } else if (data.data.type === "GROUP_SENDING_IMG"){
               let dat = data.data;
@@ -234,7 +235,8 @@ export default {
                   "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
                 },
                 "message":dat.content,
-                "id": msgId
+                "id": msgId,
+                "time":data.time,
               };
             } else {
               // return;
@@ -250,8 +252,9 @@ export default {
                 "toUser":{"id":+dat.fromUserId,
                   "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
                 },
-                "message":dat.content,
-                "id": msgId
+                "message":JSON.parse(dat.content),
+                "id": msgId,
+                "time":data.time,
               };
             }
             //添加到信息列表，以便展示信息
@@ -350,18 +353,34 @@ export default {
         this.$message.error("输入信息不能为空");
         return
       }
+      var date=new Date();
+      //年
+      var year=date.getFullYear();
+      //月
+      var month=date.getMonth()+1;
+      //日
+      var day=date.getDate();
+      //时
+      var hh=date.getHours();
+      //分
+      var mm=date.getMinutes();
+      //秒
+      var ss=date.getSeconds();
+      var rq=year+"-"+month+"-"+day+" "+hh+":"+mm+":"+ss;
       if(this.imageFile !== ""){
         data = {
           "fromUserId" : ""+this.userId,
           "toGroupId" : ""+this.groupId,
           "content" : ""+this.imageFile,
-          "type" : "GROUP_SENDING_IMG"
+          "type" : "GROUP_SENDING_IMG",
+          "time":""+rq,
         };
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
                      },
           "message":this.imageFile,
+          "time":rq,
           "id": 1
         };
         this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId])
@@ -375,13 +394,15 @@ export default {
           "fromUserId" : ""+this.userId,
           "toGroupId" : ""+this.groupId,
           "content" : ""+this.message,
-          "type" : "GROUP_SENDING"
+          "type" : "GROUP_SENDING",
+          "time":""+rq,
         };
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
                      },
           "message":this.message,
+          "time":rq,
           "id": 0
         };
         this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.friendId])
@@ -401,6 +422,20 @@ export default {
       this.websockOnMessage();
     },
     sendFile(fileUrl){
+      var date=new Date();
+      //年
+      var year=date.getFullYear();
+      //月
+      var month=date.getMonth()+1;
+      //日
+      var day=date.getDate();
+      //时
+      var hh=date.getHours();
+      //分
+      var mm=date.getMinutes();
+      //秒
+      var ss=date.getSeconds();
+      var rq=year+"-"+month+"-"+day+" "+hh+":"+mm+":"+ss;
       //文件部分
       let data = {
         "fromUserId" : ""+this.userId,
@@ -410,7 +445,8 @@ export default {
           "fileSize": this.File.size,
           "fileUrl": fileUrl
         }),
-        "type" : "FILE_MSG_GROUP_SENDING"
+        "type" : "FILE_MSG_GROUP_SENDING",
+        "time":""+rq,
       };
       let param = {
         "fromUser":{"id":this.$store.getters.userId,
@@ -422,7 +458,8 @@ export default {
           "fileSize": this.File.size,
           "fileUrl": fileUrl
         },
-        "id": 2
+        "id": 2,
+        "time":rq,
       };
       this.$websocket.dispatch("SendWebsocketMessage", [JSON.stringify( data ), this.groupId]);
       this.currendStartChatList.push(data);
@@ -458,7 +495,8 @@ export default {
                           "nickName":this.$store.getters.userNickname,
                          },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           } else {
             param = {
@@ -466,7 +504,8 @@ export default {
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName,
                         },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           }
         } else if (data.type === "GROUP_SENDING_IMG"){
@@ -478,7 +517,8 @@ export default {
                           "nickName":this.$store.getters.userNickname,
                          },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           } else {
             param = {
@@ -486,7 +526,8 @@ export default {
                           "nickName":this.newGroupFriend[+data.fromUserId].friendName,
                         },
               "message":data.content,
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           }
         }
@@ -499,7 +540,8 @@ export default {
                 "nickName": this.$store.getters.userNickname,
               },
               "message": JSON.parse(data.content),
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           } else {
             param = {
@@ -508,7 +550,8 @@ export default {
                 "nickName": this.newGroupFriend[+data.fromUserId].friendName,
               },
               "message": JSON.parse(data.content),
-              "id": msgId
+              "id": msgId,
+              "time":data.time,
             };
           }
         }
@@ -516,6 +559,7 @@ export default {
       })
     },
     getUnreadList(fromId, toId){
+      this.ParparePrivateChatMessage();
       getUnreadGroupMessageList(fromId, toId).then(response =>{
         this.unreadList = response.data.data;
         if (this.unreadLeaveFriend.length > 0) {
@@ -534,19 +578,22 @@ export default {
               t.toUser = data.fromUser;
               t.message = data.message;
               t.id = 0;
+              t.time=data.time;
             }
             //要是未读信息是图片咋整
             else if (data.type == "1") {
               t.toUser = data.fromUser;
               t.message = data.message;
               t.id = 1;
+              t.time=data.time;
             }
             //要是未读消息的文件
             else if(data.type == "2") {
               //只能先留口子
-              t.fromUser = data.fromUser;
+              t.toUser = data.fromUser;
               t.message = data.message;
               t.id = 2;
+              t.time=data.time;
               // t.time=data.time;
               console.log("文件未读",t)
             }
@@ -557,7 +604,7 @@ export default {
             }
           })
         }
-        this.ParparePrivateChatMessage()
+
       }).catch()
     },
     onClickLeft(){

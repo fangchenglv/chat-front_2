@@ -4,10 +4,6 @@
     <div>
       <div class="time">{{time}}</div>
     </div>
-
-<!--    style="display:inline-block;font-size:0.3rem;margin-right:1.5rem;max-width:50%;word-wrap:break-word;word-break:break-all;float:inherit;text-align:left;line-height:1rem;color:#778899	"-->
-<!--    <br><br><br><br>-->
-<!--    <div class="demo-type" style="float:right;width: 1rem;height: 0.5rem;line-height:2em">-->
     <div class="demo-type" >
     <div class="me">
       <p >{{name}}</p>
@@ -107,14 +103,14 @@
   .time{
     display:inline-block;
     font-size:0.3rem;
-    /*margin-right:1rem;*/
+    margin-right:1rem;
     max-width:97%;
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;
     text-align:left;
     line-height:1rem;
-    /*margin-left: auto;*/
+    margin-left: auto;
     width: 100%;
     color:#778899;
   }

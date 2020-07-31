@@ -1,5 +1,9 @@
 <template>
   <div class="group-friend">
+    <div>
+      <div class="time">{{time}}</div>
+    </div>
+    <div class="demo-type" >
       <div class="friend">
         <p >{{name}}</p>
       </div>
@@ -12,12 +16,13 @@
         </a>
       </div>
   </div>
+  </div>
 </template>
 
 <script>
   export default {
     name: 'friend-item',
-    props: ['messageid', 'me', 'name', 'msg'],
+    props: ['messageid', 'me', 'name', 'msg','time'],
     data(){
       return{
         messages:this.msg,
@@ -39,6 +44,9 @@
 </script>
 
 <style lang="scss" scoped>
+  .demo-type{
+    float:left;
+  }
 .group-friend{
   float:left; width:100%; margin-bottom:0.1rem
 }
@@ -53,7 +61,7 @@
     font-size:0.5rem;
     margin-left:0.2rem;
     margin-top:0.35rem;
-    max-width:50%;
+    max-width:6rem;
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;
@@ -74,7 +82,7 @@
   font-size:0.4rem;
   margin-right:0.3rem;
   margin-top:0rem;
-  max-width:50%;
+  max-width:6rem;
   word-wrap:break-word;
   word-break:break-all;
   float:inherit;
@@ -83,4 +91,18 @@
 .filename{
   color: #fdfff8 ;
 }
+  .time{
+    display:inline-block;
+    font-size:0.3rem;
+    /*margin-right:1rem;*/
+    max-width:97%;
+    word-wrap:break-word;
+    word-break:break-all;
+    float:inherit;
+    text-align:left;
+    line-height:1rem;
+    /*margin-left: auto;*/
+    width: 100%;
+    color:#778899;
+  }
 </style>

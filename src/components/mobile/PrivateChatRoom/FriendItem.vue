@@ -67,7 +67,7 @@
     word-wrap:break-word;
     word-break:break-all;
     float:inherit;
-    text-align:left
+    text-align:left;
   }
   .pic{
     display:inline-block;
