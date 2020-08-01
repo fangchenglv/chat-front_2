@@ -85,6 +85,7 @@ export default {
                 this.$store.dispatch("GetMyGroupChat", res.data.data);
               })
           })
+        this.$toast("修改成功")
       }
     },
     handleCancel(){
