@@ -14,7 +14,7 @@ const token = {
           state.tok = sock;
         }
       } else {
-        this.$router.replace("/login");
+
       }
       
     },
