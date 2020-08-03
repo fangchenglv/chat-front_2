@@ -100,9 +100,16 @@ export default {
       }
     };
     let validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
+      if(value.length<6){
+        callback(new Error("请输入6位及以上包含数字和大写字母、小写字母的密码"));
+      }else if(!(/\d/.test(value))){
+        callback(new Error("请输入6位及以上包含数字和大写字母、小写字母的密码"));
+      }else if(!/[a-z]/.test(value)){
+        callback(new Error("请输入6位及以上包含数字和大写字母、小写字母的密码"));
+      }else if(!(/[A-Z]/.test(value))){
+        callback(new Error("请输入6位及以上包含数字和大写字母、小写字母的密码"));
+      }
+      else {
         callback();
       }
     };
