@@ -54,14 +54,14 @@
       class="user"
       :error-message="errorEmail"
     />
-    <van-field
-      required
-      v-model="phone"
-      label="电话"
-      placeholder="请输入电话号码"
-      class="user"
-      :error-message="errorPhone"
-    />
+<!--    <van-field-->
+<!--      required-->
+<!--      v-model="phone"-->
+<!--      label="电话"-->
+<!--      placeholder="请输入电话号码"-->
+<!--      class="user"-->
+<!--      :error-message="errorPhone"-->
+<!--    />-->
     <div >
       <van-button
         plain
@@ -93,11 +93,11 @@ export default {
       nickname: '',
       gender: '',
       email: '',
-      phone: '',
+      // phone: '',
       loading: false,
       errorPass: '',
       errorEmail:"",
-      errorPhone:"",
+      // errorPhone:"",
     }
   },
   methods:{
@@ -105,27 +105,41 @@ export default {
       this.$router.push({path:'/login'});
     },
     handleResgister(){
-      if(this.username === '' || this.password === '' || this.checkPass === '' || this.nickname === '' || this.gender === '' || this.email === '' || this.phone === ''){
+      if(this.username === '' || this.password === '' || this.checkPass === '' || this.nickname === '' || this.gender === '' || this.email === '' ){
         this.$toast.fail("输入的注册信息不能有空");
         return;
       }
+     if( this.password !== ''){
+        if(this.password.length<6){
+          this.$toast.fail("请输入6位及以上包含数字和大写字母、小写字母的密码");
+        }else if(!(/\d/.test(this.password))){
+          this.$toast.fail("请输入6位及以上包含数字和大写字母、小写字母的密码");
+        }else if(!/[a-z]/.test(this.password)){
+          this.$toast.fail("请输入6位及以上包含数字和大写字母、小写字母的密码");
+        }else if(!(/[A-Z]/.test(this.password))){
+          this.$toast.fail("请输入6位及以上包含数字和大写字母、小写字母的密码");
+        }
+        else {
+          // callback();
+        }
+      };
       if(this.password !== this.checkPass){
         this.errorPass = "两次密码输入值不同，请重新输入";
         this.password = '';
         this.checkPass = '';
         return
       }
-      if(!isvalidPhoneNumber(this.phone)){
-        this.errorPhone = "输入的电话号码格式错误，请重新输入";
-        this.phone = '';
-        return
-      }
+      // if(!isvalidPhoneNumber(this.phone)){
+      //   this.errorPhone = "输入的电话号码格式错误，请重新输入";
+      //   this.phone = '';
+      //   return
+      // }
       if(!isvalidEmail(this.email)){
         this.errorEmail = "输入的邮箱地址不正确，请重新输入";
         this.email = ''
         return
       }
-      this.errorPhone = '';
+      // this.errorPhone = '';
       this.errorPass = '';
       this.errorEmail = '';
       this.loading = true;
@@ -135,7 +149,7 @@ export default {
         this.nickname.trim(),
         this.gender.trim(),
         this.email.trim(),
-        this.phone.trim()
+        // this.phone.trim()
       )
       .then(response => {
         if (response.data.status === "success") {
