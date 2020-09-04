@@ -253,7 +253,7 @@ context.onstatechange = function() {
                 return new Blob([data], { type: 'audio/wav' });
             }
         };
-Date.prototype.Format = function (fmt) { //author: meizz
+Date.prototype.Format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份
         "d+": this.getDate(), //日
@@ -266,6 +266,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (var k in o)
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    console.log("这是一个fmt",fmt);
     return fmt;
 }
 
@@ -282,8 +283,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
             recorder.disconnect();
             //清理缓存音频
             console.log("stoped",audioData.buffer.length)
-
-
+            return audioData.buffer.length;
         };
 
         //获取音频文件
@@ -395,14 +395,24 @@ Date.prototype.Format = function (fmt) { //author: meizz
                 var data=this.recorder.getBlob();
 
                 console.log("data",data);
+                console.log("data.blob",data.blob);
                 var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a')
                 save_link.href = URL.createObjectURL(data.blob);
                 var now=new Date;
                 save_link.download = now.Format("yyyyMMddhhmmss");
                 var ev = document.createEvent('MouseEvents');
                 ev.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                save_link.dispatchEvent(ev);
+                
                 console.log("这是我获得的录音吗",now.Format("yyyyMMddhhmmss"))
+                //发送录音文件
+                this.ff=1
+                console.log("!!!!!!!!!!喵喵喵喵!!!!!!!!!!!",data.blob);
+                console.log("文件file",data.blob)
+                this.File=data.blob;
+                console.log("这是录音文件名字吗",now.Format("yyyyMMddhhmmss")+".wav")
+                this.File.name=now.Format("yyyyMMddhhmmss")+".wav";
+                this.total=data.time;
+                this.sendMsg()
                 this.recorder.clear;
             },
 
