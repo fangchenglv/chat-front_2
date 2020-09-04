@@ -402,7 +402,7 @@ Date.prototype.Format = function (fmt) {
                 save_link.download = now.Format("yyyyMMddhhmmss");
                 var ev = document.createEvent('MouseEvents');
                 ev.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                
+
                 console.log("这是我获得的录音吗",now.Format("yyyyMMddhhmmss"))
                 //发送录音文件
                 this.ff=1
