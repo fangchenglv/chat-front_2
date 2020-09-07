@@ -10,7 +10,7 @@
 
     <div v-if="File !== null" style="position:sticky; top:0">
       <strong style="padding-right:0.2rem">{{File.name}}</strong>
-      <button @click="stop">暂停</button>
+      <button @click="stopRead">暂停</button>
       <button @click="continueFile">继续</button>
       <p  v-if="this.fileUpload.enableRead == true">{{this.percent}}</p>
     </div>
@@ -348,6 +348,7 @@ export default {
         that.File=that.dataUrlToFile(a.href)
         // that.File.content=a.href
         that.total=that.File.size
+        that.ff=1
         that.sendMsg()
         console.log("这个会是文件本体吗？",that.dataUrlToFile(a.href))
         //
@@ -882,7 +883,7 @@ export default {
       console.log("按了吗")
       this.$refs.item.toggle();
     },
-    stop() {
+    stopRead() {
       //中止读取操作
       console.info('中止，cuLoaded：' + this.fileUpload.cuLoaded);
       this.fileUpload.enableRead = false;
