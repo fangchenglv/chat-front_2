@@ -409,7 +409,7 @@ export default {
       var ss=date.getSeconds();
 
 
-      var rq1=year+"-"+month+"-"+day+" "+hh+"："+mm+"："+ss;;
+      var rq1=year+"-"+month+"-"+day+""+hh+"-"+mm+"-"+ss;;
       var fname=rq1+".mp4"
       return new File([new Uint8Array(data)], fname, {
         type: "video/webm"
