@@ -151,6 +151,7 @@ export default {
       });
       this.show=false;
       this.flag=0;
+      this.$refs.record.textContent === '录制';
       // this.restartRecord();
 
 
@@ -392,9 +393,33 @@ export default {
       console.log("mmm27有了吗？");
       for (var i = 0; i < binary.length; i++)
         data.push(binary.charCodeAt(i));
-      return new File([new Uint8Array(data)], "recorded-video.webm", {
+      var date=new Date();
+      //年
+      var year=date.getFullYear();
+      //月
+      var month=date.getMonth()+1;
+      //日
+      var day=date.getDate();
+      //时
+      var hh=date.getHours();
+
+      //分
+      var mm=date.getMinutes();
+      //秒
+      var ss=date.getSeconds();
+
+
+      var rq1=year+"-"+month+"-"+day+" "+hh+"："+mm+"："+ss;;
+      var fname=rq1+".mp4"
+      return new File([new Uint8Array(data)], fname, {
         type: "video/webm"
       });
+      // return new File([new Uint8Array(data)], "recorded-video.mp4", {
+      //   type: "video/webm"
+      // });
+      // return new File([new Uint8Array(data)], "recorded-video.webm", {
+      //   type: "video/webm"
+      // });
       console.log("这个文件长啥样啊？"+File);
     },
 //获取屏幕流
