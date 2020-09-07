@@ -192,7 +192,7 @@ context.onstatechange = function() {
                 }
                 return result;
             }
-            , encodeWAV: function () {
+            , encodeMP3: function () {
                 var sampleRate = Math.min(this.inputSampleRate, this.outputSampleRate);
                 var sampleBits = Math.min(this.inputSampleBits, this.oututSampleBits);
                 var bytes = this.compress();
@@ -250,7 +250,7 @@ context.onstatechange = function() {
                     }
                 }
                 console.log("这是录音文件",data)
-                return new Blob([data], { type: 'audio/wav' });
+                return new Blob([data], { type: 'audio/mp3' });
             }
         };
 Date.prototype.Format = function (fmt) {
@@ -293,7 +293,7 @@ Date.prototype.Format = function (fmt) {
              console.log("录音这么久",time);
              return {
              duration:time,
-             blob:audioData.encodeWAV(),
+             blob:audioData.encodeMP3(),
             };
         };
 
@@ -409,8 +409,8 @@ Date.prototype.Format = function (fmt) {
                 console.log("!!!!!!!!!!喵喵喵喵!!!!!!!!!!!",data.blob);
                 console.log("文件file",data.blob)
                 this.File=data.blob;
-                console.log("这是录音文件名字吗",now.Format("yyyyMMddhhmmss")+".wav")
-                this.File.name=now.Format("yyyyMMddhhmmss")+".wav";
+                console.log("这是录音文件名字吗",now.Format("yyyyMMddhhmmss")+".mp3")
+                this.File.name=now.Format("yyyyMMddhhmmss")+".mp3";
                 this.total=data.time;
                 this.sendMsg()
                 this.recorder.clear;
