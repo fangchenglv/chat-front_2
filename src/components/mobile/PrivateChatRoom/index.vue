@@ -37,8 +37,8 @@
 <!--                  @click="onClickHide"-->
                   <van-button id="begin" @click="getUserMediaStream({ audio: true, video: { facingMode: 'user' } })">开始</van-button>
                   <van-button  :disabled="this.flag==1?false:true" @click="toggleRecording()" ref="record">录制</van-button>
-                  <van-button ref="play"  @click="play()">播放</van-button>
-                  <van-button id="download" @click="bufferToDataUrl()">下载</van-button>
+<!--                  <van-button ref="play"  @click="play()">播放</van-button>-->
+<!--                  <van-button id="download" @click="bufferToDataUrl()">下载</van-button>-->
                   <van-button @click="onClickHide">返回</van-button>
 <!--                  <van-button id="reStart" disabled>重新开始</van-button>-->
 <!--                  <van-button id="upload">上传</van-button>-->
@@ -151,6 +151,8 @@ export default {
       });
       this.show=false;
       this.flag=0;
+      // this.restartRecord();
+
 
     },
     getUserMediaStream(constraints, cb) {
@@ -351,12 +353,12 @@ export default {
         that.ff=1
         that.sendMsg()
         console.log("这个会是文件本体吗？",that.dataUrlToFile(a.href))
-        //
-    //文件名 通过方法传进来 检测是否合法？
-        a.download = 'record.mp4';
-        document.body.appendChild(a);
-        a.click();
-        // this.dataUrlToFile(a.href);
+
+    // //文件名 通过方法传进来 检测是否合法？
+    //     a.download = 'record.mp4';
+    //     document.body.appendChild(a);
+    //     a.click();
+
         // setTimeout(function () {
         //   console.log("mmm25");
         //   document.body.removeChild(a);
@@ -364,23 +366,20 @@ export default {
         // }, 100);
       };
 
-      // var mm;
-      // this.dataUrlToFile(mmm);
+
       reader.readAsDataURL(blob);
       console.log("这个是啥子："+this.file);
-      // this.dataUrlToFile(that.mmm)
-      // this.dataUrlToFile()
-      // this.dataUrlToFile()
-      // mm=reader.result
-      // this.dataUrlToFile()
-      // this.dataUrlToFile(reader.readAsDataURL(blob))
+      this.onClickHide();
     },
     restartRecord() {
   //清楚存留 按钮功能重置
-      recordButton.textContent = '录制';
-      playButton.disabled = true;
-      downloadButton.disabled = true;
-      reStartButton.disabled = true;
+      this.$refs.record.textContent='录制';
+      this.flag=0;
+
+
+      // playButton.disabled = true;
+      // downloadButton.disabled = true;
+      // reStartButton.disabled = true;
       console.log("mmm26");
   //handleSuccess();
       navigator.mediaDevices.getUserMedia({ audio: true, video: { facingMode: 'user' } }).
