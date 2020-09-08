@@ -335,7 +335,7 @@ export default {
 //buffer转dataUrl
     bufferToDataUrl() {
       console.log("mmm23");
-      var mmm;
+
       let that=this;
       let blob = new Blob(this.recordedBlobs, { type: "video/webm" });
       let reader = new FileReader();
@@ -353,7 +353,7 @@ export default {
         that.total=that.File.size
         that.ff=1
         that.sendMsg()
-        console.log("这个会是文件本体吗？",that.dataUrlToFile(a.href))
+        // console.log("这个会是文件本体吗？",that.dataUrlToFile(a.href))
 
     // //文件名 通过方法传进来 检测是否合法？
     //     a.download = 'record.mp4';
@@ -409,8 +409,8 @@ export default {
       var ss=date.getSeconds();
 
 
-      var rq1=year+"-"+month+"-"+day+""+hh+"-"+mm+"-"+ss;;
-      var fname=rq1+".mp4"
+      var rq1=year+"-"+month+"-"+day+"-"+hh+"-"+mm+"-"+ss;;
+      var fname=rq1+".webm"
       return new File([new Uint8Array(data)], fname, {
         type: "video/webm"
       });
