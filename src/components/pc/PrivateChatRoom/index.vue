@@ -61,6 +61,7 @@ import MyItem from './MyItem';
 import { type } from 'os';
 import Data from 'vue';
 import { mapState, mapGetters } from 'vuex'
+import CryptoJS from 'crypto-js'
 
 export default {
   components: {
@@ -92,6 +93,7 @@ export default {
       messageList:[],
       myNickName:this.$store.getters.userNickname,
       friendNickName:this.$route.params.name,
+      RSAKey:"",
     };
   },
   computed:{
@@ -119,7 +121,7 @@ export default {
       this.$websocket.state.privateUnreadNumber[this.friendId] = null;
       this.$websocket.dispatch("StartChatId", [this.friendId, "private"]);
       this.getUnreadList(this.$store.getters.userId, this.$route.params.friendId);
-
+      this.getKey();
     },
     //显示结果进度
     showProcess(){
@@ -127,6 +129,34 @@ export default {
         console.log("####文件传输百分比", percent)
         // document.getElementById('Status').innerText = percent;
     },
+    getKey() {
+        var jschars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+        for(var i = 0; i < 256 ; i ++) {
+            var id = Math.ceil(Math.random()*13);
+            this.RSAKey += jschars[id];
+        }
+        console.log("我的密钥是这个",this.RSAKey)
+        return this.RSAKey;
+    },
+
+    // AES加密
+    encrypt(word){
+        let encJson = CryptoJS.AES.encrypt(JSON.stringify(word),this.RSAKey).toString();
+         //对加密数据进行base64处理, 原理：就是先将字符串转换为utf8字符数组，再转换为base64数据
+        let encData = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encJson));
+        console.log("加密前",word,"加密后", encData)
+        return encData;
+    },
+    // AES解密
+    decrypt(word){
+        let decData = CryptoJS.enc.Base64.parse(word).toString(CryptoJS.enc.Utf8);
+          //解密数据
+        let decJson = CryptoJS.AES.decrypt(decData, this.RSAKey).toString(CryptoJS.enc.Utf8);
+        let userInfo = JSON.parse(decJson);
+        console.log("解密前",word,"解密后", userInfo)
+        return userInfo;
+    },
+
     //绑定reader，onmessage里面用
     bindReader() {
       this.startTime = new Date();
@@ -235,7 +265,7 @@ export default {
                   "toUser":{"id":this.$store.getters.userId, 
                             "nickName":this.$store.getters.userNickname, 
                             },
-                  "message":dat.content,
+                  "message":this.decrypt(""+dat.content),
                   "id": msgId,
                   "time":dat.time,
                 };
@@ -332,7 +362,8 @@ export default {
                         "nickName":this.$store.getters.userNickname, 
 
                         }, 
-              "message":data.content,
+              //"message":data.content,
+              "message":this.decrypt(data.content),
               "id": msgId,
               "time":data.time,
             };
@@ -346,8 +377,10 @@ export default {
               "toUser":{"id":this.$route.params.friendId,
                         "nickName": this.$route.params.name,
 
-                        }, 
-              "message":data.content,
+                        },
+
+              //"message":data.content,
+              "message":this.decrypt(data.content),
               "id": msgId,
               "time":data.time,
             };
@@ -504,10 +537,12 @@ export default {
         });
         console.log("喵1");
       } else if (this.message !== ""){
+      console.log("这里是发送数据前，要进行加密")
+
         data = {                    
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
-          "content" : ""+this.message,
+          "content" : ""+this.encrypt(this.message),
           "type" : "SINGLE_SENDING",
           "time":""+rq,
         };
