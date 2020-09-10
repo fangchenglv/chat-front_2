@@ -93,7 +93,7 @@ export default {
       messageList:[],
       myNickName:this.$store.getters.userNickname,
       friendNickName:this.$route.params.name,
-      RSAKey:"",
+      myRSAKey:"",
     };
   },
   computed:{
@@ -133,25 +133,25 @@ export default {
         var jschars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
         for(var i = 0; i < 256 ; i ++) {
             var id = Math.ceil(Math.random()*13);
-            this.RSAKey += jschars[id];
+            this.myRSAKey += jschars[id];
         }
-        console.log("我的密钥是这个",this.RSAKey)
-        return this.RSAKey;
+        console.log("我的密钥是这个",this.myRSAKey)
+        return this.myRSAKey;
     },
 
     // AES加密
-    encrypt(word){
-        let encJson = CryptoJS.AES.encrypt(JSON.stringify(word),this.RSAKey).toString();
+    encrypt(word,key){
+        let encJson = CryptoJS.AES.encrypt(JSON.stringify(word),key).toString();
          //对加密数据进行base64处理, 原理：就是先将字符串转换为utf8字符数组，再转换为base64数据
         let encData = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encJson));
         console.log("加密前",word,"加密后", encData)
         return encData;
     },
     // AES解密
-    decrypt(word){
+    decrypt(word,key){
         let decData = CryptoJS.enc.Base64.parse(word).toString(CryptoJS.enc.Utf8);
           //解密数据
-        let decJson = CryptoJS.AES.decrypt(decData, this.RSAKey).toString(CryptoJS.enc.Utf8);
+        let decJson = CryptoJS.AES.decrypt(decData, key).toString(CryptoJS.enc.Utf8);
         let userInfo = JSON.parse(decJson);
         console.log("解密前",word,"解密后", userInfo)
         return userInfo;
@@ -255,7 +255,6 @@ export default {
             if (!data.data.toGroupId && data.data.fromUserId == this.friendId ){
               let msgId = -1;
               if(data.data.type === "SINGLE_SENDING"){
-
                 let dat = data.data;
                 msgId = 0;
                 param = {
@@ -265,7 +264,7 @@ export default {
                   "toUser":{"id":this.$store.getters.userId, 
                             "nickName":this.$store.getters.userNickname, 
                             },
-                  "message":this.decrypt(""+dat.content),
+                  "message":this.decrypt(""+dat.content,dat.digitalEnvelope),
                   "id": msgId,
                   "time":dat.time,
                 };
@@ -286,7 +285,6 @@ export default {
                   "time":dat.time,
                 };
               } else {
-
               console.log("汪1");
                 let dat = data.data;
                 msgId = 2;
@@ -337,8 +335,6 @@ export default {
               }
             }
           }
-
-
       }
     },
 
@@ -361,14 +357,14 @@ export default {
               "toUser":{"id":this.$store.getters.userId, 
                         "nickName":this.$store.getters.userNickname, 
 
-                        }, 
-              //"message":data.content,
-              "message":this.decrypt(data.content),
+                        },
+              "message":this.decrypt(data.content,data.digitalEnvelope),
               "id": msgId,
               "time":data.time,
             };
 
           } else {
+          console.log("这里是被解密之前的数据，为什么不行呢",data.content)
             param = {
               "fromUser":{"id":this.$store.getters.userId, 
                           "nickName":this.$store.getters.userNickname, 
@@ -380,7 +376,7 @@ export default {
                         },
 
               //"message":data.content,
-              "message":this.decrypt(data.content),
+              "message":this.decrypt(data.content,data.digitalEnvelope),
               "id": msgId,
               "time":data.time,
             };
@@ -517,6 +513,7 @@ export default {
           "content" : ""+this.imageFile,
           "type" : "SINGLE_SENDING_IMG",
           "time":""+rq,
+          "digitalEnvelope":""+this.myRSAKey,
         };
         param = {
           "fromUser":{"id":this.$store.getters.userId,
@@ -537,15 +534,17 @@ export default {
         });
         console.log("喵1");
       } else if (this.message !== ""){
-      console.log("这里是发送数据前，要进行加密")
+      console.log("这里是发送数据前，要进行加密");
 
-        data = {                    
+        data = {
           "fromUserId" : ""+this.userId,
           "toUserId" : ""+this.friendId,
-          "content" : ""+this.encrypt(this.message),
+          "content" : ""+this.encrypt(this.message,this.myRSAKey),
           "type" : "SINGLE_SENDING",
           "time":""+rq,
+          "digitalEnvelope":""+this.myRSAKey,
         };
+        console.log("这里是加密之后要传输的数据，为什么不行呢+this.encrypt(this.message,this.myRSAKey)",""+this.encrypt(this.message,this.myRSAKey));
         param = {
           "fromUser":{"id":this.$store.getters.userId,
                       "nickName":this.$store.getters.userNickname,
@@ -599,6 +598,7 @@ export default {
                     }),
         "type" : "FILE_MSG_SINGLE_SENDING",
         "time":""+rq,
+        "digitalEnvelope":""+this.myRSAKey,
       };
       let param = {
         "fromUser":{"id":this.$store.getters.userId,
