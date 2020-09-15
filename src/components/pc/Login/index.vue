@@ -118,7 +118,7 @@ export default {
               // // 开发环境地址
               //产品环境地址
               //const wsUrl = "wss://65.49.204.236:8081/ws"
-              const wsUrl = "wss://123.56.232.247:8081/ws"
+              const wsUrl = "ws://123.56.232.247:8081/ws"
               let uid = this.userId;
               uid = "" + uid;
               console.log("那么这里的userid是多少？",this.userId)
