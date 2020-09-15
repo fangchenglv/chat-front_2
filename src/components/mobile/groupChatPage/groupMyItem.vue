@@ -10,7 +10,7 @@
   <div v-if="messageid === 0" class="message" >{{msg}}</div>
   <img v-if="messageid === 1" :src="msg" alt="图片加载失败" class="pic" />
   <div v-if="messageid== 2" class="file" >
-    <a  title="文件" target="_blank" v-bind:href="['https://65.49.204.236/group1/'+msg.fileUrl]"  >
+    <a  title="文件" target="_blank" v-bind:href="['https://123.56.232.247/group1/'+msg.fileUrl]"  >
       <p class="filename">文件：{{msg.fileName}}</p>
 
     </a>
@@ -37,7 +37,30 @@
     methods: {
       init(){
 
-      }
+      },
+    playSound(){
+			var borswer = window.navigator.userAgent.toLowerCase();
+      let suffix = '';
+      let result = '';
+      const flieArr = this.msg.fileName.split('.');
+      suffix = flieArr[flieArr.length - 1];
+      console.log("后缀名是啥",suffix);
+				//非IE内核浏览器
+				if(suffix=="wav"){
+				  //console.log("yes")
+				  //var strAudio = "<audio id='audioPlay' src='['https://65.49.204.236/group1/'+msg.fileUrl]' hidden='true'>";
+         //if ( $( "body" ).find( "audio" ).length <= 0 )
+         //$( "body" ).append( strAudio );
+         //var audio = document.getElementById( "audioPlay" );
+         //浏览器支持 audion
+         //audio.play();
+				}else{
+				  var save_link ='https://65.49.204.236/group1/'+this.msg.fileUrl;
+         window.open(save_link) ;
+				}
+
+
+		},
     }
   }
 </script>

@@ -36,8 +36,6 @@ export default {
         getSingleHistoryReadList(this.$route.params.toId, this.userId).then(response =>{
             let hist = response.data.data;
             for (let i = 0; i < hist.length; i++) {
-            console.log("有时间吗",hist[i]);
-
 
             if( hist[i].type==2){
                 console.log("自己的文件",JSON.parse(hist[i].content));

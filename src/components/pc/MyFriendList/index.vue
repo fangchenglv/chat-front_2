@@ -124,6 +124,7 @@ export default {
         name: "privateChatRoom",
         params: { friendId: id, name: name, avatar: pic},
       });
+      console.log("好友信息id和名字",id,name);
     },
     deleteFriend(id) {
       const myid = this.$store.getters.userId;

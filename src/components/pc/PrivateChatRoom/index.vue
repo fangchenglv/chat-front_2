@@ -251,7 +251,7 @@ export default {
 
 
         data = JSON.parse(e.data);
-          if(data.data.type !== "REGISTER" && data.status === 200){
+          if(data.status === 200){
             if (!data.data.toGroupId && data.data.fromUserId == this.friendId ){
               let msgId = -1;
               if(data.data.type === "SINGLE_SENDING"){
