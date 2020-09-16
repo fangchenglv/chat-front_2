@@ -45,13 +45,16 @@
             </van-dropdown-item>
           </van-dropdown-menu>
         </div>
+<!--        M00/00/04/1606_426f_10a6_a01cace34f2df73c384bbcfe3e30b827.mp3-->
+        <audio id="audio" :src="'https://123.56.232.247/group1/M00/00/04/ezjo919h0WiEH-W0AAAAAEvzjz0572.wav'" autoplay="false"></audio>
+
       </van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
 
-<script src="jquery-3.2.1.min.js"></script>
-<script src="recoder.js"></script>
+
+
 <script>
 import GroupFriendItem from "../groupChatPage/groupFriendItem";
 import GroupMyItem from "../groupChatPage/groupMyItem";
@@ -139,7 +142,6 @@ Recorder(recorder){
         config = config || {};
         config.sampleBits = config.sampleBits || 8;      //采样数位 8, 16
         config.sampleRate = config.sampleRate || (44100 / 6);   //采样率(1/6 44100)
-
 
         //创建一个音频环境对象
         var audioContext = window.AudioContext || window.webkitAudioContext;
@@ -376,14 +378,12 @@ Date.prototype.Format = function (fmt) {
                 HZRecorder.get(function(rec) {
                     // console.log("录音开始了吗3",rec)
                     tmp_rec=rec;
-
                 });
                 let that=this;
                 setTimeout( function(){
                         that.recorder=tmp_rec;
                         that.recorder.start();
                         console.log("录音开始了吗3.5",this.recorder)
-
                     }, 500 );
                 //this.recorder='aaaa';
                 console.log("录音开始了吗4",this.recorder)
@@ -425,8 +425,6 @@ Date.prototype.Format = function (fmt) {
     stopRecord(){
                 this.recorder&&this.recorder.stop();
             },
-
-
 
     //显示结果进度
     showProcess(){

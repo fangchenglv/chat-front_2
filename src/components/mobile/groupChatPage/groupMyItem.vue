@@ -9,12 +9,15 @@
   </div>
   <div v-if="messageid === 0" class="message" >{{msg}}</div>
   <img v-if="messageid === 1" :src="msg" alt="图片加载失败" class="pic" />
-  <div v-if="messageid== 2" class="file" >
+  <div v-if="messageid === 2 && !isaudio(msg.fileUrl)" class="file" >
     <a  title="文件" target="_blank" v-bind:href="['https://123.56.232.247/group1/'+msg.fileUrl]"  >
       <p class="filename">文件：{{msg.fileName}}</p>
-
     </a>
   </div>
+    <div v-if="messageid === 2 && isaudio(msg.fileUrl)" class="file" >
+      <van-button @click="bf" plain >音频：点击播放</van-button>
+      <p class="filename">名称：{{msg.fileName}}</p>
+    </div>
 </div>
 </div>
 </template>
@@ -25,9 +28,13 @@
     props: ["messageid", 'me', 'name', 'msg','time'],
     data(){
       return{
+          audiourl: "",
         messages:this.msg,
       }
     },
+
+
+
     mounted(){
       if (this.messageid == 2) {
         console.log("！！！！！！！要发送的文件部分",this.messages)
@@ -36,31 +43,64 @@
     },
     methods: {
       init(){
-
       },
-    playSound(){
-			var borswer = window.navigator.userAgent.toLowerCase();
-      let suffix = '';
-      let result = '';
-      const flieArr = this.msg.fileName.split('.');
-      suffix = flieArr[flieArr.length - 1];
-      console.log("后缀名是啥",suffix);
-				//非IE内核浏览器
-				if(suffix=="wav"){
-				  //console.log("yes")
-				  //var strAudio = "<audio id='audioPlay' src='['https://65.49.204.236/group1/'+msg.fileUrl]' hidden='true'>";
-         //if ( $( "body" ).find( "audio" ).length <= 0 )
-         //$( "body" ).append( strAudio );
-         //var audio = document.getElementById( "audioPlay" );
-         //浏览器支持 audion
-         //audio.play();
-				}else{
-				  var save_link ='https://65.49.204.236/group1/'+this.msg.fileUrl;
-         window.open(save_link) ;
-				}
+        // 判断是否为录音文件
+        isaudio :function (fileName) {
+            console.log("============走判断了");
+            fileName = this.msg.fileName;
+            console.log(fileName);
+            let flieArr = fileName.split('.');
+            var suffix = String(flieArr[flieArr.length - 1]);//获取后缀
+            console.log("后缀名是啥",suffix);
+            if(suffix.toString()==="wav")
+            {
+                return true;
+            }
+            else
+            {
+                console.log("执行了这里");
+                return false;
+            }
+        },
+        //播放音频
+        bf: function() {
+            var audio = document.getElementById("audio");
+            console.log("执行了这里========audio=",audio  );
+            if (audio !== null) {
+                //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
+                // alert(audio.paused);
 
-
-		},
+                console.log("执行了这里audio !== null");
+                if (audio.paused) {
+                    audio.play(); // 播放
+                } else {
+                    audio.pause(); //  暂停
+                }
+            }
+        },
+    // playSound(){
+		// 	var borswer = window.navigator.userAgent.toLowerCase();
+    //   let suffix = '';
+    //   let result = '';
+    //   let flieArr = this.msg.fileName.split('.');
+    //   suffix = flieArr[flieArr.length - 1];//获取后缀
+    //   console.log("后缀名是啥",suffix);
+		// 		//非IE内核浏览器
+		// 		if(suffix=="wav"){
+		// 		  console.log("yes")
+		// 		  var strAudio = "<audio id='audioPlay' src='['https://123.56.232.247/group1/'+msg.fileUrl]' hidden='true'>";
+    //      if ( $( "body" ).find( "audio" ).length <= 0 )
+    //      $( "body" ).append( strAudio );
+    //      var audio = document.getElementById( "audioPlay" );
+    //      浏览器支持audion
+    //      audio.play();
+		// 		}else{
+		// 		  var save_link ='https://123.56.232.247/group1/'+this.msg.fileUrl;
+    //      window.open(save_link) ;
+		// 		}
+    //
+    //
+		// },
     }
   }
 </script>
