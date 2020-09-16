@@ -46,14 +46,7 @@
           auto-complete="off"
         ></el-input>
       </el-form-item>
-      <el-form-item prop="phone">
-        <el-input
-          v-model="ruleForm2.phone"
-          placeholder="手机号"
-          auto-complete="off"
-          @keyup.enter.native="submitForm"
-        ></el-input>
-      </el-form-item>
+
       <el-form-item class="regisbtn">
         <el-button
           type="primary"

@@ -32,7 +32,7 @@
           <van-dropdown-menu direction="up">
             <van-dropdown-item ref="item">
 <!--              <van-uploader accept="video/mp4" use-before-read :before-read="RecordVideo" :after-read="afterReadvideo">-->
-                <van-button @click="onClickShow" type="primary" plain class="file-sending" >录视频</van-button>
+                <van-button @click="onClickShow" type="primary" plain class="file-sending" >视频</van-button>
                 <van-overlay :show=" show" >
 <!--                  @click="onClickHide"-->
                   <van-button id="begin" @click="getUserMediaStream({ audio: true, video: { facingMode: 'user' } })">开始</van-button>
@@ -145,10 +145,13 @@ export default {
     },
 
     onClickHide() {
-      stream.getTracks().forEach(function (track) {
-        track.stop();
 
-      });
+        if (this.flag==1){
+            stream.getTracks().forEach(function (track) {
+                track.stop();
+            });
+        }
+
       this.show=false;
       this.flag=0;
       this.$refs.record.textContent === '录制';
@@ -201,37 +204,37 @@ export default {
       console.log("mmm3")
 
         var c = document.getElementById("myCanvas");
-        c.width = 400;
-        c.height = 300;
+        c.width = 300;
+        c.height = 500;
         console.log("mmmmmmamsiaj")
-        var i;
-        gumVideo.addEventListener('play', function () {
-          console.log("mmm6")
-          var p = document.createElement('p');
-          p.innerText = 'hello';
-    // i = window.setInterval(function () {
-    //     if (littleVideo) {
-    //         drawLittleVideo(c);
-    //     } else {
-    //         drawBigVideo(c);
-    //     }
-    // }, 20);
-        }, false);
-        gumVideo.addEventListener('pause', function () { if (i) { window.clearInterval(i); console.log("mmm4");} }, false);
-        gumVideo.addEventListener('ended', function () { if (i) { clearInterval(i); console.log(i+"mmm5")} }, false);
+        // var i;
+    //     gumVideo.addEventListener('play', function () {
+    //       console.log("mmm6")
+    //       var p = document.createElement('p');
+    //       p.innerText = 'hello';
+    // // i = window.setInterval(function () {
+    // //     if (littleVideo) {
+    // //         drawLittleVideo(c);
+    // //     } else {
+    // //         drawBigVideo(c);
+    // //     }
+    // // }, 20);
+    //     }, false);
+    //     gumVideo.addEventListener('pause', function () { if (i) { window.clearInterval(i); console.log("mmm4");} }, false);
+    //     gumVideo.addEventListener('ended', function () { if (i) { clearInterval(i); console.log(i+"mmm5")} }, false);
     },
 
     startRecording() {
       // recordedBlobs = [];
-      var options = { mimeType: 'video/webm;codecs=vp9' };
+      var options = { mimeType: 'video/mp4;codecs=vp9' };
       console.log("mmm7");
       if (!MediaRecorder.isTypeSupported(options.mimeType)) {
         console.log(options.mimeType + ' is not Supported');
-        options = { mimeType: 'video/webm;codecs=vp8' };
+        options = { mimeType: 'video/mp4;codecs=vp8' };
         console.log("mmm8");
         if (!MediaRecorder.isTypeSupported(options.mimeType)) {
           console.log(options.mimeType + ' is not Supported');
-          options = { mimeType: 'video/webm' };
+          options = { mimeType: 'video/mp4' };
           console.log("mmm9");
           if (!MediaRecorder.isTypeSupported(options.mimeType)) {
             console.log("mmm10");
@@ -277,13 +280,14 @@ export default {
     },
     toggleRecording() {
       console.log("这个时候是什么值啊？"+this.$refs.record.textContent)
-      if (this.$refs.record.textContent === '录制' || this.$refs.record.textContent === '重录') {
+        // || this.$refs.record.textContent === '重录'
+      if (this.$refs.record.textContent === '录制') {
         // littleVideo = false;
         console.log("mmm17");
         this.startRecording();
         setTimeout(() => {
           this.stopRecording();
-          this.$refs.record.textContent = '重录';
+          this.$refs.record.textContent = '录制';
           console.log("mmm18");
           // this.playButton.disabled = false;
           // this.downloadButton.disabled = false;
@@ -292,7 +296,7 @@ export default {
       } else {
         this.stopRecording();
         console.log("mmm19");
-        this.$refs.record.textContent = '重录';
+        this.$refs.record.textContent = '录制';
         // this.playButton.disabled = false;
         // this.downloadButton.disabled = false;
         // this.reStartButton.disabled = false;
@@ -337,7 +341,7 @@ export default {
       console.log("mmm23");
 
       let that=this;
-      let blob = new Blob(this.recordedBlobs, { type: "video/webm" });
+      let blob = new Blob(this.recordedBlobs, { type: "video/mp4" });
       let reader = new FileReader();
       reader.onload = function () {
         console.log("mmm24");
@@ -366,8 +370,6 @@ export default {
         //   window.URL.revokeObjectURL(reader.result);
         // }, 100);
       };
-
-
       reader.readAsDataURL(blob);
       console.log("这个是啥子："+this.file);
       this.onClickHide();
@@ -410,15 +412,15 @@ export default {
 
 
       var rq1=year+"-"+month+"-"+day+"-"+hh+"-"+mm+"-"+ss;;
-      var fname=rq1+".webm"
+      var fname=rq1+".mp4"
       return new File([new Uint8Array(data)], fname, {
-        type: "video/webm"
+        type: "video/mp4"
       });
       // return new File([new Uint8Array(data)], "recorded-video.mp4", {
-      //   type: "video/webm"
+      //   type: "video/mp4"
       // });
-      // return new File([new Uint8Array(data)], "recorded-video.webm", {
-      //   type: "video/webm"
+      // return new File([new Uint8Array(data)], "recorded-video.mp4", {
+      //   type: "video/mp4"
       // });
       console.log("这个文件长啥样啊？"+File);
     },
@@ -995,7 +997,7 @@ export default {
 .file-sending{
   padding-left:4.5rem;padding-right:4.5rem
 }
-#gumVideo {
-  transform: rotateY(180deg);
-}
+/*#gumVideo {
+   transform: rotateY(180deg);
+ }*/
 </style>
