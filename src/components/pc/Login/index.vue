@@ -106,18 +106,14 @@ export default {
     handleLogin() {
       this.$refs.ruleForm1.validate(valid => {
         if (valid) {
-
-
-
-
-
+          
           this.loading = true;
           this.$store
             .dispatch("Login", this.ruleForm1) //调用的是store里面的Login函数，传入参数是自己的表单
             .then(() => {
               // // 开发环境地址
               //产品环境地址
-              //const wsUrl = "wss://65.49.204.236:8081/ws"
+              // const wsUrl = "wss://65.49.204.236:8081/ws"
               const wsUrl = "ws://123.56.232.247:8081/ws"
               let uid = this.userId;
               uid = "" + uid;
@@ -127,11 +123,8 @@ export default {
                 alert("浏览器不支持localstorage");
                 return false;
               }else{
-                // alert("支持localstorage")
 
                 var storage=localStorage;
-                // window.localStorage.removeItem('keyValue')
-                // var keyval;
                 console.log("yonghuid是啥:",this.userId)
                 var keyname="keyValue"+this.userId;
                 console.log("keyname是啥:",keyname)
@@ -140,19 +133,11 @@ export default {
                   if(localStorage.key(i)==keyname){
                     console.log("好像进来了")
                     this.keyval=JSON.parse(localStorage.getItem(localStorage.key(i)))
-                    // if(localStorage.getItem(localStorage.key(i)!=null)){
-                    //   console.log("这里呢")
-                    //
-                    // }
-                    // else{
-                    // //  如果userid 下的key是空值则删除这条记录
-                    // }
-
                   }
                 }
                 //如果该userid没有key则生成并存储
                 if (this.keyval==null){
-                  const key = new NodeRSA({ b: 2048 }); //生成2048位的密钥
+                  const key = new NodeRSA({ b: 4096 }); //生成2048位的密钥
                   let publicDer = key.exportKey("pkcs8-public-pem");  //公钥
                   let privateDer = key.exportKey("pkcs1-private-pem");//私钥
 
@@ -168,55 +153,65 @@ export default {
                   keyname="keyValue"+this.userId;
                   storage.setItem(keyname,k);
                 }
+                let regisMsg = JSON.stringify({"type" : "REGISTER","userId" : ""+this.userId,"pubKey":""+this.keyval.public});
+                console.log("key:",this.keyval.public);
+                this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg])
+                  .then((res) =>{
+                    console.log("yyyy")
+
+
+
+                    this.loading = false;
+                    this.$router.replace({ path: "/solveRequest" });
+                    this.$store
+                      .dispatch("GetMyFriendList", this.$store.getters.userId)
+                      .then(response => {console.log("返回啥了？",response)})
+                      .catch(error => {
+                        console.log(error);
+                      });
+
+                  })
 
 
                 //主逻辑业务
               }
               //尝试使用RSA加密解密
-              // var mingwen='明文数据是这个';
+              // var mingwen='VTJGc2RHVmtYMSt5RC83YXp5Rmh6RWpQYWxVVVI2YUwvRVRBZkwyZ2d4Zz0= 586343634519AA8D53652DB34123A717B7A6C53AB27744D64459C45A986D6AB85B8D857551A7361859C272711BADA8D1293A4CD418838A3925AC6956929BA28B87984A86BD4D4697724339C17AA39614589375745B1C215924178779484A1AC5AD192B859D119C31694A395617BD55A766A8625394218199113775C33511CD8C';
               // var miwen;
               // var jiemi;
               // console.log("公钥：",this.keyval.public)
               // console.log("明文:",mingwen)
               // miwen=this.encryptedData(this.keyval.public,mingwen)
-              // console.log("加密后",miwen)
+              // console.log("加密后",miwen,"nnn",miwen.length)
               // jiemi=this.decodeData(this.keyval.private,miwen)
               // console.log("解密后",jiemi)
 
 
+              // //
+              // let regisMsg = JSON.stringify({"type" : "REGISTER","userId" : ""+this.userId,"pubKey":""+this.keyval.public});
+              // console.log("key:",this.keyval.public);
+              // this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg])
+              // .then((res) =>{
+              //   console.log("yyyy")
               //
-              let regisMsg = JSON.stringify({"type" : "REGISTER","userId" : ""+this.userId,"pubKey":""+this.keyval.public});
-              console.log("key:",this.keyval.public);
-              this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg])
-              .then((res) =>{
-                console.log("yyyy")
-
-
-
-                this.loading = false;
-                this.$router.replace({ path: "/solveRequest" });
-                this.$store
-                  .dispatch("GetMyFriendList", this.$store.getters.userId)
-                  .then(response => {console.log("返回啥了？",response)})
-                  .catch(error => {
-                    console.log(error);
-                  });
-
-              })
+              //
+              //
+              //   this.loading = false;
+              //   this.$router.replace({ path: "/solveRequest" });
+              //   this.$store
+              //     .dispatch("GetMyFriendList", this.$store.getters.userId)
+              //     .then(response => {console.log("返回啥了？",response)})
+              //     .catch(error => {
+              //       console.log(error);
+              //     });
+              //
+              // })
 
             })
             .catch(() => {
               this.loading = false;
             });
-            // this.$websocket.dispatch("SendWebsocketPublicKey",[ "REGISTER",this.userId,this.keyval.public]).then((response)=>{
-            // console.log("返回返回：",response)
-          // })
 
-          // this.$websocket.dispatch("REGISTER",  this.userId,keyval.public).then(
-          //   (response)=>{
-          //     console.log("你猜猜这里是什么？"+response)
-          //   }
-          // );
         } else {
           console.log("参数验证不合法");
           return false;
