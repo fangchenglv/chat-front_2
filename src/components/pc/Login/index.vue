@@ -106,15 +106,15 @@ export default {
     handleLogin() {
       this.$refs.ruleForm1.validate(valid => {
         if (valid) {
-          
+
           this.loading = true;
           this.$store
             .dispatch("Login", this.ruleForm1) //调用的是store里面的Login函数，传入参数是自己的表单
             .then(() => {
               // // 开发环境地址
               //产品环境地址
-              // const wsUrl = "wss://65.49.204.236:8081/ws"
-              const wsUrl = "ws://123.56.232.247:8081/ws"
+              const wsUrl = "wss://65.49.204.236:8081/ws"
+              // const wsUrl = "ws://123.56.232.247:8081/ws"
               let uid = this.userId;
               uid = "" + uid;
               console.log("那么这里的userid是多少？",this.userId)
@@ -154,7 +154,7 @@ export default {
                   storage.setItem(keyname,k);
                 }
                 let regisMsg = JSON.stringify({"type" : "REGISTER","userId" : ""+this.userId,"pubKey":""+this.keyval.public});
-                console.log("key:",this.keyval.public);
+                // console.log("key:",this.keyval.public);
                 this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg])
                   .then((res) =>{
                     console.log("yyyy")
