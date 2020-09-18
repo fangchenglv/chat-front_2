@@ -154,7 +154,7 @@ export default {
                   storage.setItem(keyname,k);
                 }
                 let regisMsg = JSON.stringify({"type" : "REGISTER","userId" : ""+this.userId,"pubKey":""+this.keyval.public});
-                console.log("key:",this.keyval.public);
+                // console.log("key:",this.keyval.public);
                 this.$websocket.dispatch("StartWebsocket", [wsUrl, regisMsg])
                   .then((res) =>{
                     console.log("yyyy")

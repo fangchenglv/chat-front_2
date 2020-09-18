@@ -9,14 +9,9 @@
       </div>
       <div v-if="messageid === 0"  class="message">{{msg}}</div>
       <img v-if="messageid === 1" :src="msg" alt="图片加载失败" class="pic">
-<<<<<<< Updated upstream
-      <div v-if="messageid== 2"  class="file" >
-        <a  title="文件" target="_blank" v-bind:href="['https://123.56.232.247/group1/'+messages.fileUrl]">
-=======
       <div v-if="messageid== 2 && !isaudio(msg.fileUrl)"  class="file" >
         <a  title="文件" target="_blank" v-bind:href="['https://65.49.204.236/group1/'+messages.fileUrl]">
 <!--        <a  title="文件" target="_blank" v-bind:href="['https://123.56.232.247/group1/'+messages.fileUrl]">-->
->>>>>>> Stashed changes
           <p  class="filename"> 文件：{{messages.fileName}} </p>
         </a>
       </div>
