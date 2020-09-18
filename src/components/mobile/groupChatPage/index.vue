@@ -46,7 +46,7 @@
           </van-dropdown-menu>
         </div>
 <!--        M00/00/04/1606_426f_10a6_a01cace34f2df73c384bbcfe3e30b827.mp3-->
-        <audio id="audio" :src="'https://123.56.232.247/group1/M00/00/04/ezjo919h0WiEH-W0AAAAAEvzjz0572.wav'" autoplay="false"></audio>
+
 
       </van-tabbar-item>
     </van-tabbar>
@@ -384,7 +384,7 @@ Date.prototype.Format = function (fmt) {
                         that.recorder=tmp_rec;
                         that.recorder.start();
                         console.log("录音开始了吗3.5",this.recorder)
-                    }, 500 );
+                    }, 200 );
                 //this.recorder='aaaa';
                 console.log("录音开始了吗4",this.recorder)
     },
@@ -646,7 +646,16 @@ Date.prototype.Format = function (fmt) {
             "id": msgId
           };
         } else {
-          return;
+          let dat = data.data;
+
+                    msgId = 2;
+                    param = {
+                      "toUser":{"id":+dat.fromUserId,
+                                "nickName":this.newGroupFriend[+dat.fromUserId].friendName,
+                               },
+                      "message":JSON.parse(dat.content),
+                      "id": msgId
+                    };
         }
         //添加到信息列表，以便展示信息
         if (! this.messageList){
@@ -703,7 +712,7 @@ Date.prototype.Format = function (fmt) {
             this.messageList.push(param);
           });
       }
-      if(this.message !== ""){
+      else if(this.message !== ""){
         data = {
           "fromUserId" : ""+this.userId,
           "toGroupId" : ""+this.groupId,
