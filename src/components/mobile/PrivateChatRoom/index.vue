@@ -32,20 +32,36 @@
           <van-dropdown-menu direction="up">
             <van-dropdown-item ref="item">
 <!--              <van-uploader accept="video/mp4" use-before-read :before-read="RecordVideo" :after-read="afterReadvideo">-->
-                <van-button @click="onClickShow" type="primary" plain class="file-sending" >视频</van-button>
+              <van-button @click="onClickShow" type="primary" plain class="file-sending" >视频</van-button>
                 <van-overlay :show=" show" >
-<!--                  @click="onClickHide"-->
-                  <van-button id="begin" @click="getUserMediaStream({ audio: true, video: { facingMode: 'user' } })">开始</van-button>
-                  <van-button  :disabled="this.flag==1?false:true" @click="toggleRecording()" ref="record">录制</van-button>
-<!--                  <van-button ref="play"  @click="play()">播放</van-button>-->
-<!--                  <van-button id="download" @click="bufferToDataUrl()">下载</van-button>-->
-                  <van-button @click="onClickHide">返回</van-button>
-<!--                  <van-button id="reStart" disabled>重新开始</van-button>-->
-<!--                  <van-button id="upload">上传</van-button>-->
-                  <video id="gumVideo" width="500" height="500" autoplay='autoplay' muted></video>
-                  <video id="gumVideo2" width="500" height="500" autoplay='autoplay' muted></video>
-                  <canvas id="myCanvas"></canvas>
+
+                  <div v-if="isiOS">
+                    <div id="demoForClick">
+                      <div id="btnID">iOS录像功能</div>
+                    </div>
+                    <!-- 换行 -->
+                    <br/>
+                    <div>
+                      <!-- 直接唤起摄像头进行录像 -->
+                      <label>摄像机</label>
+                      <van-uploader accept=".mp4,.webm,.ogg" result-type="dataUrl" :before-read="beforeReadFile" :after-read="afterReadFile">
+                        <input type="file" @click="myFunction()" class="file-sending" accept="video/*" capture='camcorder'>
+                      </van-uploader >
+                      <van-button @click="onClickHide">返回</van-button>
+
+                    </div>
+                  </div>
+                  <div v-else>
+                    <van-button id="begin" @click="getUserMediaStream({ audio: true, video: { facingMode: 'user' } })">开始</van-button>
+                    <van-button  :disabled="this.flag==1?false:true" @click="toggleRecording()" ref="record">录制</van-button>
+                    <van-button @click="onClickHide">返回</van-button>
+                    <video id="gumVideo" width="500" height="500" autoplay='autoplay' muted></video>
+                    <video id="gumVideo2" width="500" height="500" autoplay='autoplay' muted></video>
+                    <canvas id="myCanvas"></canvas>
+                  </div>
+
                 </van-overlay>
+
 <!--              </van-uploader >-->
 <!--              <van-uploader accept="image/gif,image/jpeg,image/jpg,image/png" :before-read="beforeReadImg" :after-read="afterReadImg">-->
 <!--                <van-button type="primary" plain class="file-sending">录音</van-button>-->
@@ -71,6 +87,7 @@ import FriendItem from "./FriendItem"
 import MyItem from './MyItem';
 import { type } from 'os';
 import Data from 'vue';
+import $ from 'jquery'
 
 export default {
   components: {
@@ -79,6 +96,9 @@ export default {
   },
   data() {
     return {
+      // isAndroid : navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Adr') > -1 ||/gt-|sm-|sch-/.test(navigator.userAgent)||/huawei|honor/.test(navigator.userAgent)||/vivo/.test(navigator.userAgent)||/HM|RedMi|Mi/.test(navigator.userAgent),
+      // isiOS : navigator.userAgent.indexOf('iPhone') > -1 || navigator.userAgent.indexOf('iPad') > -1 || navigator.userAgent.indexOf('iPod') > -1 || navigator.userAgent.indexOf('iOS') > -1||navigator.userAgent.indexOf('iphone') > -1,
+      isiOS : !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),
       flag:0,
       beginButton:document.querySelector('van-button#begin'),
       recordButton :document.querySelector('van-button#record'),
@@ -154,7 +174,10 @@ export default {
 
       this.show=false;
       this.flag=0;
-      this.$refs.record.textContent === '录制';
+      if (!(this.isiOS)){
+          this.$refs.record.textContent = '录制';
+      }
+
       // this.restartRecord();
 
 
@@ -971,6 +994,20 @@ export default {
     },
     onClickLeft(){
       this.$router.push({path:"/friendList"});
+    },
+    myFunction()
+      {
+          var inputUploadObj = '';
+          $("#btnID").on("click", function() {
+              inputUploadObj = document.createElement('input')
+              inputUploadObj.setAttribute('id', 'input_upload_ID');
+              inputUploadObj.setAttribute('type', 'file');
+              inputUploadObj.setAttribute('capture', 'camera');
+              inputUploadObj.setAttribute('accept', 'video/*');
+              inputUploadObj.setAttribute("style", 'visibility:hidden');
+              document.body.appendChild(inputUploadObj);
+              inputUploadObj.click();
+          });
     },
   },
 }
