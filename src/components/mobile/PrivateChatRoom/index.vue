@@ -30,50 +30,53 @@
         <van-button @click="sendMsg" plain type="info" >发送</van-button>
         <div class="bottom" >
           <van-dropdown-menu direction="up">
-            <van-dropdown-item ref="item">
-<!--              <van-uploader accept="video/mp4" use-before-read :before-read="RecordVideo" :after-read="afterReadvideo">-->
-              <van-button @click="onClickShow" type="primary" plain class="file-sending" >视频</van-button>
+            <div v-if="isiOS">
+              <van-dropdown-item ref="item">
+                <!-- 直接唤起摄像头进行录像 -->
+<!--                <label id="btnID">录视频</label>-->
+                <van-uploader accept="video/mp4,video/webm,video/ogg" result-type="dataUrl" :before-read="beforeReadFile" :after-read="afterReadFile">
+<!--                  <input type="file" @click="myFunction()" class="file-sending" accept="video/*" capture='camcorder'>-->
+                  <van-button type="primary" plain class="file-sending" accept="video/*" capture='camcorder'>视频</van-button>
+                </van-uploader >
+                <van-uploader accept="image/gif,image/jpeg,image/jpg,image/png" :before-read="beforeReadImg" :after-read="afterReadImg">
+                  <van-button type="primary" plain class="file-sending">图片</van-button>
+                </van-uploader >
+                <van-uploader accept=".xls,.doc,.txt,.pdf,.gif,.jpeg,.jpg,.png,.pptx" result-type="dataUrl" :before-read="beforeReadFile" :after-read="afterReadFile">
+                  <van-button type="primary" plain class="file-sending">文件</van-button>
+                </van-uploader >
+                <van-button block type="info" @click="onConfirm" plain>返回</van-button>
+              </van-dropdown-item>
+
+            </div>
+            <div v-else>
+              <van-dropdown-item ref="item">
+                <!--              <van-uploader accept="video/mp4" use-before-read :before-read="RecordVideo" :after-read="afterReadvideo">-->
+                <van-button @click="onClickShow" type="primary" plain class="file-sending" >视频</van-button>
                 <van-overlay :show=" show" >
 
-                  <div v-if="isiOS">
-                    <div id="demoForClick">
-                      <div id="btnID">iOS录像功能</div>
-                    </div>
-                    <!-- 换行 -->
-                    <br/>
-                    <div>
-                      <!-- 直接唤起摄像头进行录像 -->
-                      <label>摄像机</label>
-                      <van-uploader accept=".mp4,.webm,.ogg" result-type="dataUrl" :before-read="beforeReadFile" :after-read="afterReadFile">
-                        <input type="file" @click="myFunction()" class="file-sending" accept="video/*" capture='camcorder'>
-                      </van-uploader >
-                      <van-button @click="onClickHide">返回</van-button>
-
-                    </div>
-                  </div>
-                  <div v-else>
-                    <van-button id="begin" @click="getUserMediaStream({ audio: true, video: { facingMode: 'user' } })">开始</van-button>
-                    <van-button  :disabled="this.flag==1?false:true" @click="toggleRecording()" ref="record">录制</van-button>
-                    <van-button @click="onClickHide">返回</van-button>
-                    <video id="gumVideo" width="500" height="500" autoplay='autoplay' muted></video>
-                    <video id="gumVideo2" width="500" height="500" autoplay='autoplay' muted></video>
-                    <canvas id="myCanvas"></canvas>
-                  </div>
+                  <van-button id="begin" @click="getUserMediaStream({ audio: true, video: { facingMode: 'user' } })">开始</van-button>
+                  <van-button  :disabled="this.flag==1?false:true" @click="toggleRecording()" ref="record">录制</van-button>
+                  <van-button @click="onClickHide">返回</van-button>
+                  <video id="gumVideo" width="500" height="500" autoplay='autoplay' muted></video>
+                  <video id="gumVideo2" width="500" height="500" autoplay='autoplay' muted></video>
+                  <canvas id="myCanvas"></canvas>
 
                 </van-overlay>
 
-<!--              </van-uploader >-->
-<!--              <van-uploader accept="image/gif,image/jpeg,image/jpg,image/png" :before-read="beforeReadImg" :after-read="afterReadImg">-->
-<!--                <van-button type="primary" plain class="file-sending">录音</van-button>-->
-<!--              </van-uploader >-->
-              <van-uploader accept="image/gif,image/jpeg,image/jpg,image/png" :before-read="beforeReadImg" :after-read="afterReadImg">
-                <van-button type="primary" plain class="file-sending">图片</van-button>
-              </van-uploader >
-              <van-uploader accept=".xls,.doc,.txt,.pdf,.gif,.jpeg,.jpg,.png,.pptx" result-type="dataUrl" :before-read="beforeReadFile" :after-read="afterReadFile">
-                <van-button type="primary" plain class="file-sending">文件</van-button>
-              </van-uploader >
-              <van-button block type="info" @click="onConfirm" plain>返回</van-button>
-            </van-dropdown-item>
+                <!--              </van-uploader >-->
+                <!--              <van-uploader accept="image/gif,image/jpeg,image/jpg,image/png" :before-read="beforeReadImg" :after-read="afterReadImg">-->
+                <!--                <van-button type="primary" plain class="file-sending">录音</van-button>-->
+                <!--              </van-uploader >-->
+                <van-uploader accept="image/gif,image/jpeg,image/jpg,image/png" :before-read="beforeReadImg" :after-read="afterReadImg">
+                  <van-button type="primary" plain class="file-sending">图片</van-button>
+                </van-uploader >
+                <van-uploader accept=".xls,.doc,.txt,.pdf,.gif,.jpeg,.jpg,.png,.pptx" result-type="dataUrl" :before-read="beforeReadFile" :after-read="afterReadFile">
+                  <van-button type="primary" plain class="file-sending">文件</van-button>
+                </van-uploader >
+                <van-button block type="info" @click="onConfirm" plain>返回</van-button>
+              </van-dropdown-item>
+            </div>
+
           </van-dropdown-menu>
         </div>
       </van-tabbar-item>
@@ -249,15 +252,15 @@ export default {
 
     startRecording() {
       // recordedBlobs = [];
-      var options = { mimeType: 'video/mp4;codecs=vp9' };
+      var options = { mimeType: 'video/webm;codecs=vp9' };
       console.log("mmm7");
       if (!MediaRecorder.isTypeSupported(options.mimeType)) {
         console.log(options.mimeType + ' is not Supported');
-        options = { mimeType: 'video/mp4;codecs=vp8' };
+        options = { mimeType: 'video/webm;codecs=vp8' };
         console.log("mmm8");
         if (!MediaRecorder.isTypeSupported(options.mimeType)) {
           console.log(options.mimeType + ' is not Supported');
-          options = { mimeType: 'video/mp4' };
+          options = { mimeType: 'video/webm' };
           console.log("mmm9");
           if (!MediaRecorder.isTypeSupported(options.mimeType)) {
             console.log("mmm10");
@@ -335,7 +338,7 @@ export default {
     },
     play() {
       console.log("mmm21");
-      var superBuffer = new Blob(this.recordedBlobs, { type: 'video/mp4' });
+      var superBuffer = new Blob(this.recordedBlobs, { type: 'video/webm' });
       //recordedVideo.src = window.URL.createObjectURL(superBuffer);
       gumVideo2.src = window.URL.createObjectURL(superBuffer);
       gumVideo2.play()
@@ -343,7 +346,7 @@ export default {
     upload() {
   //保存在本地，通过post请求
       console.log("mmm22");
-      var blob = new Blob(this.recordedBlobs, { type: 'video/mp4' });
+      var blob = new Blob(this.recordedBlobs, { type: 'video/webm' });
   // var data = new FormData();
   // data.append('video', blob);
   // data.append('qw', 123);
@@ -364,7 +367,7 @@ export default {
       console.log("mmm23");
 
       let that=this;
-      let blob = new Blob(this.recordedBlobs, { type: "video/mp4" });
+      let blob = new Blob(this.recordedBlobs, { type: "video/webm" });
       let reader = new FileReader();
       reader.onload = function () {
         console.log("mmm24");
@@ -383,7 +386,7 @@ export default {
         // console.log("这个会是文件本体吗？",that.dataUrlToFile(a.href))
 
     // //文件名 通过方法传进来 检测是否合法？
-    //     a.download = 'record.mp4';
+    //     a.download = 'record.webm';
     //     document.body.appendChild(a);
     //     a.click();
 
@@ -435,15 +438,15 @@ export default {
 
 
       var rq1=year+"-"+month+"-"+day+"-"+hh+"-"+mm+"-"+ss;;
-      var fname=rq1+".mp4"
+      var fname=rq1+".webm"
       return new File([new Uint8Array(data)], fname, {
-        type: "video/mp4"
+        type: "video/webm"
       });
-      // return new File([new Uint8Array(data)], "recorded-video.mp4", {
-      //   type: "video/mp4"
+      // return new File([new Uint8Array(data)], "recorded-video.webm", {
+      //   type: "video/webm"
       // });
-      // return new File([new Uint8Array(data)], "recorded-video.mp4", {
-      //   type: "video/mp4"
+      // return new File([new Uint8Array(data)], "recorded-video.webm", {
+      //   type: "video/webm"
       // });
       console.log("这个文件长啥样啊？"+File);
     },
